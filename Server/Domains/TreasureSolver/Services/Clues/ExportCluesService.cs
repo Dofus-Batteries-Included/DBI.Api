@@ -98,7 +98,7 @@ public class ExportCluesService
     async Task<FileClue[]> GetCluesAsync()
     {
         LanguagesService languages = await _languagesServiceFactory.CreateLanguagesService();
-        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreatePointOfInterestsService();
+        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreateService();
         return pointOfInterestsService.GetPointOfInterests()
             .Select(
                 c => new FileClue
@@ -116,7 +116,7 @@ public class ExportCluesService
 
     async Task<Dictionary<long, FileMap>> GetMapsAsync()
     {
-        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        MapsService mapsService = await _mapsServiceFactory.CreateService();
         var maps = mapsService.GetMaps().Select(m => new { m.MapId, m.PosX, m.PosY }).ToArray();
         Dictionary<long, List<ClueRecord>> clues = new();
         foreach (IClueRecordsSource source in GetDataSources())

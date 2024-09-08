@@ -1,30 +1,22 @@
 ﻿using System.Text.Json;
-using Server.Common.Exceptions;
 using Server.Domains.DataCenter.Models;
 using Server.Domains.DataCenter.Repositories;
+using Server.Domains.DataCenter.Services.Internal;
 
 namespace Server.Domains.DataCenter.Services.Maps;
 
-public class MapsServiceFactory
+public class MapsServiceFactory : ParsedDataServiceFactory<MapsService>
 {
     readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-    readonly IRawDataRepository _rawDataRepository;
 
-    public MapsServiceFactory(IRawDataRepository rawDataRepository)
+    public MapsServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.MapPositions)
     {
-        _rawDataRepository = rawDataRepository;
     }
 
-    public async Task<MapsService> CreateMapsService(string version = "latest", CancellationToken cancellationToken = default)
+    protected override async Task<MapsService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
-        IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(version, RawDataType.MapPositions, cancellationToken);
         await using Stream stream = file.OpenRead();
         MapPositions[]? data = await JsonSerializer.DeserializeAsync<MapPositions[]>(stream, _jsonSerializerOptions, cancellationToken);
-        if (data == null)
-        {
-            throw new BadRequestException($"Could not load maps for version {version}");
-        }
-
-        return new MapsService(data);
+        return data == null ? null : new MapsService(data);
     }
 }

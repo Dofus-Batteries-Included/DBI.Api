@@ -50,7 +50,7 @@ public class FindCluesService
 
     public async Task<IReadOnlyCollection<Clue>> FindCluesAtPositionAsync(int posX, int posY)
     {
-        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        MapsService mapsService = await _mapsServiceFactory.CreateService();
         long[] mapIds = mapsService.GetMaps().Where(m => m.PosX == posX && m.PosY == posY).Select(m => m.MapId).ToArray();
 
         List<ClueRecord> results = [];
@@ -67,7 +67,7 @@ public class FindCluesService
     async Task<IReadOnlyCollection<Clue>> GetCluesFromRecordsAsync(IEnumerable<ClueRecord> results)
     {
         LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService();
-        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreatePointOfInterestsService();
+        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreateService();
         ClueRecord[] records = results.GroupBy(r => r.ClueId).Select(g => g.OrderByDescending(r => r.RecordDate).First()).Where(r => r.Found).ToArray();
         return records.Select(
                 r =>

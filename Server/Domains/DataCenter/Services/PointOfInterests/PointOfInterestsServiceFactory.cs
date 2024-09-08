@@ -1,30 +1,22 @@
 ﻿using System.Text.Json;
-using Server.Common.Exceptions;
 using Server.Domains.DataCenter.Models;
 using Server.Domains.DataCenter.Repositories;
+using Server.Domains.DataCenter.Services.Internal;
 
 namespace Server.Domains.DataCenter.Services.PointOfInterests;
 
-public class PointOfInterestsServiceFactory
+public class PointOfInterestsServiceFactory : ParsedDataServiceFactory<PointOfInterestsService>
 {
     readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-    readonly IRawDataRepository _rawDataRepository;
 
-    public PointOfInterestsServiceFactory(IRawDataRepository rawDataRepository)
+    public PointOfInterestsServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.PointOfInterest)
     {
-        _rawDataRepository = rawDataRepository;
     }
 
-    public async Task<PointOfInterestsService> CreatePointOfInterestsService(string version = "latest", CancellationToken cancellationToken = default)
+    protected override async Task<PointOfInterestsService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
-        IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(version, RawDataType.PointOfInterest, cancellationToken);
         await using Stream stream = file.OpenRead();
         PointOfInterest[]? data = await JsonSerializer.DeserializeAsync<PointOfInterest[]>(stream, _jsonSerializerOptions, cancellationToken);
-        if (data == null)
-        {
-            throw new BadRequestException($"Could not load POIs for version {version}");
-        }
-
-        return new PointOfInterestsService(data);
+        return data == null ? null : new PointOfInterestsService(data);
     }
 }

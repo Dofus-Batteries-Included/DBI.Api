@@ -50,7 +50,7 @@ public class TreasureSolverService
 
     async Task<MapPositions?> GuessTargetMapAsync(MapPositions startMap, Position position)
     {
-        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        MapsService mapsService = await _mapsServiceFactory.CreateService();
         MapPositions[] maps = mapsService.GetMapsAtPosition(position).ToArray();
         return maps.FirstOrDefault(m => m.WorldMap == startMap.WorldMap) ?? maps.FirstOrDefault();
     }

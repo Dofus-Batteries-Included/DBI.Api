@@ -24,7 +24,7 @@ public class TreasureSolverController : ControllerBase
     [HttpGet("{startMapId:long}/{direction}/{clueId:int}")]
     public async Task<ActionResult<FindNextMapResponse>> FindNextMap(long startMapId, Direction direction, int clueId)
     {
-        MapsService mapService = await _mapsServiceFactory.CreateMapsService();
+        MapsService mapService = await _mapsServiceFactory.CreateService();
         MapPositions? startMap = mapService.GetMap(startMapId);
         if (startMap is null)
         {

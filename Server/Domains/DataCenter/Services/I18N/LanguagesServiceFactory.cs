@@ -1,51 +1,61 @@
 ﻿using System.Text.Json;
-using Server.Common.Exceptions;
 using Server.Domains.DataCenter.Models;
 using Server.Domains.DataCenter.Models.I18N;
 using Server.Domains.DataCenter.Repositories;
+using Server.Domains.DataCenter.Services.Internal;
 
 namespace Server.Domains.DataCenter.Services.I18N;
 
 public class LanguagesServiceFactory
 {
-    readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-    readonly IRawDataRepository _rawDataRepository;
+    readonly LanguageServiceFactory _frLanguageFactory;
+    readonly LanguageServiceFactory _enLanguageFactory;
+    readonly LanguageServiceFactory _esLanguageFactory;
+    readonly LanguageServiceFactory _deLanguageFactory;
+    readonly LanguageServiceFactory _ptLanguageFactory;
 
     public LanguagesServiceFactory(IRawDataRepository rawDataRepository)
     {
-        _rawDataRepository = rawDataRepository;
+        _frLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NFr);
+        _enLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEn);
+        _esLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEs);
+        _deLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NDe);
+        _ptLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NPt);
     }
 
     public async Task<LanguagesService> CreateLanguagesService(string version = "latest", CancellationToken cancellationToken = default) =>
         new()
         {
-            French = await GetLanguageService(version, Language.Fr, cancellationToken),
-            English = await GetLanguageService(version, Language.En, cancellationToken),
-            Spanish = await GetLanguageService(version, Language.Es, cancellationToken),
-            German = await GetLanguageService(version, Language.De, cancellationToken),
-            Portuguese = await GetLanguageService(version, Language.Pt, cancellationToken)
+            French = await _frLanguageFactory.CreateService(version, cancellationToken),
+            English = await _enLanguageFactory.CreateService(version, cancellationToken),
+            Spanish = await _esLanguageFactory.CreateService(version, cancellationToken),
+            German = await _deLanguageFactory.CreateService(version, cancellationToken),
+            Portuguese = await _ptLanguageFactory.CreateService(version, cancellationToken)
         };
 
-    async Task<LanguageService> GetLanguageService(string version, Language language, CancellationToken cancellationToken = default)
+    class LanguageServiceFactory : ParsedDataServiceFactory<LanguageService>
     {
-        RawDataType dataType = language switch
-        {
-            Language.Fr => RawDataType.I18NFr,
-            Language.En => RawDataType.I18NEn,
-            Language.Es => RawDataType.I18NEs,
-            Language.De => RawDataType.I18NDe,
-            Language.Pt => RawDataType.I18NPt,
-            _ => throw new ArgumentOutOfRangeException(nameof(language), language, null)
-        };
+        readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
-        IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(version, dataType, cancellationToken);
-        await using Stream stream = file.OpenRead();
-        LocalizationTable? data = await JsonSerializer.DeserializeAsync<LocalizationTable>(stream, _jsonSerializerOptions, cancellationToken);
-        if (data == null)
+        public LanguageServiceFactory(IRawDataRepository rawDataRepository, RawDataType dataType) : base(rawDataRepository, dataType)
         {
-            throw new BadRequestException($"Could not load language {language} for version {version}");
         }
 
-        return new LanguageService(language.ToString().ToLower(), data.Entries);
+        protected override async Task<LanguageService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
+        {
+            string languageCode = DataType switch
+            {
+                RawDataType.I18NFr => "fr",
+                RawDataType.I18NEn => "en",
+                RawDataType.I18NEs => "es",
+                RawDataType.I18NDe => "de",
+                RawDataType.I18NPt => "pt",
+                _ => throw new ArgumentOutOfRangeException(nameof(DataType), DataType, null)
+            };
+
+            await using Stream stream = file.OpenRead();
+            LocalizationTable? data = await JsonSerializer.DeserializeAsync<LocalizationTable>(stream, _jsonSerializerOptions, cancellationToken);
+            return data == null ? null : new LanguageService(languageCode, data.Entries);
+        }
     }
 }
