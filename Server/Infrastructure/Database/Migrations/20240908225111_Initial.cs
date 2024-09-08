@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TreasureSolver.Api.Infrastructure.Database.Migrations
+namespace Server.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -16,6 +16,7 @@ namespace TreasureSolver.Api.Infrastructure.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RegistrationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AccountId = table.Column<long>(type: "bigint", nullable: false),
                     AccountName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Token = table.Column<Guid>(type: "uuid", nullable: false),

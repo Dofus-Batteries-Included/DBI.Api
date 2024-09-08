@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Infrastructure.Database;
-using TreasureSolver.Api.Infrastructure.Database;
 
 #nullable disable
 
-namespace TreasureSolver.Api.Infrastructure.Database.Migrations
+namespace Server.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -23,35 +22,7 @@ namespace TreasureSolver.Api.Infrastructure.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.ClueRecordEntity", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ClueId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("LastModificationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("MapId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("ClueRecords");
-                });
-
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.PrincipalEntity", b =>
+            modelBuilder.Entity("Server.Domains.Identity.Models.Entities.PrincipalEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,9 +50,37 @@ namespace TreasureSolver.Api.Infrastructure.Database.Migrations
                     b.ToTable("Principals");
                 });
 
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.ClueRecordEntity", b =>
+            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
                 {
-                    b.HasOne("TreasureSolver.Api.Models.Entities.PrincipalEntity", "Author")
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ClueId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("LastModificationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("MapId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("ClueRecords");
+                });
+
+            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
+                {
+                    b.HasOne("Server.Domains.Identity.Models.Entities.PrincipalEntity", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)

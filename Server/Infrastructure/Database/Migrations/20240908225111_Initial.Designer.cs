@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Infrastructure.Database;
-using TreasureSolver.Api.Infrastructure.Database;
 
 #nullable disable
 
-namespace TreasureSolver.Api.Infrastructure.Database.Migrations
+namespace Server.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240905213635_Initial")]
+    [Migration("20240908225111_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,7 +25,35 @@ namespace TreasureSolver.Api.Infrastructure.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.ClueRecordEntity", b =>
+            modelBuilder.Entity("Server.Domains.Identity.Models.Entities.PrincipalEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Revoked")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Principals");
+                });
+
+            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
@@ -54,34 +81,9 @@ namespace TreasureSolver.Api.Infrastructure.Database.Migrations
                     b.ToTable("ClueRecords");
                 });
 
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.PrincipalEntity", b =>
+            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("Revoked")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("Token")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Principals");
-                });
-
-            modelBuilder.Entity("TreasureSolver.Api.Models.Entities.ClueRecordEntity", b =>
-                {
-                    b.HasOne("TreasureSolver.Api.Models.Entities.PrincipalEntity", "Author")
+                    b.HasOne("Server.Domains.Identity.Models.Entities.PrincipalEntity", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
