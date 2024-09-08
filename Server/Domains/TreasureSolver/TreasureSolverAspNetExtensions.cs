@@ -28,7 +28,7 @@ public static class TreasureSolverAspNetExtensions
 
         services.AddHostedService<RefreshDplnDataSource>();
         services.AddHostedService<RefreshGameData>();
-        
+
         services.AddOpenApiDocument(
             settings =>
             {
@@ -52,5 +52,4 @@ public static class TreasureSolverAspNetExtensions
             }
         );
     }
-    
 }
