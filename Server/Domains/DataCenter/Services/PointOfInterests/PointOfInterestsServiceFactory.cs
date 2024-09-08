@@ -19,7 +19,7 @@ public class PointOfInterestsServiceFactory
     {
         IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(version, RawDataType.PointOfInterest, cancellationToken);
         await using Stream stream = file.OpenRead();
-        Dictionary<int, PointOfInterest>? data = await JsonSerializer.DeserializeAsync<Dictionary<int, PointOfInterest>>(stream, _jsonSerializerOptions, cancellationToken);
+        PointOfInterest[]? data = await JsonSerializer.DeserializeAsync<PointOfInterest[]>(stream, _jsonSerializerOptions, cancellationToken);
         if (data == null)
         {
             throw new BadRequestException($"Could not load POIs for version {version}");

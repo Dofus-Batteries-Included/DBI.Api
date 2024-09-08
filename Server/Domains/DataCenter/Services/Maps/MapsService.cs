@@ -2,10 +2,12 @@ using Server.Domains.DataCenter.Models;
 
 namespace Server.Domains.DataCenter.Services.Maps;
 
-public class MapsService(Dictionary<long, MapPositions> maps)
+public class MapsService(IReadOnlyCollection<MapPositions> maps)
 {
-    public MapPositions? GetMap(long id) => maps.GetValueOrDefault(id);
-    public IEnumerable<MapPositions> GetMaps() => maps.Values;
+    readonly Dictionary<long, MapPositions> _maps = maps.ToDictionary(map => map.MapId, map => map);
+
+    public MapPositions? GetMap(long id) => _maps.GetValueOrDefault(id);
+    public IEnumerable<MapPositions> GetMaps() => _maps.Values;
 }
 
 public static class MapsServiceExtensions

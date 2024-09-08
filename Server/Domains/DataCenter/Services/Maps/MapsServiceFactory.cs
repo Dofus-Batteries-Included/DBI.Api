@@ -19,7 +19,7 @@ public class MapsServiceFactory
     {
         IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(version, RawDataType.MapPositions, cancellationToken);
         await using Stream stream = file.OpenRead();
-        Dictionary<long, MapPositions>? data = await JsonSerializer.DeserializeAsync<Dictionary<long, MapPositions>>(stream, _jsonSerializerOptions, cancellationToken);
+        MapPositions[]? data = await JsonSerializer.DeserializeAsync<MapPositions[]>(stream, _jsonSerializerOptions, cancellationToken);
         if (data == null)
         {
             throw new BadRequestException($"Could not load maps for version {version}");
