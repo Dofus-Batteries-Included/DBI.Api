@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Server.Domains.TreasureSolver.Controllers.Responses;
+using Server.Domains.TreasureSolver.Models;
+using Server.Domains.TreasureSolver.Services;
+using Server.Domains.TreasureSolver.Services.Maps;
+
+namespace Server.Domains.TreasureSolver.Controllers;
+
+[Route("/solver")]
+[ApiController]
+public class TreasureSolverController : ControllerBase
+{
+    readonly IMapsService _mapService;
+    readonly TreasureSolverService _solver;
+
+    public TreasureSolverController(IMapsService mapService, TreasureSolverService solver)
+    {
+        _solver = solver;
+        _mapService = mapService;
+    }
+
+    [HttpGet("{startMapId:long}/{direction}/{clueId:int}")]
+    public async Task<ActionResult<FindNextMapResponse>> FindNextMap(long startMapId, Direction direction, int clueId)
+    {
+        Map? startMap = _mapService.GetMap(startMapId);
+        if (startMap is null)
+        {
+            return BadRequest("Invalid start map.");
+        }
+
+        Map? result = await _solver.FindNextMapAsync(startMap, direction, clueId);
+        return new FindNextMapResponse
+        {
+            Found = result != null,
+            MapId = result?.MapId,
+            MapPosition = result != null ? new Position(result.PosX, result.PosY) : null
+        };
+    }
+
+    [HttpGet("{posX:int}/{posY:int}/{direction}/{clueId:int}")]
+    public async Task<FindNextPositionResponse> FindNextPosition(int posX, int posY, Direction direction, int clueId)
+    {
+        Position? result = await _solver.FindNextMapAsync(new Position(posX, posY), direction, clueId);
+        return new FindNextPositionResponse
+        {
+            Found = result != null,
+            MapPosition = result
+        };
+    }
+}
