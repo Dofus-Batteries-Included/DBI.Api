@@ -5,6 +5,7 @@ using Serilog;
 using Serilog.Events;
 using Server.Common.Exceptions;
 using Server.Domains.DataCenter;
+using Server.Domains.Identity;
 using Server.Domains.TreasureSolver;
 using Server.Infrastructure.Authentication;
 using Server.Infrastructure.Database;
@@ -69,6 +70,7 @@ try
         }
     );
 
+    builder.Services.ConfigureIdentity();
     builder.Services.ConfigureDataCenter();
     builder.Services.ConfigureTreasureSolver();
 

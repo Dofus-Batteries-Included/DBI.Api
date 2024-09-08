@@ -13,13 +13,22 @@ namespace Server.Domains.TreasureSolver.Controllers;
 [ApiController]
 public class CluesController : ControllerBase
 {
+    /// <summary>
+    ///     Find clues in map
+    /// </summary>
     [HttpGet("at-map/{mapId:long}")]
     public async Task<IReadOnlyCollection<Clue>> FindCluesInMap([FromServices] FindCluesService findCluesService, long mapId) => await findCluesService.FindCluesInMapAsync(mapId);
 
+    /// <summary>
+    ///     Find clues at position
+    /// </summary>
     [HttpGet("at-position/{posX:int}/{posY:int}")]
     public async Task<IReadOnlyCollection<Clue>> FindCluesAtPosition([FromServices] FindCluesService findCluesService, int posX, int posY) =>
         await findCluesService.FindCluesAtPositionAsync(posX, posY);
 
+    /// <summary>
+    ///     Export clues
+    /// </summary>
     [HttpGet("export")]
     public async Task<FileStreamResult> ExportClues([FromServices] ExportCluesService exportCluesService)
     {
@@ -27,6 +36,9 @@ public class CluesController : ControllerBase
         return new FileStreamResult(file.Content, file.Type) { FileDownloadName = file.Name };
     }
 
+    /// <summary>
+    ///     Register clues
+    /// </summary>
     [HttpPost]
     [Authorize]
     public async Task RegisterClues([FromServices] RegisterCluesService registerCluesService, [FromServices] ApplicationDbContext dbContext, RegisterCluesRequest request)

@@ -6,7 +6,7 @@ using Server.Infrastructure.Database;
 
 namespace Server.Domains.Identity.Controllers;
 
-[Route("/registration")]
+[Route("identity")]
 [ApiController]
 public class RegistrationController : ControllerBase
 {
@@ -17,6 +17,9 @@ public class RegistrationController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    ///     Register account
+    /// </summary>
     [HttpPost("register")]
     public async Task<Guid> Register(long accountId, string accountName)
     {
@@ -27,6 +30,9 @@ public class RegistrationController : ControllerBase
         return token;
     }
 
+    /// <summary>
+    ///     Refresh API key
+    /// </summary>
     [Authorize]
     [HttpPost("refresh")]
     public async Task<Guid> RefreshApiKey()
@@ -37,6 +43,9 @@ public class RegistrationController : ControllerBase
         return principal.Token;
     }
 
+    /// <summary>
+    ///     Revoke registration
+    /// </summary>
     [Authorize]
     [HttpPost("revoke")]
     public async Task Revoke()

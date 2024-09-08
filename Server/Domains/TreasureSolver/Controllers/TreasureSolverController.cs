@@ -21,6 +21,9 @@ public class TreasureSolverController : ControllerBase
         _mapsServiceFactory = mapServiceFactory;
     }
 
+    /// <summary>
+    ///     Find next map
+    /// </summary>
     [HttpGet("{startMapId:long}/{direction}/{clueId:int}")]
     public async Task<ActionResult<FindNextMapResponse>> FindNextMap(long startMapId, Direction direction, int clueId)
     {
@@ -40,6 +43,9 @@ public class TreasureSolverController : ControllerBase
         };
     }
 
+    /// <summary>
+    ///     Find next position
+    /// </summary>
     [HttpGet("{posX:int}/{posY:int}/{direction}/{clueId:int}")]
     public async Task<FindNextPositionResponse> FindNextPosition(int posX, int posY, Direction direction, int clueId)
     {
