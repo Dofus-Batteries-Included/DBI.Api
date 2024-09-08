@@ -9,7 +9,7 @@ using Server.Infrastructure.Database;
 
 namespace Server.Domains.TreasureSolver.Controllers;
 
-[Route("/clues")]
+[Route("treasure-solver/clues")]
 [ApiController]
 public class CluesController : ControllerBase
 {

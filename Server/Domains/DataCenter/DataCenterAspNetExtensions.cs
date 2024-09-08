@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Server.Common.OpenApi;
 using Server.Domains.DataCenter.Repositories;
 using Server.Domains.DataCenter.Services.I18N;
 using Server.Domains.DataCenter.Services.Maps;
@@ -32,6 +33,7 @@ public static class DataCenterAspNetExtensions
                 settings.Title = "Dofus Data Center - API";
                 settings.Description = "Data extracted from Dofus.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";
+                settings.OperationProcessors.Insert(0, new FilterOperationsByRoutePrefix("/data-center"));
             }
         );
     }
