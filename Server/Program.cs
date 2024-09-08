@@ -1,22 +1,14 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using NSwag;
-using NSwag.Generation.Processors.Security;
 using Serilog;
 using Serilog.Events;
-using Server;
-using Server.Domains.TreasureSolver.Services;
-using Server.Domains.TreasureSolver.Services.Clues;
-using Server.Domains.TreasureSolver.Services.Clues.DataSources;
-using Server.Domains.TreasureSolver.Services.I18N;
-using Server.Domains.TreasureSolver.Services.Maps;
-using Server.Domains.TreasureSolver.Workers;
+using Server.Common.Exceptions;
+using Server.Domains.DataCenter;
+using Server.Domains.TreasureSolver;
 using Server.Infrastructure.Authentication;
 using Server.Infrastructure.Database;
 using Server.Infrastructure.Repository;
-using TreasureSolver.Api;
-using TreasureSolver.Api.Infrastructure.Database;
 
 #if DEBUG
 const LogEventLevel defaultLoggingLevel = LogEventLevel.Debug;
@@ -57,50 +49,14 @@ try
             }
         );
     builder.Services.AddControllersWithViews();
-
     builder.Services.AddProblemDetails();
+    builder.Services.AddExceptionHandler<ExceptionHandler>();
     builder.Services.AddHttpClient();
 
     builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, opt => { });
     builder.Services.AddAuthorization();
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddOpenApiDocument(
-        settings =>
-        {
-            settings.Title = "Treasure Solver - API";
-            settings.Description = "Dofus Treasure Hunt solver using data collected by the players.";
-            settings.Version = Metadata.Version?.ToString() ?? "~dev";
-
-            const string schemeName = "API key";
-            settings.AddSecurity(
-                schemeName,
-                new OpenApiSecurityScheme
-                {
-                    Description = "Please enter your API key.",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Name = ApiKeyAuthentication.Header,
-                    Type = OpenApiSecuritySchemeType.ApiKey
-                }
-            );
-            settings.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor(schemeName));
-        }
-    );
-
-    builder.Services.AddScoped<IClueRecordsSource, DatabaseClueRecordsSource>();
-    builder.Services.AddSingleton<StaticCluesDataSourcesService>();
-    builder.Services.AddScoped<FindCluesService>();
-    builder.Services.AddScoped<ExportCluesService>();
-    builder.Services.AddScoped<RegisterCluesService>();
-    builder.Services.AddScoped<TreasureSolverService>();
-    builder.Services.AddSingleton<MapsService>();
-    builder.Services.AddSingleton<IMapsService, MapsService>(services => services.GetRequiredService<MapsService>());
-    builder.Services.AddSingleton<CluesService>();
-    builder.Services.AddSingleton<ICluesService, CluesService>(services => services.GetRequiredService<CluesService>());
-    builder.Services.AddSingleton<LanguagesService>();
-
-    builder.Services.AddHostedService<RefreshDplnDataSource>();
-    builder.Services.AddHostedService<RefreshGameData>();
 
     builder.Services.Configure<RepositoryOptions>(
         o =>
@@ -112,6 +68,9 @@ try
             }
         }
     );
+
+    builder.Services.ConfigureDataCenter();
+    builder.Services.ConfigureTreasureSolver();
 
     WebApplication app = builder.Build();
 
