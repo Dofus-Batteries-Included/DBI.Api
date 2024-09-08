@@ -6,7 +6,5 @@ namespace Server.Controllers;
 /// </summary>
 public class HomeController : Controller
 {
-    /// <summary>
-    /// </summary>
     public IActionResult Index() => View();
 }

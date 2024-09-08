@@ -14,8 +14,6 @@ public class RawDataController : ControllerBase
 {
     readonly IRawDataRepository _repository;
 
-    /// <summary>
-    /// </summary>
     public RawDataController(IRawDataRepository repository)
     {
         _repository = repository;
