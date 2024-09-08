@@ -1,0 +1,29 @@
+# The workflow will publish a new docker image, and tag it as 'latest' if the corresponding commit is a release commit, then publish it to the prod environment.
+
+name: Publish Docker
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: Dofus-Batteries-Included/workflows/.github/workflows/docker_build_publish.yml@main
+    with:
+      docker_image_name: dbi_api
+      docker_file: Server/Dockerfile
+  
+  deploy:
+    needs: publish
+    if: ${{ needs.publish.outputs.latest_has_changed == 'true' }}
+    uses: Dofus-Batteries-Included/workflows/.github/workflows/docker_deploy.yml@main
+    with:
+      directory: /home/debian/dbi_api
+    secrets: 
+      ssh_host: ${{ secrets.SSH_HOST }}
+      ssh_user: ${{ secrets.SSH_USER }}
+      ssh_key: ${{ secrets.SSH_KEY }}
+
+permissions:
+  packages: write
