@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Server.Domains.DataCenter.Repositories;
+using Server.Domains.DataCenter.Services.I18N;
+using Server.Domains.DataCenter.Services.Maps;
+using Server.Domains.DataCenter.Services.PointOfInterests;
 using Server.Domains.DataCenter.Workers;
 using Server.Infrastructure.Repository;
 
@@ -16,6 +19,9 @@ public static class DataCenterAspNetExtensions
             )
         );
         services.AddSingleton<IRawDataRepository, RawDataFromGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromGithubReleasesSavedToDisk>());
+        services.AddSingleton<LanguagesServiceFactory>();
+        services.AddSingleton<MapsServiceFactory>();
+        services.AddSingleton<PointOfInterestsServiceFactory>();
 
         services.AddHostedService<DownloadDataFromGithubReleases>();
 

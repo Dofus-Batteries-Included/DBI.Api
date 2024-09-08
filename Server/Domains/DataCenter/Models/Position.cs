@@ -1,6 +1,6 @@
 ﻿using Server.Domains.TreasureSolver.Models;
 
-namespace Server.Domains.TreasureSolver.Services.Maps;
+namespace Server.Domains.DataCenter.Models;
 
 public record struct Position(int X, int Y);
 

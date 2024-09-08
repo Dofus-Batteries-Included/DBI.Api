@@ -11,6 +11,11 @@ public interface IRawDataFile
     string Name { get; }
 
     /// <summary>
+    ///     The version of the data
+    /// </summary>
+    string Version { get; }
+
+    /// <summary>
     ///     The content type of the data
     /// </summary>
     string ContentType { get; }

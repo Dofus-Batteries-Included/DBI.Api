@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Server.Domains.TreasureSolver.Services.Maps;
+using Server.Domains.DataCenter.Models;
 
 namespace Server.Domains.TreasureSolver.Controllers.Responses;
 

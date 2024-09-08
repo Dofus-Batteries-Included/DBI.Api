@@ -3,8 +3,6 @@ using NSwag.Generation.Processors.Security;
 using Server.Domains.TreasureSolver.Services;
 using Server.Domains.TreasureSolver.Services.Clues;
 using Server.Domains.TreasureSolver.Services.Clues.DataSources;
-using Server.Domains.TreasureSolver.Services.I18N;
-using Server.Domains.TreasureSolver.Services.Maps;
 using Server.Domains.TreasureSolver.Workers;
 using Server.Infrastructure.Authentication;
 
@@ -20,14 +18,8 @@ public static class TreasureSolverAspNetExtensions
         services.AddScoped<ExportCluesService>();
         services.AddScoped<RegisterCluesService>();
         services.AddScoped<TreasureSolverService>();
-        services.AddSingleton<MapsService>();
-        services.AddSingleton<IMapsService, MapsService>(s => s.GetRequiredService<MapsService>());
-        services.AddSingleton<CluesService>();
-        services.AddSingleton<ICluesService, CluesService>(s => s.GetRequiredService<CluesService>());
-        services.AddSingleton<LanguagesService>();
 
         services.AddHostedService<RefreshDplnDataSource>();
-        services.AddHostedService<RefreshGameData>();
 
         services.AddOpenApiDocument(
             settings =>

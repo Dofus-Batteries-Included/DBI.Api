@@ -35,7 +35,7 @@ public abstract class PeriodicService : BackgroundService
             DateTime start = DateTime.Now;
             while (!stoppingToken.IsCancellationRequested && !_triggerAsap && DateTime.Now - start < _period)
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
             }
         }
 

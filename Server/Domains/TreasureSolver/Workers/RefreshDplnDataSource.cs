@@ -3,10 +3,13 @@ using Microsoft.Extensions.Options;
 using PuppeteerSharp;
 using Server.Common.Extensions;
 using Server.Common.Workers;
+using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Repositories;
+using Server.Domains.DataCenter.Services.I18N;
+using Server.Domains.DataCenter.Services.Maps;
+using Server.Domains.DataCenter.Services.PointOfInterests;
 using Server.Domains.TreasureSolver.Models;
-using Server.Domains.TreasureSolver.Services.Clues;
 using Server.Domains.TreasureSolver.Services.Clues.DataSources;
-using Server.Domains.TreasureSolver.Services.Maps;
 using Server.Infrastructure.Database;
 using Server.Infrastructure.Repository;
 
@@ -16,41 +19,39 @@ public class RefreshDplnDataSource : PeriodicService
 {
     readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true };
     readonly IServiceScopeFactory _scopeFactory;
-    readonly ICluesService _cluesService;
-    readonly IMapsService _mapsService;
+    readonly LanguagesServiceFactory _languagesServiceFactory;
+    readonly PointOfInterestsServiceFactory _pointOfInterestsServiceFactory;
+    readonly MapsServiceFactory _mapsServiceFactory;
     readonly StaticCluesDataSourcesService _staticCluesDataSourcesService;
     readonly ILogger<RefreshDplnDataSource> _logger;
     int? _lastHintsHashCode;
     int? _lastMapCluesHashCode;
     readonly string _cacheDirectory;
     readonly string _cacheFilePath;
-    const string CacheFilename = "dpln.json";
 
     public RefreshDplnDataSource(
         IServiceScopeFactory scopeFactory,
-        ICluesService cluesService,
-        IMapsService mapsService,
+        IRawDataRepository rawDataRepository,
+        LanguagesServiceFactory languagesServiceFactory,
+        PointOfInterestsServiceFactory pointOfInterestsServiceFactory,
+        MapsServiceFactory mapsServiceFactory,
         StaticCluesDataSourcesService staticCluesDataSourcesService,
         IOptions<RepositoryOptions> repositoryOptions,
         ILogger<RefreshDplnDataSource> logger
     ) : base(TimeSpan.FromHours(1), logger)
     {
         _scopeFactory = scopeFactory;
-        _cluesService = cluesService;
-        _mapsService = mapsService;
+        _languagesServiceFactory = languagesServiceFactory;
+        _pointOfInterestsServiceFactory = pointOfInterestsServiceFactory;
+        _mapsServiceFactory = mapsServiceFactory;
         _staticCluesDataSourcesService = staticCluesDataSourcesService;
         _logger = logger;
         _cacheDirectory = Path.Join(repositoryOptions.Value.BasePath, "Clues", "Sources");
         _cacheFilePath = Path.Join(_cacheDirectory, "dpln.json");
 
-        _cluesService.DataRefreshed += (_, _) =>
+        rawDataRepository.LatestVersionChanged += (_, _) =>
         {
-            _lastHintsHashCode = null;
-            _lastMapCluesHashCode = null;
-            TriggerAsap();
-        };
-        _mapsService.DataRefreshed += (_, _) =>
-        {
+            _logger.LogInformation("Latest version has changed, DPLN data source will be refreshed ASAP");
             _lastHintsHashCode = null;
             _lastMapCluesHashCode = null;
             TriggerAsap();
@@ -126,21 +127,29 @@ public class RefreshDplnDataSource : PeriodicService
 
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
+        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService(cancellationToken: stoppingToken);
+        PointOfInterestsService cluesService = await _pointOfInterestsServiceFactory.CreatePointOfInterestsService(cancellationToken: stoppingToken);
+        MapsService mapsService = await _mapsServiceFactory.CreateMapsService(cancellationToken: stoppingToken);
+
         using IServiceScope scope = _scopeFactory.CreateScope();
         await using ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        Clue[] allClues = _cluesService.GetClues().ToArray();
+        PointOfInterest[] allPois = cluesService.GetPointOfInterests().ToArray();
         if (stoppingToken.IsCancellationRequested)
         {
             return [];
         }
 
         Dictionary<int, int> dplbClueToGameClueMapping = new();
-        foreach (Clue clue in allClues)
+        foreach (PointOfInterest poi in allPois)
         {
-            string? nameFrWithoutAccent = clue.Name.French?.RemoveAccents();
-            string? nameEnWithoutAccent = clue.Name.English?.RemoveAccents();
-            string? nameEsWithoutAccent = clue.Name.Spanish?.RemoveAccents();
+            string? nameFr = languagesService.French.Get(poi.NameId);
+            string? nameEn = languagesService.English.Get(poi.NameId);
+            string? nameEs = languagesService.Spanish.Get(poi.NameId);
+
+            string? nameFrWithoutAccent = nameFr?.RemoveAccents();
+            string? nameEnWithoutAccent = nameEn?.RemoveAccents();
+            string? nameEsWithoutAccent = nameEs?.RemoveAccents();
 
             Hint? hint = hints.FirstOrDefault(
                 h => h.HintFr != null && h.HintFr == nameFrWithoutAccent
@@ -149,11 +158,11 @@ public class RefreshDplnDataSource : PeriodicService
             );
             if (hint is null)
             {
-                _logger.LogWarning("Could not find clue {Name} ({Id}) in DPLB file.", clue.Name.English ?? clue.Name.French ?? clue.Name.Spanish ?? "???", clue.ClueId);
+                _logger.LogWarning("Could not find clue {Name} ({Id}) in DPLB file.", nameEn ?? nameFr ?? nameEs ?? "???", poi.PoiId);
                 continue;
             }
 
-            dplbClueToGameClueMapping[hint.ClueId] = clue.ClueId;
+            dplbClueToGameClueMapping[hint.ClueId] = poi.PoiId;
         }
 
         Dictionary<long, ClueRecord[]> result = new();
@@ -164,10 +173,10 @@ public class RefreshDplnDataSource : PeriodicService
                 return [];
             }
 
-            Map[] maps = _mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
+            MapPositions[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
             int[] clueIds = clues.Clues.Where(c => dplbClueToGameClueMapping.ContainsKey(c)).Select(c => dplbClueToGameClueMapping[c]).ToArray();
 
-            foreach (Map map in maps)
+            foreach (MapPositions map in maps)
             {
                 result[map.MapId] = clueIds.Select(c => new ClueRecord { MapId = map.MapId, ClueId = c, RecordDate = date, Found = true }).ToArray();
             }

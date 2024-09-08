@@ -20,6 +20,8 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         _logger = logger;
     }
 
+    public event EventHandler? LatestVersionChanged;
+
     public Task<string> GetLatestVersionAsync() =>
         Task.FromResult(GetActualVersions().OrderDescending().FirstOrDefault() ?? throw new NotFoundException("Could not find any version."));
 
@@ -27,13 +29,13 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
     public Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
     {
-        string? versionDirectory = GetVersionDirectory(version);
-        if (versionDirectory == null)
+        string? actualVersion = GetActualVersion(version);
+        if (actualVersion == null)
         {
             throw new NotFoundException($"Could not find data for version {version}.");
         }
 
-        string versionPath = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, versionDirectory);
+        string versionPath = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, actualVersion);
         if (!Directory.Exists(versionPath))
         {
             throw new NotFoundException($"Could not find data for version {version}.");
@@ -45,7 +47,7 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             throw new NotFoundException($"Could not find data for for type {type} in version {version}.");
         }
 
-        return Task.FromResult<IRawDataFile>(new File(path));
+        return Task.FromResult<IRawDataFile>(new File(path, actualVersion));
     }
 
     public async Task<SavedDataSummary> GetSavedDataSummaryAsync(CancellationToken cancellationToken = default)
@@ -70,6 +72,8 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
     public async Task SaveRawDataFilesAsync(DownloadDataFromGithubReleases.Release release, string gameVersion, ZipArchive archive, CancellationToken cancellationToken = default)
     {
+        string? oldLatest = GetActualVersion("latest");
+
         _logger.LogInformation("Saving data from release {Name} containing version {Version}.", release.Name, gameVersion);
 
         string path = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, gameVersion);
@@ -92,9 +96,14 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             await using Stream entryStream = entry.Open();
             await entryStream.CopyToAsync(file, cancellationToken);
         }
+
+        if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
+        {
+            LatestVersionChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
-    string? GetVersionDirectory(string version) =>
+    string? GetActualVersion(string version) =>
         version switch
         {
             "latest" => GetActualVersions().OrderDescending().FirstOrDefault(),
@@ -143,13 +152,15 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
     {
         readonly string _filepath;
 
-        public File(string filepath)
+        public File(string filepath, string version)
         {
             _filepath = filepath;
+            Version = version;
             Name = Path.GetFileName(filepath);
         }
 
         public string Name { get; }
+        public string Version { get; }
         public string ContentType { get; } = "application/json";
         public Stream OpenRead() => System.IO.File.OpenRead(_filepath);
     }

@@ -1,21 +1,22 @@
-﻿using Server.Domains.TreasureSolver.Models;
+﻿using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Services.Maps;
+using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues;
-using Server.Domains.TreasureSolver.Services.Maps;
 
 namespace Server.Domains.TreasureSolver.Services;
 
 public class TreasureSolverService
 {
     readonly FindCluesService _findCluesService;
-    readonly IMapsService _mapsService;
+    readonly MapsServiceFactory _mapsServiceFactory;
 
-    public TreasureSolverService(FindCluesService findCluesService, IMapsService mapsService)
+    public TreasureSolverService(FindCluesService findCluesService, MapsServiceFactory mapsServiceFactory)
     {
         _findCluesService = findCluesService;
-        _mapsService = mapsService;
+        _mapsServiceFactory = mapsServiceFactory;
     }
 
-    public async Task<Map?> FindNextMapAsync(Map startMap, Direction direction, int clueId)
+    public async Task<MapPositions?> FindNextMapAsync(MapPositions startMap, Direction direction, int clueId)
     {
         Position position = new(startMap.PosX, startMap.PosY);
         for (int i = 0; i < 10; i++)
@@ -24,7 +25,7 @@ public class TreasureSolverService
             IReadOnlyCollection<Clue> clues = await _findCluesService.FindCluesAtPositionAsync(position.X, position.Y);
             if (clues.Any(c => c.ClueId == clueId))
             {
-                return GuessTargetMap(startMap, position);
+                return await GuessTargetMapAsync(startMap, position);
             }
         }
 
@@ -47,9 +48,10 @@ public class TreasureSolverService
         return null;
     }
 
-    Map? GuessTargetMap(Map startMap, Position position)
+    async Task<MapPositions?> GuessTargetMapAsync(MapPositions startMap, Position position)
     {
-        Map[] maps = _mapsService.GetMapsAtPosition(position).ToArray();
+        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        MapPositions[] maps = mapsService.GetMapsAtPosition(position).ToArray();
         return maps.FirstOrDefault(m => m.WorldMap == startMap.WorldMap) ?? maps.FirstOrDefault();
     }
 }

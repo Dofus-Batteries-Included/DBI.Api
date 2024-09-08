@@ -8,6 +8,8 @@ namespace Server.Domains.DataCenter.Repositories;
 /// </summary>
 public interface IRawDataRepository
 {
+    event EventHandler LatestVersionChanged;
+
     /// <summary>
     ///     Get the latest available version in the repository.
     /// </summary>

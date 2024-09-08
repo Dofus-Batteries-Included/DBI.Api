@@ -1,30 +1,36 @@
-﻿using Server.Domains.TreasureSolver.Models;
+﻿using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Services.I18N;
+using Server.Domains.DataCenter.Services.Maps;
+using Server.Domains.DataCenter.Services.PointOfInterests;
+using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues.DataSources;
-using Server.Domains.TreasureSolver.Services.Maps;
 
 namespace Server.Domains.TreasureSolver.Services.Clues;
 
 public class FindCluesService
 {
     readonly IClueRecordsSource[] _sources;
-    readonly ICluesService _cluesService;
-    readonly IMapsService _mapsService;
     readonly StaticCluesDataSourcesService _staticCluesDataSourcesService;
+    readonly LanguagesServiceFactory _languagesServiceFactory;
+    readonly PointOfInterestsServiceFactory _pointOfInterestsServiceFactory;
+    readonly MapsServiceFactory _mapsServiceFactory;
 
     public FindCluesService(
         IEnumerable<IClueRecordsSource> sources,
         StaticCluesDataSourcesService staticCluesDataSourcesService,
-        ICluesService cluesService,
-        IMapsService mapsService
+        LanguagesServiceFactory languagesServiceFactory,
+        PointOfInterestsServiceFactory pointOfInterestsServiceFactory,
+        MapsServiceFactory mapsServiceFactory
     )
     {
         _staticCluesDataSourcesService = staticCluesDataSourcesService;
-        _cluesService = cluesService;
-        _mapsService = mapsService;
+        _languagesServiceFactory = languagesServiceFactory;
+        _pointOfInterestsServiceFactory = pointOfInterestsServiceFactory;
+        _mapsServiceFactory = mapsServiceFactory;
         _sources = sources.ToArray();
     }
 
-    public async Task<DateTime?> GetLastModificationDate()
+    public async Task<DateTime?> GetLastModificationDateAsync()
     {
         DateTime?[] dates = await Task.WhenAll(GetDataSources().Select(s => s.GetLastModificationDate()));
         return dates.Max();
@@ -39,12 +45,13 @@ public class FindCluesService
             results.AddRange(cluesInMap);
         }
 
-        return GetCluesFromRecords(results);
+        return await GetCluesFromRecordsAsync(results);
     }
 
     public async Task<IReadOnlyCollection<Clue>> FindCluesAtPositionAsync(int posX, int posY)
     {
-        long[] mapIds = _mapsService.GetMaps().Where(m => m.PosX == posX && m.PosY == posY).Select(m => m.MapId).ToArray();
+        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        long[] mapIds = mapsService.GetMaps().Where(m => m.PosX == posX && m.PosY == posY).Select(m => m.MapId).ToArray();
 
         List<ClueRecord> results = [];
         foreach (long mapId in mapIds)
@@ -54,17 +61,19 @@ public class FindCluesService
             results.AddRange(cluesInMap);
         }
 
-        return GetCluesFromRecords(results);
+        return await GetCluesFromRecordsAsync(results);
     }
 
-    IReadOnlyCollection<Clue> GetCluesFromRecords(IEnumerable<ClueRecord> results)
+    async Task<IReadOnlyCollection<Clue>> GetCluesFromRecordsAsync(IEnumerable<ClueRecord> results)
     {
+        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService();
+        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreatePointOfInterestsService();
         ClueRecord[] records = results.GroupBy(r => r.ClueId).Select(g => g.OrderByDescending(r => r.RecordDate).First()).Where(r => r.Found).ToArray();
         return records.Select(
                 r =>
                 {
-                    Clue? clue = _cluesService.GetClue(r.ClueId);
-                    return new Clue { ClueId = r.ClueId, Name = clue?.Name ?? new LocalizedText() };
+                    PointOfInterest? poi = pointOfInterestsService.GetPointOfInterest(r.ClueId);
+                    return new Clue { ClueId = r.ClueId, Name = poi != null ? languagesService.Get(poi.NameId) : new LocalizedText() };
                 }
             )
             .ToArray();

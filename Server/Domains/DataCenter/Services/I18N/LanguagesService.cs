@@ -1,28 +1,28 @@
 ﻿using Server.Domains.TreasureSolver.Models;
 
-namespace Server.Domains.TreasureSolver.Services.I18N;
+namespace Server.Domains.DataCenter.Services.I18N;
 
 public class LanguagesService
 {
-    public LanguageService French { get; } = new("fr");
-    public LanguageService English { get; } = new("en");
-    public LanguageService Spanish { get; } = new("es");
-    public LanguageService German { get; } = new("de");
-    public LanguageService Portuguese { get; } = new("pt");
+    public required LanguageService French { get; init; }
+    public required LanguageService English { get; init; }
+    public required LanguageService Spanish { get; init; }
+    public required LanguageService German { get; init; }
+    public required LanguageService Portuguese { get; init; }
 }
 
 public class LanguageService
 {
-    IReadOnlyDictionary<int, string> _table = new Dictionary<int, string>();
+    readonly Dictionary<int, string> _table;
 
-    public LanguageService(string language)
+    public LanguageService(string language, Dictionary<int, string> table)
     {
         Language = language;
+        _table = table;
     }
 
     public string Language { get; }
     public string? Get(int id) => _table.GetValueOrDefault(id);
-    public void SetTable(IReadOnlyDictionary<int, string> table) => _table = table;
 }
 
 public static class LanguagesServiceExtensions

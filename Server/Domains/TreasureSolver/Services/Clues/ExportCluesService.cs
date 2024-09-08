@@ -1,9 +1,12 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
+using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Services.I18N;
+using Server.Domains.DataCenter.Services.Maps;
+using Server.Domains.DataCenter.Services.PointOfInterests;
 using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues.DataSources;
-using Server.Domains.TreasureSolver.Services.Maps;
 using Server.Infrastructure.Repository;
 
 namespace Server.Domains.TreasureSolver.Services.Clues;
@@ -16,8 +19,9 @@ public class ExportCluesService
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
     readonly FindCluesService _findCluesService;
-    readonly ICluesService _cluesService;
-    readonly IMapsService _mapsService;
+    readonly LanguagesServiceFactory _languagesServiceFactory;
+    readonly PointOfInterestsServiceFactory _pointOfInterestsServiceFactory;
+    readonly MapsServiceFactory _mapsServiceFactory;
     readonly IEnumerable<IClueRecordsSource> _sources;
     readonly StaticCluesDataSourcesService _staticCluesDataSourcesService;
     readonly IOptions<RepositoryOptions> _repositoryOptions;
@@ -25,8 +29,9 @@ public class ExportCluesService
 
     public ExportCluesService(
         FindCluesService findCluesService,
-        ICluesService cluesService,
-        IMapsService mapsService,
+        LanguagesServiceFactory languagesServiceFactory,
+        PointOfInterestsServiceFactory pointOfInterestsServiceFactory,
+        MapsServiceFactory mapsServiceFactory,
         IEnumerable<IClueRecordsSource> sources,
         StaticCluesDataSourcesService staticCluesDataSourcesService,
         IOptions<RepositoryOptions> repositoryOptions,
@@ -34,9 +39,10 @@ public class ExportCluesService
     )
     {
         _findCluesService = findCluesService;
+        _languagesServiceFactory = languagesServiceFactory;
+        _pointOfInterestsServiceFactory = pointOfInterestsServiceFactory;
+        _mapsServiceFactory = mapsServiceFactory;
         _logger = logger;
-        _cluesService = cluesService;
-        _mapsService = mapsService;
         _sources = sources;
         _staticCluesDataSourcesService = staticCluesDataSourcesService;
         _repositoryOptions = repositoryOptions;
@@ -45,7 +51,7 @@ public class ExportCluesService
     public async Task<File> ExportCluesAsync()
     {
         string version = Metadata.Version?.ToString() ?? "~dev";
-        DateTime lastModificationDate = await _findCluesService.GetLastModificationDate() ?? DateTime.Now;
+        DateTime lastModificationDate = await _findCluesService.GetLastModificationDateAsync() ?? DateTime.Now;
 
         string filepath = GetExportedFilePath();
         string filename = GetExportedFileName(version, lastModificationDate);
@@ -58,8 +64,8 @@ public class ExportCluesService
             {
                 Version = version,
                 LastModificationDate = lastModificationDate,
-                Clues = GetClues(),
-                Maps = await GetMaps()
+                Clues = await GetCluesAsync(),
+                Maps = await GetMapsAsync()
             };
 
             int mapCount = content.Maps.Count;
@@ -89,24 +95,29 @@ public class ExportCluesService
     static string GetExportedFileName(string version, DateTime lastModificationDate) => $"clues_{version}_{lastModificationDate:yyyy_MM_dd_HH_mm_ss}.json";
     string GetExportedFilePath() => Path.Join(_repositoryOptions.Value.BasePath, "Clues");
 
-    FileClue[] GetClues() =>
-        _cluesService.GetClues()
+    async Task<FileClue[]> GetCluesAsync()
+    {
+        LanguagesService languages = await _languagesServiceFactory.CreateLanguagesService();
+        PointOfInterestsService pointOfInterestsService = await _pointOfInterestsServiceFactory.CreatePointOfInterestsService();
+        return pointOfInterestsService.GetPointOfInterests()
             .Select(
                 c => new FileClue
                 {
-                    ClueId = c.ClueId,
-                    NameFr = c.Name.French,
-                    NameEn = c.Name.English,
-                    NameEs = c.Name.Spanish,
-                    NameDe = c.Name.German,
-                    NamePt = c.Name.Portuguese
+                    ClueId = c.PoiId,
+                    NameFr = languages.French.Get(c.NameId),
+                    NameEn = languages.English.Get(c.NameId),
+                    NameEs = languages.Spanish.Get(c.NameId),
+                    NameDe = languages.German.Get(c.NameId),
+                    NamePt = languages.Portuguese.Get(c.NameId)
                 }
             )
             .ToArray();
+    }
 
-    async Task<Dictionary<long, FileMap>> GetMaps()
+    async Task<Dictionary<long, FileMap>> GetMapsAsync()
     {
-        var maps = _mapsService.GetMaps().Select(m => new { m.MapId, m.PosX, m.PosY }).ToArray();
+        MapsService mapsService = await _mapsServiceFactory.CreateMapsService();
+        var maps = mapsService.GetMaps().Select(m => new { m.MapId, m.PosX, m.PosY }).ToArray();
         Dictionary<long, List<ClueRecord>> clues = new();
         foreach (IClueRecordsSource source in GetDataSources())
         {
@@ -115,7 +126,7 @@ public class ExportCluesService
             {
                 if (!clues.ContainsKey(data.Key))
                 {
-                    clues[data.Key] = new List<ClueRecord>();
+                    clues[data.Key] = [];
                 }
 
                 clues[data.Key].AddRange(data.Value);
