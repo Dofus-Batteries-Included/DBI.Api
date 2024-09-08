@@ -7,7 +7,8 @@ using Server.Domains.TreasureSolver.Services;
 
 namespace Server.Domains.TreasureSolver.Controllers;
 
-[Route("/solver")]
+[Route("treasure-solver")]
+[Tags("Treasure Solver")]
 [ApiController]
 public class TreasureSolverController : ControllerBase
 {

@@ -7,7 +7,7 @@ namespace Server.Domains.DataCenter.Controllers;
 /// <summary>
 ///     Retrieve raw data in JSON files.
 /// </summary>
-[Route("ddc/versions/{gameVersion}/raw")]
+[Route("data-center/versions/{gameVersion}/raw")]
 [Tags("Raw data")]
 [ApiController]
 public class RawDataController : ControllerBase

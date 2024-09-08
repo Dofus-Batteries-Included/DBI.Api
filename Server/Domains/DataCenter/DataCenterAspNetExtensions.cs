@@ -28,7 +28,7 @@ public static class DataCenterAspNetExtensions
         services.AddOpenApiDocument(
             settings =>
             {
-                settings.DocumentName = "ddc";
+                settings.DocumentName = "data-center";
                 settings.Title = "Dofus Data Center - API";
                 settings.Description = "Data extracted from Dofus.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";

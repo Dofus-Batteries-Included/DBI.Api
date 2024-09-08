@@ -7,7 +7,8 @@ namespace Server.Domains.DataCenter.Controllers;
 /// <summary>
 ///     Retrieve the available game versions.
 /// </summary>
-[Route("ddc/game-versions")]
+[Route("data-center/game-versions")]
+[Tags("Game versions")]
 [ApiController]
 public class GameVersionsController : ControllerBase
 {
