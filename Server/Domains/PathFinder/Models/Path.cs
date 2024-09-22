@@ -1,10 +1,12 @@
-﻿namespace Server.Domains.PathFinder.Models;
+﻿using Server.Common.Models;
+
+namespace Server.Domains.PathFinder.Models;
 
 public class Path
 {
     public required long FromMapId { get; init; }
+    public required Position? FromMapPosition { get; init; }
     public required long ToMapId { get; init; }
+    public required Position? ToMapPosition { get; init; }
     public required IReadOnlyCollection<PathStep> Steps { get; init; }
-
-    public static Path Empty(long mapId) => new() { FromMapId = mapId, ToMapId = mapId, Steps = [] };
 }
