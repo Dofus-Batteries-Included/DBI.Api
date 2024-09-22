@@ -1,4 +1,4 @@
-﻿using Server.Domains.TreasureSolver.Models;
+﻿using Server.Common.Models;
 
 namespace Server.Domains.DataCenter.Models;
 

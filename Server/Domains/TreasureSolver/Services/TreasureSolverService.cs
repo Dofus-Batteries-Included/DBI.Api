@@ -1,4 +1,5 @@
-﻿using Server.Domains.DataCenter.Models;
+﻿using Server.Common.Models;
+using Server.Domains.DataCenter.Models;
 using Server.Domains.DataCenter.Services.Maps;
 using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues;

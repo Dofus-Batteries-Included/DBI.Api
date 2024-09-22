@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Server.Controllers;
+namespace Server.Common.Controllers;
 
 /// <summary>
 /// </summary>

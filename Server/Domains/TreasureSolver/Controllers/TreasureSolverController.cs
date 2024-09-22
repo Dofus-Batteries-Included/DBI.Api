@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Server.Common.Models;
 using Server.Domains.DataCenter.Models;
 using Server.Domains.DataCenter.Services.Maps;
 using Server.Domains.TreasureSolver.Controllers.Responses;
-using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services;
 
 namespace Server.Domains.TreasureSolver.Controllers;

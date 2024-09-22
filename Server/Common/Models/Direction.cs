@@ -1,4 +1,4 @@
-﻿namespace Server.Domains.TreasureSolver.Models;
+﻿namespace Server.Common.Models;
 
 public enum Direction
 {
