@@ -87,6 +87,8 @@ try
         app.UsePathBase(pathBase);
     }
 
+    app.UseExceptionHandler();
+
     app.UseOpenApi();
     app.UseSwaggerUi(settings => { settings.PersistAuthorization = true; });
 

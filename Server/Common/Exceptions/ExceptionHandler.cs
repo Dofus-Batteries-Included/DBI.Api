@@ -12,6 +12,8 @@ class ExceptionHandler : IExceptionHandler
         _problemDetailsService = problemDetailsService;
     }
 
+    public bool ShowException { get; set; }
+
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         int statusCode = exception switch
@@ -22,20 +24,27 @@ class ExceptionHandler : IExceptionHandler
         };
 
         httpContext.Response.StatusCode = statusCode;
-        await _problemDetailsService.TryWriteAsync(
-            new ProblemDetailsContext
-            {
-                HttpContext = httpContext,
-                ProblemDetails = new ProblemDetails
-                {
-                    Title = "An error occurred while processing your request.",
-                    Status = statusCode,
-                    Detail = exception.Message
-                },
-                Exception = exception
-            }
-        );
+        ProblemDetails problemDetails = new()
+        {
+            Type = "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.5",
+            Title = "An error occurred while processing your request.",
+            Status = statusCode,
+            Detail = exception.Message
+        };
 
+        if (await _problemDetailsService.TryWriteAsync(
+                new ProblemDetailsContext
+                {
+                    HttpContext = httpContext,
+                    ProblemDetails = problemDetails,
+                    Exception = ShowException ? exception : null
+                }
+            ))
+        {
+            return true;
+        }
+
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
         return true;
     }
 }

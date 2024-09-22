@@ -28,6 +28,7 @@ public class RawDataController : ControllerBase
     [HttpGet("i18n/{lang}")]
     [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<FileResult> GetI18N(Language lang, string gameVersion = "latest")
     {
         RawDataType type = lang switch
@@ -53,6 +54,7 @@ public class RawDataController : ControllerBase
     [HttpGet("map-positions")]
     [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<FileResult> GetMapPositions(string gameVersion = "latest")
     {
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.MapPositions);
@@ -68,9 +70,74 @@ public class RawDataController : ControllerBase
     [HttpGet("points-of-interest")]
     [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<FileResult> GetPointsOfInterest(string gameVersion = "latest")
     {
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.PointOfInterest);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get world graph data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("world-graph")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetWorldGraph(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.WorldGraph);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get super areas data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("super-areas")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetSuperAreas(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.SuperAreas);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get areas data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("areas")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetAreas(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Areas);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get sub areas data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("sub-areas")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetSubAreas(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.SubAreas);
         return File(file.OpenRead(), file.ContentType, file.Name);
     }
 }
