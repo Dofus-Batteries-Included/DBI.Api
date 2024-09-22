@@ -129,7 +129,7 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
     IEnumerable<string> GetActualVersions() =>
         Directory.Exists(_repositoryOptions.Value.DataCenterRawDataPath)
-            ? Directory.EnumerateDirectories(_repositoryOptions.Value.DataCenterRawDataPath).Select(Path.GetFileName).OfType<string>()
+            ? Directory.EnumerateDirectories(_repositoryOptions.Value.DataCenterRawDataPath).Select(Path.GetFileName).OfType<string>().Order()
             : [];
 
     async Task WriteDdcMetadataAsync(DownloadDataFromGithubReleases.Release release, string directory, CancellationToken cancellationToken)
