@@ -38,5 +38,25 @@ public enum RawDataType
     /// <summary>
     ///     Points of interest data
     /// </summary>
-    PointOfInterest
+    PointOfInterest,
+
+    /// <summary>
+    ///     World graph data
+    /// </summary>
+    WorldGraph,
+
+    /// <summary>
+    ///     Super areas data
+    /// </summary>
+    SuperAreas,
+
+    /// <summary>
+    ///     Areas data
+    /// </summary>
+    Areas,
+
+    /// <summary>
+    ///     Sub areas data
+    /// </summary>
+    SubAreas
 }

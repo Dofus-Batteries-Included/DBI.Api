@@ -32,19 +32,19 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         string? actualVersion = GetActualVersion(version);
         if (actualVersion == null)
         {
-            throw new NotFoundException($"Could not find data for version {version}.");
+            throw new NotFoundException($"Could not find data for version {actualVersion}.");
         }
 
         string versionPath = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, actualVersion);
         if (!Directory.Exists(versionPath))
         {
-            throw new NotFoundException($"Could not find data for version {version}.");
+            throw new NotFoundException($"Could not find data for version {actualVersion}.");
         }
 
         string path = Path.Join(versionPath, GetFilename(type));
         if (!Path.Exists(path))
         {
-            throw new NotFoundException($"Could not find data for for type {type} in version {version}.");
+            throw new NotFoundException($"Could not find data for {type} in version {actualVersion}.");
         }
 
         return Task.FromResult<IRawDataFile>(new File(path, actualVersion));
@@ -120,6 +120,10 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.I18NPt => "pt.i18n.json",
             RawDataType.MapPositions => "map-positions.json",
             RawDataType.PointOfInterest => "point-of-interest.json",
+            RawDataType.WorldGraph => "world-graph.json",
+            RawDataType.SuperAreas => "super-areas.json",
+            RawDataType.Areas => "areas.json",
+            RawDataType.SubAreas => "sub-areas.json",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 
