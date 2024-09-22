@@ -17,7 +17,7 @@ public class TreasureSolverService
         _mapsServiceFactory = mapsServiceFactory;
     }
 
-    public async Task<MapPosition?> FindNextMapAsync(MapPosition startMap, Direction direction, int clueId)
+    public async Task<RawMapPosition?> FindNextMapAsync(RawMapPosition startMap, Direction direction, int clueId)
     {
         Position position = new(startMap.PosX, startMap.PosY);
         for (int i = 0; i < 10; i++)
@@ -49,10 +49,10 @@ public class TreasureSolverService
         return null;
     }
 
-    async Task<MapPosition?> GuessTargetMapAsync(MapPosition startMap, Position position)
+    async Task<RawMapPosition?> GuessTargetMapAsync(RawMapPosition startMap, Position position)
     {
         MapsService mapsService = await _mapsServiceFactory.CreateService();
-        MapPosition[] maps = mapsService.GetMapsAtPosition(position).ToArray();
+        RawMapPosition[] maps = mapsService.GetMapsAtPosition(position).ToArray();
         return maps.FirstOrDefault(m => m.WorldMap == startMap.WorldMap) ?? maps.FirstOrDefault();
     }
 }

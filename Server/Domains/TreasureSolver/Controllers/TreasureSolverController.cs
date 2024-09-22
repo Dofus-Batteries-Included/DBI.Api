@@ -28,13 +28,13 @@ public class TreasureSolverController : ControllerBase
     public async Task<ActionResult<FindNextMapResponse>> FindNextMap(long startMapId, Direction direction, int clueId)
     {
         MapsService mapService = await _mapsServiceFactory.CreateService();
-        MapPosition? startMap = mapService.GetMap(startMapId);
+        RawMapPosition? startMap = mapService.GetMap(startMapId);
         if (startMap is null)
         {
             return BadRequest("Invalid start map.");
         }
 
-        MapPosition? result = await _solver.FindNextMapAsync(startMap, direction, clueId);
+        RawMapPosition? result = await _solver.FindNextMapAsync(startMap, direction, clueId);
         return new FindNextMapResponse
         {
             Found = result != null,

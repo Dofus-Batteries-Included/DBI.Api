@@ -1,6 +1,6 @@
 namespace Server.Domains.DataCenter.Models;
 
-public class MapPosition
+public class RawMapPosition
 {
     public long MapId { get; init; }
     public int PosX { get; init; }

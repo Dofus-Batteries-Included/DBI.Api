@@ -2,5 +2,5 @@
 
 public static class MapPositionExtensions
 {
-    public static int DistanceTo(this MapPosition map, MapPosition otherMap) => Math.Abs(map.PosX - otherMap.PosX) + Math.Abs(map.PosX - otherMap.PosY);
+    public static int DistanceTo(this RawMapPosition map, RawMapPosition otherMap) => Math.Abs(map.PosX - otherMap.PosX) + Math.Abs(map.PosX - otherMap.PosY);
 }

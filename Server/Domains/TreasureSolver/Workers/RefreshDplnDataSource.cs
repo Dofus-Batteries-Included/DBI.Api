@@ -134,14 +134,14 @@ public class RefreshDplnDataSource : PeriodicService
         using IServiceScope scope = _scopeFactory.CreateScope();
         await using ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        PointOfInterest[] allPois = cluesService.GetPointOfInterests().ToArray();
+        RawPointOfInterest[] allPois = cluesService.GetPointOfInterests().ToArray();
         if (stoppingToken.IsCancellationRequested)
         {
             return [];
         }
 
         Dictionary<int, int> dplbClueToGameClueMapping = new();
-        foreach (PointOfInterest poi in allPois)
+        foreach (RawPointOfInterest poi in allPois)
         {
             string? nameFr = languagesService.French.Get(poi.NameId);
             string? nameEn = languagesService.English.Get(poi.NameId);
@@ -173,10 +173,10 @@ public class RefreshDplnDataSource : PeriodicService
                 return [];
             }
 
-            MapPosition[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
+            RawMapPosition[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
             int[] clueIds = clues.Clues.Where(c => dplbClueToGameClueMapping.ContainsKey(c)).Select(c => dplbClueToGameClueMapping[c]).ToArray();
 
-            foreach (MapPosition map in maps)
+            foreach (RawMapPosition map in maps)
             {
                 result[map.MapId] = clueIds.Select(c => new ClueRecord { MapId = map.MapId, ClueId = c, RecordDate = date, Found = true }).ToArray();
             }

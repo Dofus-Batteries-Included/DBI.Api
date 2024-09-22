@@ -1,6 +1,6 @@
 namespace Server.Domains.DataCenter.Models;
 
-public class PointOfInterest
+public class RawPointOfInterest
 {
     public int PoiId { get; init; }
     public int NameId { get; init; }

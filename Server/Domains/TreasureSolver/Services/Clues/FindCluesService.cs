@@ -73,7 +73,7 @@ public class FindCluesService
         return records.Select(
                 r =>
                 {
-                    PointOfInterest? poi = pointOfInterestsService.GetPointOfInterest(r.ClueId);
+                    RawPointOfInterest? poi = pointOfInterestsService.GetPointOfInterest(r.ClueId);
                     return new Clue { ClueId = r.ClueId, Name = poi != null ? languagesService.Get(poi.NameId) : new LocalizedText() };
                 }
             )

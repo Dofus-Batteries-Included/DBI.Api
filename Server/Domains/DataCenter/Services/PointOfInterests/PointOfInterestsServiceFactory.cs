@@ -16,7 +16,7 @@ public class PointOfInterestsServiceFactory : ParsedDataServiceFactory<PointOfIn
     protected override async Task<PointOfInterestsService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
         await using Stream stream = file.OpenRead();
-        PointOfInterest[]? data = await JsonSerializer.DeserializeAsync<PointOfInterest[]>(stream, _jsonSerializerOptions, cancellationToken);
+        RawPointOfInterest[]? data = await JsonSerializer.DeserializeAsync<RawPointOfInterest[]>(stream, _jsonSerializerOptions, cancellationToken);
         return data == null ? null : new PointOfInterestsService(data);
     }
 }
