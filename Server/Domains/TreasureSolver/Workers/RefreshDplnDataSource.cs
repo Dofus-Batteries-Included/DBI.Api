@@ -173,10 +173,10 @@ public class RefreshDplnDataSource : PeriodicService
                 return [];
             }
 
-            MapPositions[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
+            MapPosition[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
             int[] clueIds = clues.Clues.Where(c => dplbClueToGameClueMapping.ContainsKey(c)).Select(c => dplbClueToGameClueMapping[c]).ToArray();
 
-            foreach (MapPositions map in maps)
+            foreach (MapPosition map in maps)
             {
                 result[map.MapId] = clueIds.Select(c => new ClueRecord { MapId = map.MapId, ClueId = c, RecordDate = date, Found = true }).ToArray();
             }

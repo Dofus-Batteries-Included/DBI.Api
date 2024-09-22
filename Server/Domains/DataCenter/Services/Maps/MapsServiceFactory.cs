@@ -16,7 +16,7 @@ public class MapsServiceFactory : ParsedDataServiceFactory<MapsService>
     protected override async Task<MapsService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
         await using Stream stream = file.OpenRead();
-        MapPositions[]? data = await JsonSerializer.DeserializeAsync<MapPositions[]>(stream, _jsonSerializerOptions, cancellationToken);
+        MapPosition[]? data = await JsonSerializer.DeserializeAsync<MapPosition[]>(stream, _jsonSerializerOptions, cancellationToken);
         return data == null ? null : new MapsService(data);
     }
 }

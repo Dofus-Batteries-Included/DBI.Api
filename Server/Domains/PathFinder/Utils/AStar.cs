@@ -158,13 +158,13 @@ class AStar
 
     int ComputeDistance(WorldGraphNode from, WorldGraphNode to)
     {
-        MapPositions? fromMap = _mapsService.GetMap(from.MapId);
+        MapPosition? fromMap = _mapsService.GetMap(from.MapId);
         if (fromMap is null)
         {
             return 0;
         }
 
-        MapPositions? toMap = _mapsService.GetMap(to.MapId);
+        MapPosition? toMap = _mapsService.GetMap(to.MapId);
         if (toMap == null)
         {
             return 0;
