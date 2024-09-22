@@ -1,3 +1,4 @@
+using Server.Common.Models;
 using Server.Domains.DataCenter.Models;
 
 namespace Server.Domains.DataCenter.Services.Maps;

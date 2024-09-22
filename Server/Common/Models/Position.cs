@@ -1,6 +1,4 @@
-﻿using Server.Common.Models;
-
-namespace Server.Domains.DataCenter.Models;
+﻿namespace Server.Common.Models;
 
 public record struct Position(int X, int Y);
 
