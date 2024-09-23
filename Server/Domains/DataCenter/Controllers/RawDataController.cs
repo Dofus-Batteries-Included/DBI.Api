@@ -62,6 +62,22 @@ public class RawDataController : ControllerBase
     }
 
     /// <summary>
+    ///     Get map coordinates data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("map-coordinates")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetMapCoordinates(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.MapCoordinates);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
     ///     Get points of interest data
     /// </summary>
     /// <remarks>
@@ -138,6 +154,22 @@ public class RawDataController : ControllerBase
     public async Task<FileResult> GetSubAreas(string gameVersion = "latest")
     {
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.SubAreas);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get maps data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("maps")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetMaps(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Maps);
         return File(file.OpenRead(), file.ContentType, file.Name);
     }
 }

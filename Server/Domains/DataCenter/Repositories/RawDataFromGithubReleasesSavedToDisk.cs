@@ -119,11 +119,13 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.I18NDe => "de.i18n.json",
             RawDataType.I18NPt => "pt.i18n.json",
             RawDataType.MapPositions => "map-positions.json",
+            RawDataType.MapCoordinates => "map-coordinates.json",
             RawDataType.PointOfInterest => "point-of-interest.json",
             RawDataType.WorldGraph => "world-graph.json",
             RawDataType.SuperAreas => "super-areas.json",
             RawDataType.Areas => "areas.json",
             RawDataType.SubAreas => "sub-areas.json",
+            RawDataType.Maps => "maps.json",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 

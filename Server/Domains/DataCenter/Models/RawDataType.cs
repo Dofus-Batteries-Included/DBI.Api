@@ -36,6 +36,11 @@ public enum RawDataType
     MapPositions,
 
     /// <summary>
+    ///     Map coordinates data
+    /// </summary>
+    MapCoordinates,
+
+    /// <summary>
     ///     Points of interest data
     /// </summary>
     PointOfInterest,
@@ -58,5 +63,10 @@ public enum RawDataType
     /// <summary>
     ///     Sub areas data
     /// </summary>
-    SubAreas
+    SubAreas,
+
+    /// <summary>
+    ///     Maps data
+    /// </summary>
+    Maps
 }
