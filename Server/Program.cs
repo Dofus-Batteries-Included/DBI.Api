@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -50,9 +51,11 @@ try
             }
         );
     builder.Services.AddControllersWithViews();
+    builder.Services.AddResponseCompression();
     builder.Services.AddProblemDetails();
     builder.Services.AddExceptionHandler<ExceptionHandler>();
     builder.Services.AddHttpClient();
+
 
     builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, opt => { });
     builder.Services.AddAuthorization();
@@ -93,6 +96,7 @@ try
     app.UseSwaggerUi(settings => { settings.PersistAuthorization = true; });
 
     app.UseAuthorization();
+    app.UseResponseCompression();
 
     app.MapDefaultControllerRoute();
 
