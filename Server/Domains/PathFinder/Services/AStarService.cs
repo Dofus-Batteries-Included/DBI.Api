@@ -1,8 +1,8 @@
 ﻿using Server.Common.Models;
 using Server.Domains.DataCenter.Models.Maps;
 using Server.Domains.DataCenter.Models.WorldGraphs;
-using Server.Domains.DataCenter.Services.Maps;
-using Server.Domains.DataCenter.Services.WorldGraphs;
+using Server.Domains.DataCenter.Raw.Services.Maps;
+using Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 using Server.Domains.PathFinder.Models;
 using Enumerable = System.Linq.Enumerable;
 using Path = Server.Domains.PathFinder.Models.Path;

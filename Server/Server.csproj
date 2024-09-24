@@ -35,6 +35,11 @@
       <_ContentIncludedByDefault Remove="Domains\DataCenter\Views\Home\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Domains\DataCenter\Raw\Services\" />
+      <Folder Include="Domains\DataCenter\Services\" />
+    </ItemGroup>
+
     <PropertyGroup>
         <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>

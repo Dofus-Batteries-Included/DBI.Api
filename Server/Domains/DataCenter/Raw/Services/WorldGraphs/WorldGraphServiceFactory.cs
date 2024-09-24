@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using Server.Domains.DataCenter.Models.Raw;
 using Server.Domains.DataCenter.Models.WorldGraphs;
+using Server.Domains.DataCenter.Raw.Models;
+using Server.Domains.DataCenter.Raw.Services.Internal;
 using Server.Domains.DataCenter.Repositories;
-using Server.Domains.DataCenter.Services.Internal;
 
-namespace Server.Domains.DataCenter.Services.WorldGraphs;
+namespace Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 
 public class WorldGraphServiceFactory : ParsedDataServiceFactory<WorldGraphService>
 {

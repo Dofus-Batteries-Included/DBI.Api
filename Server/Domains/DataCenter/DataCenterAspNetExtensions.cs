@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Server.Common.OpenApi;
+using Server.Domains.DataCenter.Raw.Services.I18N;
+using Server.Domains.DataCenter.Raw.Services.Maps;
+using Server.Domains.DataCenter.Raw.Services.PointOfInterests;
 using Server.Domains.DataCenter.Repositories;
-using Server.Domains.DataCenter.Services.I18N;
-using Server.Domains.DataCenter.Services.Maps;
-using Server.Domains.DataCenter.Services.PointOfInterests;
 using Server.Domains.DataCenter.Workers;
 using Server.Infrastructure.Repository;
 

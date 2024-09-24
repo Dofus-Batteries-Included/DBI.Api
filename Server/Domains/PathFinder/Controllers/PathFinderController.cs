@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Domains.DataCenter.Services.Maps;
-using Server.Domains.DataCenter.Services.WorldGraphs;
+using Server.Domains.DataCenter.Raw.Services.Maps;
+using Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 using Server.Domains.PathFinder.Controllers.Responses;
 using Server.Domains.PathFinder.Services;
 

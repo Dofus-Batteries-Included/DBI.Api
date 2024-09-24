@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 using Server.Common.Exceptions;
-using Server.Domains.DataCenter.Models.Raw;
+using Server.Domains.DataCenter.Raw.Models;
 using Server.Domains.DataCenter.Workers;
 using Server.Infrastructure.Repository;
 

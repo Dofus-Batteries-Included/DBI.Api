@@ -1,6 +1,6 @@
 ﻿using Server.Domains.DataCenter.Models.WorldGraphs;
 
-namespace Server.Domains.DataCenter.Services.WorldGraphs;
+namespace Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 
 public class WorldGraphService(WorldGraph data)
 {

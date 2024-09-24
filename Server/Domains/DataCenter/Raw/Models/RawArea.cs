@@ -1,6 +1,6 @@
 ﻿using Server.Common.Models;
 
-namespace Server.Domains.DataCenter.Models.Raw;
+namespace Server.Domains.DataCenter.Raw.Models;
 
 public class RawArea
 {

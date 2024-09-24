@@ -1,6 +1,6 @@
-﻿using Server.Domains.DataCenter.Models.Raw;
+﻿using Server.Domains.DataCenter.Raw.Models;
 
-namespace Server.Domains.DataCenter.Services.Maps;
+namespace Server.Domains.DataCenter.Raw.Services.Maps;
 
 public class RawMapsService(Dictionary<long, RawMap> maps)
 {

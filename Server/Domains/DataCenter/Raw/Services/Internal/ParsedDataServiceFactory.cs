@@ -1,7 +1,7 @@
-﻿using Server.Domains.DataCenter.Models.Raw;
+﻿using Server.Domains.DataCenter.Raw.Models;
 using Server.Domains.DataCenter.Repositories;
 
-namespace Server.Domains.DataCenter.Services.Internal;
+namespace Server.Domains.DataCenter.Raw.Services.Internal;
 
 public abstract class ParsedDataServiceFactory<TService>
 {

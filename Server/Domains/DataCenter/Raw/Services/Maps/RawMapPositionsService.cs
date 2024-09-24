@@ -1,7 +1,7 @@
 using Server.Common.Models;
-using Server.Domains.DataCenter.Models.Raw;
+using Server.Domains.DataCenter.Raw.Models;
 
-namespace Server.Domains.DataCenter.Services.Maps;
+namespace Server.Domains.DataCenter.Raw.Services.Maps;
 
 public class RawMapPositionsService(IReadOnlyCollection<RawMapPosition> maps)
 {

@@ -1,6 +1,6 @@
 ﻿using Server.Common.Models;
 
-namespace Server.Domains.DataCenter.Services.I18N;
+namespace Server.Domains.DataCenter.Raw.Services.I18N;
 
 public class LanguagesService
 {

@@ -1,6 +1,6 @@
-﻿using Server.Domains.DataCenter.Models.Raw;
+﻿using Server.Domains.DataCenter.Raw.Models;
 
-namespace Server.Domains.DataCenter.Services.PointOfInterests;
+namespace Server.Domains.DataCenter.Raw.Services.PointOfInterests;
 
 public class RawPointOfInterestsService(IReadOnlyCollection<RawPointOfInterest> pois)
 {

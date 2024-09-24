@@ -2,9 +2,9 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using Server.Common.Models;
-using Server.Domains.DataCenter.Services.I18N;
-using Server.Domains.DataCenter.Services.Maps;
-using Server.Domains.DataCenter.Services.PointOfInterests;
+using Server.Domains.DataCenter.Raw.Services.I18N;
+using Server.Domains.DataCenter.Raw.Services.Maps;
+using Server.Domains.DataCenter.Raw.Services.PointOfInterests;
 using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues.DataSources;
 using Server.Infrastructure.Repository;
