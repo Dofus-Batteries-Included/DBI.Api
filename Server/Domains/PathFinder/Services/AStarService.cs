@@ -85,7 +85,8 @@ class AStarService
 
             _knownPaths[(current.Id, targetNode.Id)] = new Path
             {
-                FromMapId = current.MapId, FromMapPosition = currentMap?.Position ?? new Position(),
+                FromMapId = current.MapId,
+                FromMapPosition = currentMap?.Position ?? new Position(),
                 ToMapId = targetNode.MapId,
                 ToMapPosition = targetMap?.Position ?? new Position(),
                 Steps = Enumerable.Reverse(result).ToArray()
@@ -101,21 +102,19 @@ class AStarService
         WorldGraphEdge[] edges = _worldGraphService.GetEdges(previous.Id, current.Id).ToArray();
         WorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
 
-        WorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is WorldGraphEdgeType.Scroll);
+        WorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is WorldGraphEdgeType.Scroll or WorldGraphEdgeType.ScrollAction);
 
         if (scrollTransition is { Direction: not null })
         {
             return new ScrollStep
             {
-                FromMapId = previous.MapId,
-                FromMapPosition = previousMap?.Position,
-                ToMapId = current.MapId,
-                ToMapPosition = currentMap?.Position,
+                MapId = previous.MapId,
+                MapPosition = previousMap?.Position,
                 Direction = scrollTransition.Direction.Value
             };
         }
 
-        return new PathStep { FromMapId = previous.MapId, FromMapPosition = previousMap?.Position, ToMapId = current.MapId, ToMapPosition = currentMap?.Position };
+        return new PathStep { MapId = previous.MapId, MapPosition = previousMap?.Position };
     }
 
     bool Explore(WorldGraphNode sourceNode, WorldGraphNode targetNode, IDictionary<WorldGraphNode, WorldGraphNode> cameFrom)
