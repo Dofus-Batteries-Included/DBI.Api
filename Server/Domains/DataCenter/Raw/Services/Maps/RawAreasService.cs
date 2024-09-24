@@ -2,8 +2,10 @@
 
 namespace Server.Domains.DataCenter.Raw.Services.Maps;
 
-public class RawAreasService(Dictionary<long, RawArea> maps)
+public class RawAreasService(IReadOnlyCollection<RawArea> subAreas)
 {
-    public RawArea? GetArea(long mapId) => maps.GetValueOrDefault(mapId);
-    public IEnumerable<RawArea> GetAreas() => maps.Values;
+    readonly Dictionary<int, RawArea> _subAreas = subAreas.ToDictionary(map => map.Id, map => map);
+
+    public RawArea? GetArea(int subAreaId) => _subAreas.GetValueOrDefault(subAreaId);
+    public IEnumerable<RawArea> GetAreas() => _subAreas.Values;
 }

@@ -16,7 +16,7 @@ public class RawAreasServiceFactory : ParsedDataServiceFactory<RawAreasService>
     protected override async Task<RawAreasService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
         await using Stream stream = file.OpenRead();
-        Dictionary<long, RawArea>? data = await JsonSerializer.DeserializeAsync<Dictionary<long, RawArea>>(stream, _jsonSerializerOptions, cancellationToken);
+        RawArea[]? data = await JsonSerializer.DeserializeAsync<RawArea[]>(stream, _jsonSerializerOptions, cancellationToken);
         return data == null ? null : new RawAreasService(data);
     }
 }

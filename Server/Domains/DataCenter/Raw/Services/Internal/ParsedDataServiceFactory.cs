@@ -16,6 +16,8 @@ public abstract class ParsedDataServiceFactory<TService>
 
     protected RawDataType DataType { get; }
 
+    public async Task PreloadAsync(string version, CancellationToken cancellationToken = default) => _ = await CreateServiceAsync(version, cancellationToken);
+
     public async Task<TService> CreateServiceAsync(string version = "latest", CancellationToken cancellationToken = default)
     {
         string actualVersion = version switch
