@@ -1,5 +1,5 @@
 ﻿using Server.Common.Models;
-using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Models.Raw;
 using Server.Domains.DataCenter.Services.Maps;
 using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues;
@@ -9,12 +9,12 @@ namespace Server.Domains.TreasureSolver.Services;
 public class TreasureSolverService
 {
     readonly FindCluesService _findCluesService;
-    readonly MapsServiceFactory _mapsServiceFactory;
+    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
 
-    public TreasureSolverService(FindCluesService findCluesService, MapsServiceFactory mapsServiceFactory)
+    public TreasureSolverService(FindCluesService findCluesService, RawMapPositionsServiceFactory rawMapPositionsServiceFactory)
     {
         _findCluesService = findCluesService;
-        _mapsServiceFactory = mapsServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
     }
 
     public async Task<RawMapPosition?> FindNextMapAsync(RawMapPosition startMap, Direction direction, int clueId)
@@ -51,8 +51,8 @@ public class TreasureSolverService
 
     async Task<RawMapPosition?> GuessTargetMapAsync(RawMapPosition startMap, Position position)
     {
-        MapsService mapsService = await _mapsServiceFactory.CreateService();
-        RawMapPosition[] maps = mapsService.GetMapsAtPosition(position).ToArray();
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateService();
+        RawMapPosition[] maps = rawMapPositionsService.GetMapsAtPosition(position).ToArray();
         return maps.FirstOrDefault(m => m.WorldMap == startMap.WorldMap) ?? maps.FirstOrDefault();
     }
 }

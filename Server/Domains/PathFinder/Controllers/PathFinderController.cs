@@ -12,22 +12,22 @@ namespace Server.Domains.PathFinder.Controllers;
 public class PathFinderController : ControllerBase
 {
     readonly WorldGraphServiceFactory _worldGraphServiceFactory;
-    readonly MapsServiceFactory _mapsServiceFactory;
+    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
-    public PathFinderController(WorldGraphServiceFactory worldGraphServiceFactory, MapsServiceFactory mapsServiceFactory, ILoggerFactory loggerFactory)
+    public PathFinderController(WorldGraphServiceFactory worldGraphServiceFactory, RawMapPositionsServiceFactory rawMapPositionsServiceFactory, ILoggerFactory loggerFactory)
     {
         _worldGraphServiceFactory = worldGraphServiceFactory;
-        _mapsServiceFactory = mapsServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _loggerFactory = loggerFactory;
     }
 
     public async Task<FindPathResponse> FindPath(long fromMapId, long toMapId, CancellationToken cancellationToken = default)
     {
         WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateService(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateService(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateService(cancellationToken: cancellationToken);
 
-        AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
+        AStarService aStarService = new(worldGraphService, rawMapPositionsService, _loggerFactory.CreateLogger<AStarService>());
         throw new NotImplementedException();
     }
 }

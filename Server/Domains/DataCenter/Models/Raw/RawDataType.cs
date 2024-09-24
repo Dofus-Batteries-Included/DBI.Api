@@ -1,4 +1,4 @@
-namespace Server.Domains.DataCenter.Models;
+namespace Server.Domains.DataCenter.Models.Raw;
 
 /// <summary>
 ///     Available data types

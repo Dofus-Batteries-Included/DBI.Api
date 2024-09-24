@@ -1,6 +1,5 @@
 ﻿using Server.Common.Models;
-using Server.Domains.DataCenter.Models;
-using Server.Domains.DataCenter.Models.Extensions;
+using Server.Domains.DataCenter.Models.Maps;
 using Server.Domains.DataCenter.Models.WorldGraphs;
 using Server.Domains.DataCenter.Services.Maps;
 using Server.Domains.DataCenter.Services.WorldGraphs;
@@ -15,33 +14,31 @@ class AStarService
     const int MaxIterations = 100000;
 
     readonly WorldGraphService _worldGraphService;
-    readonly MapsService _mapsService;
+    readonly RawMapPositionsService _rawMapPositionsService;
     readonly ILogger _logger;
 
     readonly Dictionary<(long, long), Path?> _knownPaths = new();
 
-    public AStarService(WorldGraphService worldGraphService, MapsService mapsService, ILogger<AStarService> logger)
+    public AStarService(WorldGraphService worldGraphService, RawMapPositionsService rawMapPositionsService, ILogger<AStarService> logger)
     {
         _worldGraphService = worldGraphService;
-        _mapsService = mapsService;
+        _rawMapPositionsService = rawMapPositionsService;
         _logger = logger;
     }
 
     public Path? GetShortestPath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
     {
-        RawMapPosition? sourceMap = _mapsService.GetPositionOfNode(sourceNode);
-        RawMapPosition? targetMap = _mapsService.GetPositionOfNode(targetNode);
-        Position? fromPosition = sourceMap == null ? null : new Position(sourceMap.PosX, sourceMap.PosY);
-        Position? toPosition = targetMap == null ? null : new Position(targetMap.PosX, targetMap.PosY);
+        Map? sourceMap = _rawMapPositionsService.GetMap(sourceNode);
+        Map? targetMap = _rawMapPositionsService.GetMap(targetNode);
 
         if (sourceNode == targetNode)
         {
             return new Path
             {
                 FromMapId = sourceNode.MapId,
-                FromMapPosition = fromPosition,
+                FromMapPosition = sourceMap?.Position,
                 ToMapId = targetNode.MapId,
-                ToMapPosition = toPosition,
+                ToMapPosition = targetMap?.Position,
                 Steps = []
             };
         }
@@ -51,9 +48,9 @@ class AStarService
             _logger.LogDebug(
                 "Cache miss while computing path from {SourceNodeId} ({SourceMapPosition}) to {TargetNodeId} ({TargetMapPosition})",
                 sourceNode.Id,
-                fromPosition,
+                sourceMap?.Position,
                 targetNode.Id,
-                toPosition
+                targetMap?.Position
             );
             ComputePath(sourceNode, targetNode);
         }
@@ -63,8 +60,7 @@ class AStarService
 
     void ComputePath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
     {
-        RawMapPosition? targetMap = _mapsService.GetPositionOfNode(targetNode);
-        Position? toPosition = targetMap == null ? null : new Position(targetMap.PosX, targetMap.PosY);
+        Map? targetMap = _rawMapPositionsService.GetMap(targetNode);
 
         Dictionary<WorldGraphNode, WorldGraphNode> cameFrom = new();
 
@@ -85,14 +81,13 @@ class AStarService
             result.Add(step);
 
             current = previous;
-            RawMapPosition? currentMap = _mapsService.GetPositionOfNode(current);
-            Position? currentPosition = currentMap == null ? null : new Position(currentMap.PosX, currentMap.PosY);
+            Map? currentMap = _rawMapPositionsService.GetMap(current);
 
             _knownPaths[(current.Id, targetNode.Id)] = new Path
             {
-                FromMapId = current.MapId, FromMapPosition = currentPosition ?? new Position(),
+                FromMapId = current.MapId, FromMapPosition = currentMap?.Position ?? new Position(),
                 ToMapId = targetNode.MapId,
-                ToMapPosition = toPosition ?? new Position(),
+                ToMapPosition = targetMap?.Position ?? new Position(),
                 Steps = Enumerable.Reverse(result).ToArray()
             };
         }
@@ -174,18 +169,18 @@ class AStarService
 
     int ComputeDistance(WorldGraphNode from, WorldGraphNode to)
     {
-        RawMapPosition? fromMap = _mapsService.GetMap(from.MapId);
+        Map? fromMap = _rawMapPositionsService.GetMap(from.MapId);
         if (fromMap is null)
         {
             return 0;
         }
 
-        RawMapPosition? toMap = _mapsService.GetMap(to.MapId);
+        Map? toMap = _rawMapPositionsService.GetMap(to.MapId);
         if (toMap == null)
         {
             return 0;
         }
 
-        return fromMap.DistanceTo(toMap);
+        return fromMap.Position.DistanceTo(toMap.Position);
     }
 }

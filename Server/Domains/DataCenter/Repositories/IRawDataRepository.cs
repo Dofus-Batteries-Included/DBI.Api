@@ -1,4 +1,4 @@
-﻿using Server.Domains.DataCenter.Models;
+﻿using Server.Domains.DataCenter.Models.Raw;
 
 namespace Server.Domains.DataCenter.Repositories;
 

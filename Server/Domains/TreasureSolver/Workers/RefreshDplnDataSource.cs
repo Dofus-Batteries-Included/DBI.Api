@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using PuppeteerSharp;
 using Server.Common.Extensions;
 using Server.Common.Workers;
-using Server.Domains.DataCenter.Models;
+using Server.Domains.DataCenter.Models.Raw;
 using Server.Domains.DataCenter.Repositories;
 using Server.Domains.DataCenter.Services.I18N;
 using Server.Domains.DataCenter.Services.Maps;
@@ -20,8 +20,8 @@ public class RefreshDplnDataSource : PeriodicService
     readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true };
     readonly IServiceScopeFactory _scopeFactory;
     readonly LanguagesServiceFactory _languagesServiceFactory;
-    readonly PointOfInterestsServiceFactory _pointOfInterestsServiceFactory;
-    readonly MapsServiceFactory _mapsServiceFactory;
+    readonly RawPointOfInterestsServiceFactory _rawPointOfInterestsServiceFactory;
+    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly StaticCluesDataSourcesService _staticCluesDataSourcesService;
     readonly ILogger<RefreshDplnDataSource> _logger;
     int? _lastHintsHashCode;
@@ -33,8 +33,8 @@ public class RefreshDplnDataSource : PeriodicService
         IServiceScopeFactory scopeFactory,
         IRawDataRepository rawDataRepository,
         LanguagesServiceFactory languagesServiceFactory,
-        PointOfInterestsServiceFactory pointOfInterestsServiceFactory,
-        MapsServiceFactory mapsServiceFactory,
+        RawPointOfInterestsServiceFactory rawPointOfInterestsServiceFactory,
+        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
         StaticCluesDataSourcesService staticCluesDataSourcesService,
         IOptions<RepositoryOptions> repositoryOptions,
         ILogger<RefreshDplnDataSource> logger
@@ -42,8 +42,8 @@ public class RefreshDplnDataSource : PeriodicService
     {
         _scopeFactory = scopeFactory;
         _languagesServiceFactory = languagesServiceFactory;
-        _pointOfInterestsServiceFactory = pointOfInterestsServiceFactory;
-        _mapsServiceFactory = mapsServiceFactory;
+        _rawPointOfInterestsServiceFactory = rawPointOfInterestsServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _staticCluesDataSourcesService = staticCluesDataSourcesService;
         _logger = logger;
         _cacheDirectory = Path.Join(repositoryOptions.Value.BasePath, "Clues", "Sources");
@@ -128,8 +128,8 @@ public class RefreshDplnDataSource : PeriodicService
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
         LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService(cancellationToken: stoppingToken);
-        PointOfInterestsService cluesService = await _pointOfInterestsServiceFactory.CreateService(cancellationToken: stoppingToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateService(cancellationToken: stoppingToken);
+        RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateService(cancellationToken: stoppingToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateService(cancellationToken: stoppingToken);
 
         using IServiceScope scope = _scopeFactory.CreateScope();
         await using ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -173,7 +173,7 @@ public class RefreshDplnDataSource : PeriodicService
                 return [];
             }
 
-            RawMapPosition[] maps = mapsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
+            RawMapPosition[] maps = rawMapPositionsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
             int[] clueIds = clues.Clues.Where(c => dplbClueToGameClueMapping.ContainsKey(c)).Select(c => dplbClueToGameClueMapping[c]).ToArray();
 
             foreach (RawMapPosition map in maps)
