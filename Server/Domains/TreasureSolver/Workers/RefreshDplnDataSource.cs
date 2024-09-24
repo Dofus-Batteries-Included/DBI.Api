@@ -128,8 +128,8 @@ public class RefreshDplnDataSource : PeriodicService
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
         LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService(cancellationToken: stoppingToken);
-        RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateService(cancellationToken: stoppingToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateService(cancellationToken: stoppingToken);
+        RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
 
         using IServiceScope scope = _scopeFactory.CreateScope();
         await using ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

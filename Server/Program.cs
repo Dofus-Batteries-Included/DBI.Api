@@ -1,12 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using Server.Common.Exceptions;
 using Server.Domains.DataCenter;
 using Server.Domains.Identity;
+using Server.Domains.PathFinder;
 using Server.Domains.TreasureSolver;
 using Server.Infrastructure.Authentication;
 using Server.Infrastructure.Database;
@@ -76,6 +76,7 @@ try
     builder.Services.ConfigureIdentity();
     builder.Services.ConfigureDataCenter();
     builder.Services.ConfigureTreasureSolver();
+    builder.Services.ConfigurePathFinder();
 
     WebApplication app = builder.Build();
 

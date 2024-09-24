@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Server.Domains.DataCenter.Models.WorldGraphs;
 using Server.Domains.DataCenter.Raw.Models;
 using Server.Domains.DataCenter.Raw.Services.Internal;
@@ -8,9 +9,12 @@ namespace Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 
 public class WorldGraphServiceFactory : ParsedDataServiceFactory<WorldGraphService>
 {
-    readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+    readonly JsonSerializerOptions _jsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
+    };
 
-    public WorldGraphServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.PointOfInterest)
+    public WorldGraphServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.WorldGraph)
     {
     }
 

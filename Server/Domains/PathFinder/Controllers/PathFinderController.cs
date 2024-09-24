@@ -29,9 +29,14 @@ public class PathFinderController : ControllerBase
     [HttpGet("path")]
     public async Task<FindPathResponse> FindPath(long fromMapId, int fromMapCellNumber, long toMapId, int toMapCellNumber, CancellationToken cancellationToken = default)
     {
-        WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateService(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateService(cancellationToken: cancellationToken);
+        WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
+        return FindPathImpl(worldGraphService, mapsService, fromMapId, fromMapCellNumber, toMapId, toMapCellNumber);
+    }
+
+    FindPathResponse FindPathImpl(WorldGraphService worldGraphService, MapsService mapsService, long fromMapId, int fromMapCellNumber, long toMapId, int toMapCellNumber)
+    {
         Cell? fromCell = mapsService.GetCell(fromMapId, fromMapCellNumber);
         if (fromCell == null)
         {

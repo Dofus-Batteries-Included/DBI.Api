@@ -16,7 +16,7 @@ public abstract class ParsedDataServiceFactory<TService>
 
     protected RawDataType DataType { get; }
 
-    public async Task<TService> CreateService(string version = "latest", CancellationToken cancellationToken = default)
+    public async Task<TService> CreateServiceAsync(string version = "latest", CancellationToken cancellationToken = default)
     {
         string actualVersion = version switch
         {

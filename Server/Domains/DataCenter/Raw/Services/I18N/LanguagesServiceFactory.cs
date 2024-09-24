@@ -26,11 +26,11 @@ public class LanguagesServiceFactory
     public async Task<LanguagesService> CreateLanguagesService(string version = "latest", CancellationToken cancellationToken = default) =>
         new()
         {
-            French = await _frLanguageFactory.CreateService(version, cancellationToken),
-            English = await _enLanguageFactory.CreateService(version, cancellationToken),
-            Spanish = await _esLanguageFactory.CreateService(version, cancellationToken),
-            German = await _deLanguageFactory.CreateService(version, cancellationToken),
-            Portuguese = await _ptLanguageFactory.CreateService(version, cancellationToken)
+            French = await _frLanguageFactory.CreateServiceAsync(version, cancellationToken),
+            English = await _enLanguageFactory.CreateServiceAsync(version, cancellationToken),
+            Spanish = await _esLanguageFactory.CreateServiceAsync(version, cancellationToken),
+            German = await _deLanguageFactory.CreateServiceAsync(version, cancellationToken),
+            Portuguese = await _ptLanguageFactory.CreateServiceAsync(version, cancellationToken)
         };
 
     class LanguageServiceFactory : ParsedDataServiceFactory<LanguageService>
