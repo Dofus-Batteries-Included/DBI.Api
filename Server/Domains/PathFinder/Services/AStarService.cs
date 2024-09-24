@@ -1,8 +1,8 @@
 ﻿using Server.Common.Models;
 using Server.Domains.DataCenter.Models.Maps;
 using Server.Domains.DataCenter.Models.WorldGraphs;
-using Server.Domains.DataCenter.Raw.Services.Maps;
 using Server.Domains.DataCenter.Raw.Services.WorldGraphs;
+using Server.Domains.DataCenter.Services;
 using Server.Domains.PathFinder.Models;
 using Enumerable = System.Linq.Enumerable;
 using Path = Server.Domains.PathFinder.Models.Path;
@@ -14,22 +14,22 @@ class AStarService
     const int MaxIterations = 100000;
 
     readonly WorldGraphService _worldGraphService;
-    readonly RawMapPositionsService _rawMapPositionsService;
+    readonly MapsService _mapsService;
     readonly ILogger _logger;
 
     readonly Dictionary<(long, long), Path?> _knownPaths = new();
 
-    public AStarService(WorldGraphService worldGraphService, RawMapPositionsService rawMapPositionsService, ILogger<AStarService> logger)
+    public AStarService(WorldGraphService worldGraphService, MapsService mapsService, ILogger<AStarService> logger)
     {
         _worldGraphService = worldGraphService;
-        _rawMapPositionsService = rawMapPositionsService;
+        _mapsService = mapsService;
         _logger = logger;
     }
 
     public Path? GetShortestPath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
     {
-        Map? sourceMap = _rawMapPositionsService.GetMap(sourceNode);
-        Map? targetMap = _rawMapPositionsService.GetMap(targetNode);
+        Map? sourceMap = _mapsService.GetMap(sourceNode);
+        Map? targetMap = _mapsService.GetMap(targetNode);
 
         if (sourceNode == targetNode)
         {
@@ -60,7 +60,7 @@ class AStarService
 
     void ComputePath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
     {
-        Map? targetMap = _rawMapPositionsService.GetMap(targetNode);
+        Map? targetMap = _mapsService.GetMap(targetNode);
 
         Dictionary<WorldGraphNode, WorldGraphNode> cameFrom = new();
 
@@ -81,7 +81,7 @@ class AStarService
             result.Add(step);
 
             current = previous;
-            Map? currentMap = _rawMapPositionsService.GetMap(current);
+            Map? currentMap = _mapsService.GetMap(current);
 
             _knownPaths[(current.Id, targetNode.Id)] = new Path
             {
@@ -169,13 +169,13 @@ class AStarService
 
     int ComputeDistance(WorldGraphNode from, WorldGraphNode to)
     {
-        Map? fromMap = _rawMapPositionsService.GetMap(from.MapId);
+        Map? fromMap = _mapsService.GetMap(from.MapId);
         if (fromMap is null)
         {
             return 0;
         }
 
-        Map? toMap = _rawMapPositionsService.GetMap(to.MapId);
+        Map? toMap = _mapsService.GetMap(to.MapId);
         if (toMap == null)
         {
             return 0;

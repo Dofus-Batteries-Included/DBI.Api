@@ -10,8 +10,9 @@ public class WorldGraphService(WorldGraph data)
 
     public IEnumerable<WorldGraphNode> GetAllNodes() => _nodes.Values;
     public IEnumerable<WorldGraphEdge> GetAllEdges() => _edges.Values.SelectMany(d => d.SelectMany(dd => dd.Value));
-    public WorldGraphNode? GetNode(long id) => _nodes.GetValueOrDefault(id);
-    public IEnumerable<WorldGraphEdge> GetEdges(long from, long to) => _edges.GetValueOrDefault(from)?.GetValueOrDefault(to) ?? [];
-    public IEnumerable<WorldGraphEdge> GetEdgesFrom(long from) => _edges.GetValueOrDefault(from)?.SelectMany(d => d.Value) ?? [];
-    public IEnumerable<WorldGraphEdge> GetEdgesTo(long to) => _edges.Values.SelectMany(d => d.GetValueOrDefault(to) ?? []);
+    public WorldGraphNode? GetNode(long nodeId) => _nodes.GetValueOrDefault(nodeId);
+    public WorldGraphNode? GetNode(long mapId, int zoneId) => _nodes.Values.FirstOrDefault(n => n.MapId == mapId && n.ZoneId == zoneId);
+    public IEnumerable<WorldGraphEdge> GetEdges(long fromNodeId, long toNodeId) => _edges.GetValueOrDefault(fromNodeId)?.GetValueOrDefault(toNodeId) ?? [];
+    public IEnumerable<WorldGraphEdge> GetEdgesFrom(long fromNodeId) => _edges.GetValueOrDefault(fromNodeId)?.SelectMany(d => d.Value) ?? [];
+    public IEnumerable<WorldGraphEdge> GetEdgesTo(long toNodeId) => _edges.Values.SelectMany(d => d.GetValueOrDefault(toNodeId) ?? []);
 }
