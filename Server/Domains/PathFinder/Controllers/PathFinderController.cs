@@ -43,7 +43,7 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find start position.");
         }
 
-        WorldGraphNode? fromNode = worldGraphService.GetNode(fromMapId, fromCell.LinkedZone + 1);
+        WorldGraphNode? fromNode = FindNode(worldGraphService, fromMapId, fromCell);
         if (fromNode == null)
         {
             throw new NotFoundException("Could not find start position.");
@@ -55,7 +55,7 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        WorldGraphNode? toNode = worldGraphService.GetNode(toMapId, toCell.LinkedZone + 1);
+        WorldGraphNode? toNode = FindNode(worldGraphService, toMapId, toCell);
         if (toNode == null)
         {
             throw new NotFoundException("Could not find end position.");
@@ -65,5 +65,11 @@ public class PathFinderController : ControllerBase
         Path? path = aStarService.GetShortestPath(fromNode, toNode);
 
         return new FindPathResponse { FoundPath = path != null, Steps = path?.Steps };
+    }
+
+    static WorldGraphNode FindNode(WorldGraphService worldGraphService, long mapId, Cell cell)
+    {
+        int zone = cell.LinkedZone / 16;
+        return worldGraphService.GetNode(mapId, zone) ?? worldGraphService.GetNodesAtMap(mapId).First();
     }
 }
