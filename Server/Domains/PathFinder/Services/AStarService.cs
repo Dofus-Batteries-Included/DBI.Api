@@ -95,6 +95,9 @@ class AStarService
 
     PathStep ComputeStep(WorldGraphNode previous, WorldGraphNode current)
     {
+        Map? previousMap = _mapsService.GetMap(previous);
+        Map? currentMap = _mapsService.GetMap(current);
+
         WorldGraphEdge[] edges = _worldGraphService.GetEdges(previous.Id, current.Id).ToArray();
         WorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
 
@@ -102,10 +105,17 @@ class AStarService
 
         if (scrollTransition is { Direction: not null })
         {
-            return new ScrollStep { FromMapId = previous.MapId, ToMapId = current.MapId, Direction = scrollTransition.Direction.Value };
+            return new ScrollStep
+            {
+                FromMapId = previous.MapId,
+                FromMapPosition = previousMap?.Position,
+                ToMapId = current.MapId,
+                ToMapPosition = currentMap?.Position,
+                Direction = scrollTransition.Direction.Value
+            };
         }
 
-        return new PathStep { FromMapId = previous.MapId, ToMapId = current.MapId };
+        return new PathStep { FromMapId = previous.MapId, FromMapPosition = previousMap?.Position, ToMapId = current.MapId, ToMapPosition = currentMap?.Position };
     }
 
     bool Explore(WorldGraphNode sourceNode, WorldGraphNode targetNode, IDictionary<WorldGraphNode, WorldGraphNode> cameFrom)
