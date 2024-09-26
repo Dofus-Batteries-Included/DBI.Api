@@ -6,6 +6,7 @@ using Serilog.Events;
 using Server.Common.Exceptions;
 using Server.Domains.DataCenter;
 using Server.Domains.Identity;
+using Server.Domains.PathFinder;
 using Server.Domains.TreasureSolver;
 using Server.Infrastructure.Authentication;
 using Server.Infrastructure.Database;
@@ -46,13 +47,15 @@ try
             options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             }
         );
     builder.Services.AddControllersWithViews();
+    builder.Services.AddResponseCompression();
     builder.Services.AddProblemDetails();
     builder.Services.AddExceptionHandler<ExceptionHandler>();
     builder.Services.AddHttpClient();
+
 
     builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, opt => { });
     builder.Services.AddAuthorization();
@@ -73,6 +76,7 @@ try
     builder.Services.ConfigureIdentity();
     builder.Services.ConfigureDataCenter();
     builder.Services.ConfigureTreasureSolver();
+    builder.Services.ConfigurePathFinder();
 
     WebApplication app = builder.Build();
 
@@ -93,6 +97,7 @@ try
     app.UseSwaggerUi(settings => { settings.PersistAuthorization = true; });
 
     app.UseAuthorization();
+    app.UseResponseCompression();
 
     app.MapDefaultControllerRoute();
 

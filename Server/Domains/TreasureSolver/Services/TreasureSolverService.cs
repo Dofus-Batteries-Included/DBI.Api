@@ -1,5 +1,6 @@
-﻿using Server.Domains.DataCenter.Models;
-using Server.Domains.DataCenter.Services.Maps;
+﻿using Server.Common.Models;
+using Server.Domains.DataCenter.Raw.Models;
+using Server.Domains.DataCenter.Raw.Services.Maps;
 using Server.Domains.TreasureSolver.Models;
 using Server.Domains.TreasureSolver.Services.Clues;
 
@@ -8,15 +9,15 @@ namespace Server.Domains.TreasureSolver.Services;
 public class TreasureSolverService
 {
     readonly FindCluesService _findCluesService;
-    readonly MapsServiceFactory _mapsServiceFactory;
+    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
 
-    public TreasureSolverService(FindCluesService findCluesService, MapsServiceFactory mapsServiceFactory)
+    public TreasureSolverService(FindCluesService findCluesService, RawMapPositionsServiceFactory rawMapPositionsServiceFactory)
     {
         _findCluesService = findCluesService;
-        _mapsServiceFactory = mapsServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
     }
 
-    public async Task<MapPositions?> FindNextMapAsync(MapPositions startMap, Direction direction, int clueId)
+    public async Task<RawMapPosition?> FindNextMapAsync(RawMapPosition startMap, Direction direction, int clueId)
     {
         Position position = new(startMap.PosX, startMap.PosY);
         for (int i = 0; i < 10; i++)
@@ -48,10 +49,10 @@ public class TreasureSolverService
         return null;
     }
 
-    async Task<MapPositions?> GuessTargetMapAsync(MapPositions startMap, Position position)
+    async Task<RawMapPosition?> GuessTargetMapAsync(RawMapPosition startMap, Position position)
     {
-        MapsService mapsService = await _mapsServiceFactory.CreateService();
-        MapPositions[] maps = mapsService.GetMapsAtPosition(position).ToArray();
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync();
+        RawMapPosition[] maps = rawMapPositionsService.GetMapsAtPosition(position).ToArray();
         return maps.FirstOrDefault(m => m.WorldMap == startMap.WorldMap) ?? maps.FirstOrDefault();
     }
 }

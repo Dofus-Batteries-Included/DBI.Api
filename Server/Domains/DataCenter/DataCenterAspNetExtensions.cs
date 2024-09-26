@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using Server.Common.OpenApi;
+using Server.Domains.DataCenter.Raw.Services.I18N;
+using Server.Domains.DataCenter.Raw.Services.Maps;
+using Server.Domains.DataCenter.Raw.Services.PointOfInterests;
+using Server.Domains.DataCenter.Raw.Services.WorldGraphs;
 using Server.Domains.DataCenter.Repositories;
-using Server.Domains.DataCenter.Services.I18N;
-using Server.Domains.DataCenter.Services.Maps;
-using Server.Domains.DataCenter.Services.PointOfInterests;
+using Server.Domains.DataCenter.Services;
 using Server.Domains.DataCenter.Workers;
 using Server.Infrastructure.Repository;
 
@@ -21,8 +23,15 @@ public static class DataCenterAspNetExtensions
         );
         services.AddSingleton<IRawDataRepository, RawDataFromGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromGithubReleasesSavedToDisk>());
         services.AddSingleton<LanguagesServiceFactory>();
+        services.AddSingleton<RawSuperAreasServiceFactory>();
+        services.AddSingleton<RawAreasServiceFactory>();
+        services.AddSingleton<RawSubAreasServiceFactory>();
+        services.AddSingleton<RawMapsServiceFactory>();
+        services.AddSingleton<RawMapPositionsServiceFactory>();
+        services.AddSingleton<RawPointOfInterestsServiceFactory>();
+        services.AddSingleton<WorldGraphServiceFactory>();
+
         services.AddSingleton<MapsServiceFactory>();
-        services.AddSingleton<PointOfInterestsServiceFactory>();
 
         services.AddHostedService<DownloadDataFromGithubReleases>();
 

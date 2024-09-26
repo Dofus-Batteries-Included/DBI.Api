@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Server.Common.Models;
 
 namespace Server.Domains.TreasureSolver.Models;
 
