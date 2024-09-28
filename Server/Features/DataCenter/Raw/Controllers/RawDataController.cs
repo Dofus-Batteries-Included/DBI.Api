@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Server.Features.DataCenter.Models;
 using Server.Features.DataCenter.Raw.Models;
 using Server.Features.DataCenter.Repositories;
@@ -9,7 +10,7 @@ namespace Server.Features.DataCenter.Raw.Controllers;
 ///     Retrieve raw data in JSON files.
 /// </summary>
 [Route("data-center/versions/{gameVersion}/raw")]
-[Tags("Raw data")]
+[OpenApiTag("Raw data")]
 [ApiController]
 public class RawDataController : ControllerBase
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Server.Features.DataCenter.Controllers.Versions.Responses;
 using Server.Features.DataCenter.Repositories;
 
@@ -8,7 +9,7 @@ namespace Server.Features.DataCenter.Controllers.Versions;
 ///     Retrieve the available game versions.
 /// </summary>
 [Route("data-center/game-versions")]
-[Tags("Game versions")]
+[OpenApiTag("Game versions")]
 [ApiController]
 public class GameVersionsController : ControllerBase
 {

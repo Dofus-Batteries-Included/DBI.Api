@@ -16,6 +16,7 @@ static class IdentityAspNetExtensions
                 settings.Description = "Manage identities.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";
                 settings.OperationProcessors.Insert(0, new FilterOperationsByRoutePrefix("/identity"));
+                settings.DocumentProcessors.Add(new SortTagsInDocument());
 
                 const string schemeName = "API key";
                 settings.AddSecurity(

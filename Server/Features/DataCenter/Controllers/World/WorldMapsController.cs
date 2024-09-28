@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Server.Common.Exceptions;
 using Server.Features.DataCenter.Models.Maps;
 using Server.Features.DataCenter.Services;
@@ -9,7 +10,7 @@ namespace Server.Features.DataCenter.Controllers.World;
 ///     World Maps endpoints
 /// </summary>
 [Route("data-center/versions/{gameVersion}/world/world-maps")]
-[Tags("World - World Maps")]
+[OpenApiTag("World - World Maps")]
 [ApiController]
 public class WorldMapsController : ControllerBase
 {

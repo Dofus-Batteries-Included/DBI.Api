@@ -16,6 +16,7 @@ static class PathFinderAspNetExtensions
                 settings.Description = "Dofus path finder using data extracted from the game.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";
                 settings.OperationProcessors.Insert(0, new FilterOperationsByRoutePrefix("/path-finder"));
+                settings.DocumentProcessors.Add(new SortTagsInDocument());
 
                 const string schemeName = "API key";
                 settings.AddSecurity(
