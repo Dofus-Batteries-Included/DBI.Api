@@ -22,7 +22,7 @@ namespace Server.Infrastructure.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Server.Domains.Identity.Models.Entities.PrincipalEntity", b =>
+            modelBuilder.Entity("Server.Features.Identity.Models.Entities.PrincipalEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Server.Infrastructure.Database.Migrations
                     b.ToTable("Principals");
                 });
 
-            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
+            modelBuilder.Entity("Server.Features.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
@@ -78,9 +78,9 @@ namespace Server.Infrastructure.Database.Migrations
                     b.ToTable("ClueRecords");
                 });
 
-            modelBuilder.Entity("Server.Domains.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
+            modelBuilder.Entity("Server.Features.TreasureSolver.Models.Entities.ClueRecordEntity", b =>
                 {
-                    b.HasOne("Server.Domains.Identity.Models.Entities.PrincipalEntity", "Author")
+                    b.HasOne("Server.Features.Identity.Models.Entities.PrincipalEntity", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
