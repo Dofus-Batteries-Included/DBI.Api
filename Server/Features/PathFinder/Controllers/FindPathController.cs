@@ -13,13 +13,13 @@ namespace Server.Features.PathFinder.Controllers;
 [Route("path-finder")]
 [Tags("Path Finder")]
 [ApiController]
-public class PathFinderController : ControllerBase
+public class FindPathController : ControllerBase
 {
     readonly WorldGraphServiceFactory _worldGraphServiceFactory;
     readonly MapsServiceFactory _mapsServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
-    public PathFinderController(WorldGraphServiceFactory worldGraphServiceFactory, MapsServiceFactory mapsServiceFactory, ILoggerFactory loggerFactory)
+    public FindPathController(WorldGraphServiceFactory worldGraphServiceFactory, MapsServiceFactory mapsServiceFactory, ILoggerFactory loggerFactory)
     {
         _worldGraphServiceFactory = worldGraphServiceFactory;
         _mapsServiceFactory = mapsServiceFactory;
@@ -37,6 +37,7 @@ public class PathFinderController : ControllerBase
 
     FindPathResponse FindPathImpl(WorldGraphService worldGraphService, MapsService mapsService, long fromMapId, int fromMapCellNumber, long toMapId, int toMapCellNumber)
     {
+        Map? fromMap = mapsService.GetMap(fromMapId);
         Cell? fromCell = mapsService.GetCell(fromMapId, fromMapCellNumber);
         if (fromCell == null)
         {
@@ -49,6 +50,7 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find start position.");
         }
 
+        Map? toMap = mapsService.GetMap(toMapId);
         Cell? toCell = mapsService.GetCell(toMapId, toMapCellNumber);
         if (toCell == null)
         {
@@ -64,7 +66,11 @@ public class PathFinderController : ControllerBase
         AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
         Path? path = aStarService.GetShortestPath(fromNode, toNode);
 
-        return new FindPathResponse { FoundPath = path != null, Steps = path?.Steps };
+        return new FindPathResponse
+        {
+            FoundPath = path != null,
+            Path = path
+        };
     }
 
     static WorldGraphNode FindNode(WorldGraphService worldGraphService, long mapId, Cell cell)

@@ -35,10 +35,8 @@ class AStarService
         {
             return new Path
             {
-                FromMapId = sourceNode.MapId,
-                FromMapPosition = sourceMap?.Position,
-                ToMapId = targetNode.MapId,
-                ToMapPosition = targetMap?.Position,
+                From = new PathMap { MapId = sourceNode.MapId, MapPosition = sourceMap?.Position, WorldGraphNodeId = sourceNode.Id },
+                To = new PathMap { MapId = targetNode.MapId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
                 Steps = []
             };
         }
@@ -72,34 +70,32 @@ class AStarService
 
         List<PathStep> result = [];
 
-        WorldGraphNode current = targetNode;
-        while (cameFrom.ContainsKey(current))
+        WorldGraphNode currentNode = targetNode;
+        while (cameFrom.ContainsKey(currentNode))
         {
-            WorldGraphNode previous = cameFrom[current];
+            WorldGraphNode previous = cameFrom[currentNode];
 
-            PathStep step = ComputeStep(previous, current);
+            PathStep step = ComputeStep(previous, currentNode);
             result.Add(step);
 
-            current = previous;
-            Map? currentMap = _mapsService.GetMap(current);
+            currentNode = previous;
+            Map? currentMap = _mapsService.GetMap(currentNode);
 
-            _knownPaths[(current.Id, targetNode.Id)] = new Path
+            _knownPaths[(currentNode.Id, targetNode.Id)] = new Path
             {
-                FromMapId = current.MapId,
-                FromMapPosition = currentMap?.Position ?? new Position(),
-                ToMapId = targetNode.MapId,
-                ToMapPosition = targetMap?.Position ?? new Position(),
+                From = new PathMap { MapId = currentNode.MapId, MapPosition = currentMap?.Position, WorldGraphNodeId = currentNode.Id },
+                To = new PathMap { MapId = targetNode.MapId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
                 Steps = Enumerable.Reverse(result).ToArray()
             };
         }
     }
 
-    PathStep ComputeStep(WorldGraphNode previous, WorldGraphNode current)
+    PathStep ComputeStep(WorldGraphNode current, WorldGraphNode next)
     {
-        Map? previousMap = _mapsService.GetMap(previous);
         Map? currentMap = _mapsService.GetMap(current);
+        PathMap currentPathMap = new() { MapId = current.MapId, MapPosition = currentMap?.Position, WorldGraphNodeId = current.Id };
 
-        WorldGraphEdge[] edges = _worldGraphService.GetEdges(previous.Id, current.Id).ToArray();
+        WorldGraphEdge[] edges = _worldGraphService.GetEdges(current.Id, next.Id).ToArray();
         WorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
 
         WorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is WorldGraphEdgeType.Scroll or WorldGraphEdgeType.ScrollAction);
@@ -108,13 +104,12 @@ class AStarService
         {
             return new ScrollStep
             {
-                MapId = previous.MapId,
-                MapPosition = previousMap?.Position,
+                Map = currentPathMap,
                 Direction = scrollTransition.Direction.Value
             };
         }
 
-        return new PathStep { MapId = previous.MapId, MapPosition = previousMap?.Position };
+        return new PathStep { Map = currentPathMap };
     }
 
     bool Explore(WorldGraphNode sourceNode, WorldGraphNode targetNode, IDictionary<WorldGraphNode, WorldGraphNode> cameFrom)
