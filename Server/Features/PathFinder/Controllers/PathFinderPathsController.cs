@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Server.Common.Exceptions;
 using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
 using Server.Features.DataCenter.Models.WorldGraphs;
@@ -42,7 +43,16 @@ public class PathFinderPathsController : ControllerBase
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, mapsService, fromMapId, request.FromCellNumber);
+        if (fromNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find start position.");
+        }
+
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, mapsService, toMapId, request.ToCellNumber);
+        if (toNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find end position.");
+        }
 
         AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
 
@@ -69,7 +79,16 @@ public class PathFinderPathsController : ControllerBase
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(fromMapX, fromMapY), request.FromCellNumber);
+        if (fromNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find start position.");
+        }
+        
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, mapsService, toMapId, request.ToCellNumber);
+        if (toNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find end position.");
+        }
 
         AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
 
@@ -96,7 +115,16 @@ public class PathFinderPathsController : ControllerBase
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, mapsService, fromMapId, request.FromCellNumber);
+        if (fromNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find start position.");
+        }
+        
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(toMapX, toMapY), request.ToCellNumber);
+        if (toNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find end position.");
+        }
 
         AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
 
@@ -124,7 +152,16 @@ public class PathFinderPathsController : ControllerBase
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(fromMapX, fromMapY), request.FromCellNumber);
+        if (fromNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find start position.");
+        }
+        
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(toMapX, toMapY), request.ToCellNumber);
+        if (toNodes.Length == 0)
+        {
+            throw new NotFoundException("Could not find end position.");
+        }
 
         AStarService aStarService = new(worldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
 
