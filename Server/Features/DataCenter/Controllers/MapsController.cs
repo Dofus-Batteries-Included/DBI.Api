@@ -26,4 +26,11 @@ public class MapsController : ControllerBase
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(gameVersion, cancellationToken);
         return mapsService.GetMap(mapId) ?? throw new NotFoundException("Could not find map.");
     }
+
+    [HttpGet("{mapId:long}/cells/{cellNumber:int}")]
+    public async Task<Cell> GetMapCell(long mapId, int cellNumber, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(gameVersion, cancellationToken);
+        return mapsService.GetCell(mapId, cellNumber) ?? throw new NotFoundException("Could not find cell.");
+    }
 }
