@@ -6,17 +6,26 @@ using Server.Features.TreasureSolver.Services.Clues;
 
 namespace Server.Features.TreasureSolver.Services;
 
+/// <summary>
+///     Solve treasure hunts.
+/// </summary>
 public class TreasureSolverService
 {
     readonly FindCluesService _findCluesService;
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
 
+    /// <summary>
+    /// </summary>
     public TreasureSolverService(FindCluesService findCluesService, RawMapPositionsServiceFactory rawMapPositionsServiceFactory)
     {
         _findCluesService = findCluesService;
         _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
     }
 
+    /// <summary>
+    ///     Find the next map in the treasure hunt.
+    ///     The next map is the first one containing the clue <see cref="clueId" /> when moving from the <see cref="startMap" /> in direction <see cref="direction" /> for up to 10 maps.
+    /// </summary>
     public async Task<RawMapPosition?> FindNextMapAsync(RawMapPosition startMap, Direction direction, int clueId)
     {
         Position position = new(startMap.PosX, startMap.PosY);
@@ -33,6 +42,11 @@ public class TreasureSolverService
         return null;
     }
 
+    /// <summary>
+    ///     Find the next map in the treasure hunt.
+    ///     The next map is the first one containing the clue <see cref="clueId" /> when moving from the <see cref="startPosition" /> in direction <see cref="direction" /> for up to 10
+    ///     maps.
+    /// </summary>
     public async Task<Position?> FindNextMapAsync(Position startPosition, Direction direction, int clueId)
     {
         Position position = startPosition;

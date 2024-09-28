@@ -2,12 +2,21 @@
 
 namespace Server.Features.TreasureSolver.Controllers.Requests;
 
+/// <summary>
+///     Register clues.
+/// </summary>
 public class RegisterCluesRequest
 {
+    /// <summary>
+    ///     The clues to register.
+    /// </summary>
     [Required]
     public required IReadOnlyCollection<RegisterClueRequest> Clues { get; init; }
 }
 
+/// <summary>
+///     A clue to register.
+/// </summary>
 public class RegisterClueRequest
 {
     /// <summary>

@@ -2,7 +2,7 @@
 
 namespace Server.Features.TreasureSolver.Services.Clues.DataSources;
 
-public class StaticClueRecordsSource : IClueRecordsSource
+class StaticClueRecordsSource : IClueRecordsSource
 {
     public StaticClueRecordsSource(IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>> clues, DateTime? lastModificationDate = null)
     {

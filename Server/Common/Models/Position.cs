@@ -1,8 +1,13 @@
 ﻿namespace Server.Common.Models;
 
+/// <summary>
+///     2D position.
+/// </summary>
+/// <param name="X">The horizontal coordinate.</param>
+/// <param name="Y">The vertical coordinate.</param>
 public record struct Position(int X, int Y);
 
-public static class PositionExtensions
+static class PositionExtensions
 {
     public static Position MoveInDirection(this Position start, Direction direction, int distance = 1) =>
         direction switch

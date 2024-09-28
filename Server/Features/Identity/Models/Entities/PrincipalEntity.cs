@@ -3,8 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Features.Identity.Models.Entities;
 
+/// <summary>
+///     A principal in the database.
+/// </summary>
 public class PrincipalEntity
 {
+    /// <summary>
+    /// </summary>
     public PrincipalEntity(long accountId, string accountName, Guid token)
     {
         RegistrationDate = DateTime.Now.ToUniversalTime();
@@ -13,6 +18,9 @@ public class PrincipalEntity
         Token = token;
     }
 
+    /// <summary>
+    ///     The unique ID of the principal.
+    /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; private set; }
@@ -43,6 +51,16 @@ public class PrincipalEntity
     /// </summary>
     public bool Revoked { get; private set; }
 
+    /// <summary>
+    ///     Refresh the API token of the principal.
+    /// </summary>
     public void RefreshToken() => Token = Guid.NewGuid();
+
+    /// <summary>
+    ///     Revoke the principal.
+    ///     The API token of a revoked principal can no longer be used to authenticate requests.
+    ///     <br />
+    ///     Revoking the principal allows to forbid it from calling the API while keeping the relationships between it and the data it submitted.
+    /// </summary>
     public void Revoke() => Revoked = true;
 }

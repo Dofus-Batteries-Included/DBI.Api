@@ -5,7 +5,7 @@ using Server.Infrastructure.Authentication;
 
 namespace Server.Features.PathFinder;
 
-public static class PathFinderAspNetExtensions
+static class PathFinderAspNetExtensions
 {
     public static void ConfigurePathFinder(this IServiceCollection services) =>
         services.AddOpenApiDocument(

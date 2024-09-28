@@ -5,7 +5,7 @@ using Server.Infrastructure.Authentication;
 
 namespace Server.Features.Identity;
 
-public static class IdentityAspNetExtensions
+static class IdentityAspNetExtensions
 {
     public static void ConfigureIdentity(this IServiceCollection services) =>
         services.AddOpenApiDocument(

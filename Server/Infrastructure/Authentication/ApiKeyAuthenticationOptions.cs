@@ -2,6 +2,6 @@
 
 namespace Server.Infrastructure.Authentication;
 
-public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
+class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
 {
 }

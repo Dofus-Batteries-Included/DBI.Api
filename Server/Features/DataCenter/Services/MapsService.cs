@@ -6,6 +6,8 @@ using Server.Features.DataCenter.Raw.Services.Maps;
 
 namespace Server.Features.DataCenter.Services;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class MapsService(
     RawWorldMapsService? rawWorldMapsService,
     RawSuperAreasService? rawSuperAreasService,
@@ -75,19 +77,17 @@ public class MapsService(
         RawSubArea? subArea = rawSubAreasService?.GetSubArea(rawMapPosition.SubAreaId);
         RawArea? area = subArea is null ? null : rawAreasService?.GetArea(subArea.AreaId);
         RawSuperArea? superArea = area?.SuperAreaId is null ? null : rawSuperAreasService?.GetSuperArea(area.SuperAreaId.Value);
-
-        int? worldMapId = subArea?.WorldMapId ?? area?.WorldMapId ?? superArea?.WorldMapId;
-        RawWorldMap? worldMap = worldMapId is null ? null : rawWorldMapsService?.GetWorldMap(worldMapId.Value);
+        RawWorldMap? worldMap = rawWorldMapsService?.GetWorldMap(((int?)rawMapPosition.WorldMap).Value);
 
         return new Map
         {
-            WorldMapId = worldMapId,
+            WorldMapId = rawMapPosition.WorldMap,
             WorldMapName = worldMap is null ? null : languagesService?.Get(worldMap.NameId),
             SuperAreaId = superArea?.Id,
             SuperAreaName = superArea is null ? null : languagesService?.Get(superArea.NameId),
             AreaId = area?.Id,
             AreaName = area is null ? null : languagesService?.Get(area.NameId),
-            SubAreaId = subArea?.Id,
+            SubAreaId = rawMapPosition.SubAreaId,
             SubAreaName = subArea is null ? null : languagesService?.Get(subArea.NameId),
             MapId = rawMapPosition.MapId,
             MapName = languagesService?.Get(rawMapPosition.NameId),

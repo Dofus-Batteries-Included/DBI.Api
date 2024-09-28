@@ -6,6 +6,8 @@ using Server.Features.DataCenter.Repositories;
 
 namespace Server.Features.DataCenter.Raw.Services.I18N;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class LanguagesServiceFactory
 {
     readonly LanguageServiceFactory _frLanguageFactory;

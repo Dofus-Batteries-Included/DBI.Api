@@ -11,7 +11,7 @@ using Server.Infrastructure.Repository;
 
 namespace Server.Features.DataCenter;
 
-public static class DataCenterAspNetExtensions
+static class DataCenterAspNetExtensions
 {
     public static void ConfigureDataCenter(this IServiceCollection services)
     {

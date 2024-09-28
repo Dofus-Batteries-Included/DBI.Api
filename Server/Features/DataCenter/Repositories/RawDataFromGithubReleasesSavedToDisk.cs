@@ -21,7 +21,7 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         _logger = logger;
     }
 
-    public event EventHandler? LatestVersionChanged;
+    public event EventHandler<LatestVersionChangedEventArgs>? LatestVersionChanged;
 
     public Task<string> GetLatestVersionAsync() =>
         Task.FromResult(GetActualVersions().OrderDescending().FirstOrDefault() ?? throw new NotFoundException("Could not find any version."));
@@ -133,7 +133,7 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
         if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
         {
-            LatestVersionChanged?.Invoke(this, EventArgs.Empty);
+            LatestVersionChanged?.Invoke(this, new LatestVersionChangedEventArgs { NewLatestVersion = gameVersion });
         }
     }
 

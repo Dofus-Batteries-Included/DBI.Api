@@ -3,7 +3,7 @@ using NSwag.Generation.Processors.Contexts;
 
 namespace Server.Common.OpenApi;
 
-public class FilterOperationsByRoutePrefix : IOperationProcessor
+class FilterOperationsByRoutePrefix : IOperationProcessor
 {
     readonly string _routePrefix;
 

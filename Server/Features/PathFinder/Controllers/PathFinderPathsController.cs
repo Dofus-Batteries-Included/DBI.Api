@@ -13,6 +13,9 @@ using Server.Features.PathFinder.Services;
 
 namespace Server.Features.PathFinder.Controllers;
 
+/// <summary>
+///     Path finder endpoints
+/// </summary>
 [Route("path-finder/path")]
 [Tags("Path Finder")]
 [ApiController]
@@ -23,6 +26,8 @@ public class PathFinderPathsController : ControllerBase
     readonly WorldServiceFactory _worldServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
+    /// <summary>
+    /// </summary>
     public PathFinderPathsController(
         WorldGraphServiceFactory worldGraphServiceFactory,
         RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
@@ -36,6 +41,14 @@ public class PathFinderPathsController : ControllerBase
         _loggerFactory = loggerFactory;
     }
 
+    /// <summary>
+    ///     Find paths between maps identified by their IDs
+    /// </summary>
+    /// <remarks>
+    ///     The endpoint might return multiple paths because there might be multiple nodes in the start and end maps.
+    ///     A node is a subset of cells in a map that are connected, if a map has multiple nodes the endpoint will return all the paths it can find between all the pairs of nodes. <br />
+    ///     Consider providing cell numbers to restrict the search to the actual nodes where the character is located.
+    /// </remarks>
     [HttpGet("from/{fromMapId:long}/to/{toMapId:long}")]
     public async Task<FindPathsResponse> FindPathsFromIdToId(long fromMapId, long toMapId, [FromQuery] FindPathsRequest request, CancellationToken cancellationToken = default)
     {
@@ -65,6 +78,10 @@ public class PathFinderPathsController : ControllerBase
         };
     }
 
+    /// <summary>
+    ///     Find paths between a map identified by its position and a map identified by its id
+    /// </summary>
+    /// <inheritdoc cref="FindPathsFromIdToId" />
     [HttpGet("from/position/{fromMapX:int}/{fromMapY:int}/to/{toMapId:long}")]
     public async Task<FindPathsResponse> FindPathsFromPositionToId(
         int fromMapX,
@@ -101,6 +118,10 @@ public class PathFinderPathsController : ControllerBase
         };
     }
 
+    /// <summary>
+    ///     Find paths between a map identified by its id and a map identified by its position
+    /// </summary>
+    /// <inheritdoc cref="FindPathsFromIdToId" />
     [HttpGet("from/position/{fromMapId:long}/to/position/{toMapX:int}/{toMapY:int}")]
     public async Task<FindPathsResponse> FindPathsFromIdToPosition(
         long fromMapId,
@@ -137,6 +158,10 @@ public class PathFinderPathsController : ControllerBase
         };
     }
 
+    /// <summary>
+    ///     Find paths between maps identified by their positions
+    /// </summary>
+    /// <inheritdoc cref="FindPathsFromIdToId" />
     [HttpGet("from/position/{fromMapX:int}/{fromMapY:int}/to/position/{toMapX:int}/{toMapY:int}")]
     public async Task<FindPathsResponse> FindPathsFromPositionToPosition(
         int fromMapX,

@@ -14,6 +14,8 @@ public class GameVersionsController : ControllerBase
 {
     readonly IRawDataRepository _repository;
 
+    /// <summary>
+    /// </summary>
     public GameVersionsController(IRawDataRepository repository)
     {
         _repository = repository;

@@ -2,6 +2,8 @@
 
 namespace Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class WorldGraphService(WorldGraph data)
 {
     readonly Dictionary<long, WorldGraphNode> _nodes = data.Nodes.ToDictionary(n => n.Id, n => n);

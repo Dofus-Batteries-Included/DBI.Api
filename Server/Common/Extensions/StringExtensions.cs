@@ -2,7 +2,7 @@
 
 namespace Server.Common.Extensions;
 
-public static class StringExtensions
+static class StringExtensions
 {
     public static string RemoveAccents(this string str)
     {

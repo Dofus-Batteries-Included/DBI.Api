@@ -6,5 +6,8 @@ namespace Server.Common.Controllers;
 /// </summary>
 public class HomeController : Controller
 {
+    /// <summary>
+    ///     Index page
+    /// </summary>
     public IActionResult Index() => View();
 }

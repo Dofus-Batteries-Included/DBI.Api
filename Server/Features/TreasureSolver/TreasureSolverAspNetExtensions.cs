@@ -9,7 +9,7 @@ using Server.Infrastructure.Authentication;
 
 namespace Server.Features.TreasureSolver;
 
-public static class TreasureSolverAspNetExtensions
+static class TreasureSolverAspNetExtensions
 {
     public static void ConfigureTreasureSolver(this IServiceCollection services)
     {

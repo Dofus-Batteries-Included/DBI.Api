@@ -9,7 +9,7 @@ using Server.Infrastructure.Database;
 
 namespace Server.Infrastructure.Authentication;
 
-public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
+class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
 {
     readonly ApplicationDbContext _applicationDbContext;
 

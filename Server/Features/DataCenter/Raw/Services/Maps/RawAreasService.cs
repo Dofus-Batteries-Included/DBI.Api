@@ -2,6 +2,8 @@
 
 namespace Server.Features.DataCenter.Raw.Services.Maps;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class RawAreasService(IReadOnlyCollection<RawArea> subAreas)
 {
     readonly Dictionary<int, RawArea> _subAreas = subAreas.ToDictionary(map => map.Id, map => map);

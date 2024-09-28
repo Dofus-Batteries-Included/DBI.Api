@@ -5,7 +5,7 @@ using Server.Infrastructure.Database;
 
 namespace Server.Features.TreasureSolver.Services.Clues.DataSources;
 
-public class DatabaseClueRecordsSource : IClueRecordsSource
+class DatabaseClueRecordsSource : IClueRecordsSource
 {
     readonly ApplicationDbContext _context;
 

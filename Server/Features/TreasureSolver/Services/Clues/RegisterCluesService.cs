@@ -6,18 +6,26 @@ using Server.Infrastructure.Database;
 
 namespace Server.Features.TreasureSolver.Services.Clues;
 
+/// <summary>
+///     Register clues.
+/// </summary>
 public class RegisterCluesService
 {
     readonly ApplicationDbContext _context;
 
+    /// <summary>
+    /// </summary>
     public RegisterCluesService(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task RegisterCluesAsync(PrincipalEntity author, IReadOnlyCollection<RegisterClueRequest> newClueRequests)
+    /// <summary>
+    ///     Register that the <see cref="author" /> has found (or not found) the clues in <see cref="request" />.
+    /// </summary>
+    public async Task RegisterCluesAsync(PrincipalEntity author, RegisterCluesRequest request)
     {
-        foreach (RegisterClueRequest clueRequest in newClueRequests)
+        foreach (RegisterClueRequest clueRequest in request.Clues)
         {
             ClueAtMapStatus status = clueRequest.Found ? ClueAtMapStatus.Found : ClueAtMapStatus.NotFound;
 

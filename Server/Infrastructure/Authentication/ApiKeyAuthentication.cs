@@ -1,6 +1,6 @@
 ﻿namespace Server.Infrastructure.Authentication;
 
-public static class ApiKeyAuthentication
+static class ApiKeyAuthentication
 {
     public const string Header = "Authorization";
     public const string Scheme = "ApiKey";

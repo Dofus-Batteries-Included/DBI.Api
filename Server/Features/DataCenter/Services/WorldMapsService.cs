@@ -5,10 +5,20 @@ using Server.Features.DataCenter.Raw.Services.Maps;
 
 namespace Server.Features.DataCenter.Services;
 
+/// <summary>
+///     Get world maps.
+/// </summary>
 public class WorldMapsService(RawWorldMapsService? rawWorldMapService, LanguagesService languagesService)
 {
+    /// <summary>
+    ///     Get all the world maps in the game.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<WorldMap>? GetWorldMaps() => rawWorldMapService?.GetWorldMaps().Select(Cook);
 
+    /// <summary>
+    ///     Get the given world map by id.
+    /// </summary>
     public WorldMap? GetWorldMap(int worldMapId)
     {
         RawWorldMap? worldMap = rawWorldMapService?.GetWorldMap(worldMapId);
