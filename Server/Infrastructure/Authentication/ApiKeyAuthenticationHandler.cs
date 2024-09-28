@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using Server.Domains.Identity.Models.Entities;
+using Server.Features.Identity.Models.Entities;
 using Server.Infrastructure.Database;
 
 namespace Server.Infrastructure.Authentication;
