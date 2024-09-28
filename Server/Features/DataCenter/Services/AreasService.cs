@@ -8,7 +8,12 @@ namespace Server.Features.DataCenter.Services;
 /// <summary>
 ///     Get areas
 /// </summary>
-public class AreasService(RawWorldMapsService? rawWorldMapsService, RawSuperAreasService? rawSuperAreasService, RawAreasService? rawAreasService, LanguagesService languagesService)
+public class AreasService(
+    RawWorldMapsService? rawWorldMapsService,
+    RawSuperAreasService? rawSuperAreasService,
+    RawAreasService? rawAreasService,
+    LanguagesService? languagesService
+)
 {
     /// <summary>
     ///     Get all the areas in the game.
@@ -39,11 +44,13 @@ public class AreasService(RawWorldMapsService? rawWorldMapsService, RawSuperArea
     Area Cook(RawArea area)
     {
         RawSuperArea? superArea = area.SuperAreaId is null ? null : rawSuperAreasService?.GetSuperArea(area.SuperAreaId.Value);
-        RawWorldMap? worldMap = area.WorldMapId is null ? null : rawWorldMapsService?.GetWorldMap(area.WorldMapId.Value);
+
+        int? worldMapId = area.WorldMapId ?? superArea?.WorldMapId;
+        RawWorldMap? worldMap = worldMapId is null ? null : rawWorldMapsService?.GetWorldMap(worldMapId.Value);
 
         return new Area
         {
-            WorldMapId = area.WorldMapId,
+            WorldMapId = worldMapId,
             WorldMapName = worldMap is null ? null : languagesService?.Get(worldMap.NameId),
             SuperAreaId = area.SuperAreaId,
             SuperAreaName = superArea is null ? null : languagesService?.Get(superArea.NameId),
