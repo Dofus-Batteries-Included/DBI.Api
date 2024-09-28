@@ -4,6 +4,7 @@ namespace Server.Features.DataCenter.Models.Maps;
 
 public class Map
 {
+    public required long? WorldMapId { get; init; }
     public required long? SuperAreaId { get; init; }
     public required LocalizedText? SuperAreaName { get; init; }
     public required long? AreaId { get; init; }
