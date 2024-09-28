@@ -61,4 +61,24 @@ public class MapsController : ControllerBase
         WorldGraphService worldService = await _worldServiceFactory.CreateWorldGraphServiceAsync(gameVersion, cancellationToken);
         return worldService.GetNodesInMap(mapId) ?? throw new NotFoundException($"Could not find nodes in version {gameVersion}.");
     }
+
+    /// <summary>
+    ///     Get transitions from map
+    /// </summary>
+    [HttpGet("{mapId:long}/transitions/outgoing")]
+    public async Task<IEnumerable<MapTransition>> GetTransitionsFromMap(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        WorldGraphService worldService = await _worldServiceFactory.CreateWorldGraphServiceAsync(gameVersion, cancellationToken);
+        return worldService.GetTransitionsFromMap(mapId) ?? throw new NotFoundException($"Could not find transitions in version {gameVersion}.");
+    }
+
+    /// <summary>
+    ///     Get transitions to map
+    /// </summary>
+    [HttpGet("{mapId:long}/transitions/incoming")]
+    public async Task<IEnumerable<MapTransition>> GetTransitionsToMap(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        WorldGraphService worldService = await _worldServiceFactory.CreateWorldGraphServiceAsync(gameVersion, cancellationToken);
+        return worldService.GetTransitionsToMap(mapId) ?? throw new NotFoundException($"Could not find transitions in version {gameVersion}.");
+    }
 }
