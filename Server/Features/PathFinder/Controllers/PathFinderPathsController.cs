@@ -2,14 +2,15 @@
 using Server.Common.Exceptions;
 using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Models;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.Maps;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 using Server.Features.DataCenter.Services;
 using Server.Features.PathFinder.Controllers.Requests;
 using Server.Features.PathFinder.Controllers.Responses;
 using Server.Features.PathFinder.Services;
+using WorldGraphService = Server.Features.DataCenter.Raw.Services.WorldGraphs.WorldGraphService;
 
 namespace Server.Features.PathFinder.Controllers;
 
@@ -203,10 +204,10 @@ public class PathFinderPathsController : ControllerBase
     {
         if (!cellNumber.HasValue)
         {
-            return worldGraphService.GetNodesAtMap(mapId).ToArray();
+            return worldGraphService.GetNodesInMap(mapId).ToArray();
         }
 
-        Cell? cell = mapsService.GetCell(mapId, cellNumber.Value);
+        MapCell? cell = mapsService.GetCell(mapId, cellNumber.Value);
         if (cell == null)
         {
             return [];
@@ -227,16 +228,16 @@ public class PathFinderPathsController : ControllerBase
 
         if (!cellNumber.HasValue)
         {
-            return maps.SelectMany(m => worldGraphService.GetNodesAtMap(m.MapId)).ToArray();
+            return maps.SelectMany(m => worldGraphService.GetNodesInMap(m.MapId)).ToArray();
         }
 
         var cells = maps.Select(m => new { m.MapId, Cell = mapsService.GetCell(m.MapId, cellNumber.Value) }).Where(c => c.Cell != null).ToArray();
         return cells.Select(x => FindNode(worldGraphService, x.MapId, x.Cell!)).ToArray();
     }
 
-    static WorldGraphNode FindNode(WorldGraphService worldGraphService, long mapId, Cell cell)
+    static WorldGraphNode FindNode(WorldGraphService worldGraphService, long mapId, MapCell mapCell)
     {
-        int zone = cell.LinkedZone / 16;
-        return worldGraphService.GetNode(mapId, zone) ?? worldGraphService.GetNodesAtMap(mapId).First();
+        int zone = mapCell.LinkedZone / 16;
+        return worldGraphService.GetNode(mapId, zone) ?? worldGraphService.GetNodesInMap(mapId).First();
     }
 }

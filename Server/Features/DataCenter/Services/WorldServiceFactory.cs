@@ -1,5 +1,6 @@
 ﻿using Server.Features.DataCenter.Raw.Services.I18N;
 using Server.Features.DataCenter.Raw.Services.Maps;
+using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
 namespace Server.Features.DataCenter.Services;
 
@@ -13,6 +14,7 @@ public class WorldServiceFactory(
     RawAreasServiceFactory rawAreasServiceFactory,
     RawSuperAreasServiceFactory rawSuperAreasServiceFactory,
     RawWorldMapsServiceFactory rawWorldMapsServiceFactory,
+    WorldGraphServiceFactory rawWorldGraphServiceFactory,
     LanguagesServiceFactory languagesServiceFactory
 )
 {
@@ -71,4 +73,10 @@ public class WorldServiceFactory(
             await rawMapPositionsServiceFactory.TryCreateServiceAsync(version, cancellationToken),
             await languagesServiceFactory.CreateLanguagesServiceAsync(version, cancellationToken)
         );
+
+    /// <summary>
+    ///     Create an instance of MapsService for the given version of the game.
+    /// </summary>
+    public async Task<WorldGraphService> CreateWorldGraphServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
+        new(await rawWorldGraphServiceFactory.TryCreateServiceAsync(version, cancellationToken));
 }

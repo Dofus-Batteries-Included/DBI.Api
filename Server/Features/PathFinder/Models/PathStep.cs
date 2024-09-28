@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Server.Features.DataCenter.Models.WorldGraphs;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 namespace Server.Features.PathFinder.Models;
 

@@ -36,7 +36,7 @@ public class MapsController : ControllerBase
     ///     Get map cells
     /// </summary>
     [HttpGet("{mapId:long}/cells")]
-    public async Task<IEnumerable<Cell>> GetMapCells(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MapCell>> GetMapCells(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
         MapsService worldService = await _worldServiceFactory.CreateMapsServiceAsync(gameVersion, cancellationToken);
         return worldService.GetCells(mapId) ?? throw new NotFoundException($"Could not find map cells in version {gameVersion}.");
@@ -46,9 +46,19 @@ public class MapsController : ControllerBase
     ///     Get map cell
     /// </summary>
     [HttpGet("{mapId:long}/cells/{cellNumber:int}")]
-    public async Task<Cell> GetMapCell(long mapId, int cellNumber, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    public async Task<MapCell> GetMapCell(long mapId, int cellNumber, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
         MapsService worldService = await _worldServiceFactory.CreateMapsServiceAsync(gameVersion, cancellationToken);
         return worldService.GetCell(mapId, cellNumber) ?? throw new NotFoundException($"Could not find map cell in version {gameVersion}.");
+    }
+
+    /// <summary>
+    ///     Get nodes in map
+    /// </summary>
+    [HttpGet("{mapId:long}/nodes")]
+    public async Task<IEnumerable<MapNode>> GetNodesInMap(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        WorldGraphService worldService = await _worldServiceFactory.CreateWorldGraphServiceAsync(gameVersion, cancellationToken);
+        return worldService.GetNodesInMap(mapId) ?? throw new NotFoundException($"Could not find nodes in version {gameVersion}.");
     }
 }
