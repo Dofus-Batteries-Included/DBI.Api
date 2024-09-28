@@ -15,7 +15,7 @@ public abstract class PeriodicService : BackgroundService
 
     public void TriggerAsap() => _triggerAsap = true;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override sealed async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await OnStartAsync(stoppingToken);
 

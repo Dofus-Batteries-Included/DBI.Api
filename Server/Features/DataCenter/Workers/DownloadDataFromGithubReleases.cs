@@ -27,8 +27,6 @@ partial class DownloadDataFromGithubReleases : PeriodicService
     {
         Logger.LogInformation("Start refreshing data from DDC Releases.");
 
-        RawDataFromGithubReleasesSavedToDisk.SavedDataSummary versionsMetadata = await _rawDataFromGithubReleasesSavedToDisk.GetSavedDataSummaryAsync(stoppingToken);
-
         await foreach (Release release in GetReleasesAsync(stoppingToken))
         {
             if (_processedReleases.Contains(release.Name))
@@ -54,14 +52,16 @@ partial class DownloadDataFromGithubReleases : PeriodicService
                 continue;
             }
 
-            RawDataFromGithubReleasesSavedToDisk.DdcMetadata? ddcMetadata = versionsMetadata.GetMetadata(metadata.GameVersion);
-            if (ddcMetadata != null && string.Compare(release.Name, ddcMetadata.ReleaseName, StringComparison.InvariantCultureIgnoreCase) <= 0)
+            RawDataFromGithubReleasesSavedToDisk.DdcMetadata? ddcMetadata = await _rawDataFromGithubReleasesSavedToDisk.GetSavedMetadataAsync(metadata.GameVersion, stoppingToken);
+            bool ignoreRelease = ddcMetadata != null && string.Compare(release.Name, ddcMetadata.ReleaseName, StringComparison.InvariantCultureIgnoreCase) <= 0;
+
+            if (ignoreRelease)
             {
                 Logger.LogInformation(
                     "Release {ReleaseName} containing data for version {Version} will be ignored because the current data has been extracted from more recent release {MetadataReleaseName}.",
                     release.Name,
                     metadata.GameVersion,
-                    ddcMetadata.ReleaseName
+                    ddcMetadata!.ReleaseName
                 );
             }
             else

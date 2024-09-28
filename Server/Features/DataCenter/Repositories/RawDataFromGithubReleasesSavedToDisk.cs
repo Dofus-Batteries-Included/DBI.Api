@@ -87,6 +87,12 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         return new SavedDataSummary(versions, versionsMetadata);
     }
 
+    public async Task<DdcMetadata?> GetSavedMetadataAsync(string version, CancellationToken cancellationToken = default)
+    {
+        string path = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, version);
+        return await ReadDdcMetadataAsync(path, cancellationToken);
+    }
+
     public async Task SaveRawDataFilesAsync(DownloadDataFromGithubReleases.Release release, string gameVersion, ZipArchive archive, CancellationToken cancellationToken = default)
     {
         string? oldLatest = GetActualVersion("latest");
