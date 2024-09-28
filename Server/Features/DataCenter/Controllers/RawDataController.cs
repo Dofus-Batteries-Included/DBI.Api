@@ -173,4 +173,20 @@ public class RawDataController : ControllerBase
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Maps);
         return File(file.OpenRead(), file.ContentType, file.Name);
     }
+
+    /// <summary>
+    ///     Get world maps data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("world-maps")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetWorldMaps(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.WorldMaps);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
 }

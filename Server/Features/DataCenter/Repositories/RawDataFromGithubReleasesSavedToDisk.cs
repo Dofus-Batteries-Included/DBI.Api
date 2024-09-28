@@ -126,6 +126,7 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.Areas => "areas.json",
             RawDataType.SubAreas => "sub-areas.json",
             RawDataType.Maps => "maps.json",
+            RawDataType.WorldMaps => "world-maps.json",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 

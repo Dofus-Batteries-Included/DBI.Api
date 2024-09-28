@@ -68,5 +68,10 @@ public enum RawDataType
     /// <summary>
     ///     Maps data
     /// </summary>
-    Maps
+    Maps,
+
+    /// <summary>
+    ///     World maps data
+    /// </summary>
+    WorldMaps
 }
