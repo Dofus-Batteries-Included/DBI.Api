@@ -69,11 +69,7 @@ public class FindPathController : ControllerBase
         return new FindPathResponse
         {
             FoundPath = path != null,
-            FromMapId = fromMapId,
-            FromMapPosition = fromMap?.Position,
-            ToMapId = toMapId,
-            ToMapPosition = toMap?.Position,
-            Steps = path?.Steps
+            Path = path
         };
     }
 

@@ -2,8 +2,7 @@ using Path = Server.Features.PathFinder.Models.Path;
 
 namespace Server.Features.PathFinder.Controllers.Responses;
 
-public class FindPathResponse
+public class FindAllPathsResponse
 {
-    public bool FoundPath { get; set; }
-    public Path? Path { get; set; }
+    public IReadOnlyCollection<Path>? Paths { get; set; }
 }
