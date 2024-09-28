@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Server.Common.Exceptions;
 using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
@@ -17,7 +18,7 @@ namespace Server.Features.PathFinder.Controllers;
 ///     Path finder endpoints
 /// </summary>
 [Route("path-finder/path")]
-[Tags("Path Finder")]
+[OpenApiTag("Path Finder")]
 [ApiController]
 public class PathFinderPathsController : ControllerBase
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Server.Common.Models;
 using Server.Features.DataCenter.Raw.Models;
 using Server.Features.DataCenter.Raw.Services.Maps;
@@ -11,7 +12,7 @@ namespace Server.Features.TreasureSolver.Controllers;
 ///     Treasure solver endpoints
 /// </summary>
 [Route("treasure-solver")]
-[Tags("Treasure Solver")]
+[OpenApiTag("Treasure Solver")]
 [ApiController]
 public class TreasureSolverController : ControllerBase
 {
