@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
 using Server.Common.Exceptions;
 using Server.Features.DataCenter.Raw.Models;
@@ -8,7 +9,7 @@ using Server.Infrastructure.Repository;
 
 namespace Server.Features.DataCenter.Repositories;
 
-class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
+partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 {
     readonly IOptions<RepositoryOptions> _repositoryOptions;
     readonly ILogger<RawDataFromGithubReleasesSavedToDisk> _logger;
@@ -153,10 +154,13 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 
-    IEnumerable<string> GetActualVersions() =>
-        Directory.Exists(_repositoryOptions.Value.DataCenterRawDataPath)
-            ? Directory.EnumerateDirectories(_repositoryOptions.Value.DataCenterRawDataPath).Select(Path.GetFileName).OfType<string>().Order()
+    IEnumerable<string> GetActualVersions()
+    {
+        Regex versionRegex = VersionRegex();
+        return Directory.Exists(_repositoryOptions.Value.DataCenterRawDataPath)
+            ? Directory.EnumerateDirectories(_repositoryOptions.Value.DataCenterRawDataPath).Select(Path.GetFileName).OfType<string>().Where(v => versionRegex.IsMatch(v)).Order()
             : [];
+    }
 
     async Task WriteDdcMetadataAsync(DownloadDataFromGithubReleases.Release release, string directory, CancellationToken cancellationToken)
     {
@@ -215,4 +219,10 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         public required string ReleaseUrl { get; init; }
         public required string ReleaseName { get; init; }
     }
+
+    [GeneratedRegex(
+        @"^\d+(\.\d+)*$",
+        RegexOptions.Compiled | RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Singleline | RegexOptions.ExplicitCapture
+    )]
+    private static partial Regex VersionRegex();
 }
