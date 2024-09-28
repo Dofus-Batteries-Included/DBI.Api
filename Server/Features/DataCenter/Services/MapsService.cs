@@ -43,7 +43,7 @@ public class MapsService(
             SubAreaId = subArea?.Id,
             SubAreaName = subArea is null ? null : languagesService?.Get(subArea.NameId),
             MapId = mapId,
-            Name = languagesService?.Get(rawMapPosition.NameId),
+            MapName = languagesService?.Get(rawMapPosition.NameId),
             Position = new Position(rawMapPosition.PosX, rawMapPosition.PosY),
             CellsCount = rawMap.Cells.Count
         };
