@@ -1,6 +1,6 @@
 ﻿namespace Server.Common.Workers;
 
-public abstract class PeriodicService : BackgroundService
+abstract class PeriodicService : BackgroundService
 {
     readonly TimeSpan _period;
     bool _triggerAsap;

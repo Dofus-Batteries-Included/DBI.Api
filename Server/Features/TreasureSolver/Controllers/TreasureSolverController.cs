@@ -7,6 +7,9 @@ using Server.Features.TreasureSolver.Services;
 
 namespace Server.Features.TreasureSolver.Controllers;
 
+/// <summary>
+///     Treasure solver endpoints
+/// </summary>
 [Route("treasure-solver")]
 [Tags("Treasure Solver")]
 [ApiController]
@@ -15,6 +18,8 @@ public class TreasureSolverController : ControllerBase
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly TreasureSolverService _solver;
 
+    /// <summary>
+    /// </summary>
     public TreasureSolverController(RawMapPositionsServiceFactory rawMapPositionServiceFactory, TreasureSolverService solver)
     {
         _solver = solver;

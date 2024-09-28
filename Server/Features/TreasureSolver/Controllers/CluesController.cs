@@ -9,6 +9,9 @@ using Server.Infrastructure.Database;
 
 namespace Server.Features.TreasureSolver.Controllers;
 
+/// <summary>
+///     Clues endpoints
+/// </summary>
 [Route("treasure-solver/clues")]
 [ApiController]
 public class CluesController : ControllerBase
@@ -44,6 +47,6 @@ public class CluesController : ControllerBase
     public async Task RegisterClues([FromServices] RegisterCluesService registerCluesService, [FromServices] ApplicationDbContext dbContext, RegisterCluesRequest request)
     {
         PrincipalEntity principal = await ControllerContext.RequirePrincipal(dbContext);
-        await registerCluesService.RegisterCluesAsync(principal, request.Clues);
+        await registerCluesService.RegisterCluesAsync(principal, request);
     }
 }

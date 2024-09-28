@@ -1,5 +1,7 @@
 ﻿namespace Server.Features.DataCenter.Models.WorldGraphs;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class WorldGraph
 {
     public IReadOnlyCollection<WorldGraphNode> Nodes { get; set; } = [];

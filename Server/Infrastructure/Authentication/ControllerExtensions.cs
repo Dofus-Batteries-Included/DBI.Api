@@ -5,7 +5,7 @@ using Server.Infrastructure.Database;
 
 namespace Server.Infrastructure.Authentication;
 
-public static class ControllerExtensions
+static class ControllerExtensions
 {
     public static async Task<PrincipalEntity?> GetPrincipal(this ControllerContext context, ApplicationDbContext dbContext)
     {

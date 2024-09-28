@@ -6,12 +6,17 @@ using Server.Infrastructure.Database;
 
 namespace Server.Features.Identity.Controllers;
 
+/// <summary>
+///     Registration endpoints
+/// </summary>
 [Route("identity")]
 [ApiController]
 public class RegistrationController : ControllerBase
 {
     readonly ApplicationDbContext _context;
 
+    /// <summary>
+    /// </summary>
     public RegistrationController(ApplicationDbContext context)
     {
         _context = context;

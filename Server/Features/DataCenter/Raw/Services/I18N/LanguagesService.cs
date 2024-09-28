@@ -2,6 +2,8 @@
 
 namespace Server.Features.DataCenter.Raw.Services.I18N;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class LanguagesService
 {
     public required LanguageService? French { get; init; }

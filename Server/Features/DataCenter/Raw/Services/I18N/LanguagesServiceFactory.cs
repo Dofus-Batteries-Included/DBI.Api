@@ -6,6 +6,8 @@ using Server.Features.DataCenter.Repositories;
 
 namespace Server.Features.DataCenter.Raw.Services.I18N;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public class LanguagesServiceFactory
 {
     readonly LanguageServiceFactory _frLanguageFactory;
@@ -23,7 +25,7 @@ public class LanguagesServiceFactory
         _ptLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NPt);
     }
 
-    public async Task<LanguagesService> CreateLanguagesService(string version = "latest", CancellationToken cancellationToken = default) =>
+    public async Task<LanguagesService> CreateLanguagesServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
         new()
         {
             French = await _frLanguageFactory.TryCreateServiceAsync(version, cancellationToken),

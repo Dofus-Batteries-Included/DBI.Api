@@ -5,38 +5,39 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-      <UserSecretsId>a3407a5a-f324-4722-9cc3-a6d0300f02e9</UserSecretsId>
-  </PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <UserSecretsId>a3407a5a-f324-4722-9cc3-a6d0300f02e9</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MinVer" Version="6.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
-        <PackageReference Include="PuppeteerSharp" Version="20.0.0" />
-        <PackageReference Include="Semver" Version="2.3.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
+        <PackageReference Include="NSwag.AspNetCore" Version="14.1.0"/>
+        <PackageReference Include="PuppeteerSharp" Version="20.0.0"/>
+        <PackageReference Include="Semver" Version="2.3.0"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="Domains\DataCenter\Views\Home\Index.cshtml" />
+        <_ContentIncludedByDefault Remove="Domains\DataCenter\Views\Home\Index.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\DataCenter\Raw\Services\" />
+        <Folder Include="Features\DataCenter\Raw\Services\"/>
     </ItemGroup>
 
     <PropertyGroup>

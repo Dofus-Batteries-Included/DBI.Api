@@ -15,7 +15,7 @@ using Server.Infrastructure.Repository;
 
 namespace Server.Features.TreasureSolver.Workers;
 
-public class RefreshDplnDataSource : PeriodicService
+class RefreshDplnDataSource : PeriodicService
 {
     readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true };
     readonly IServiceScopeFactory _scopeFactory;
@@ -127,7 +127,7 @@ public class RefreshDplnDataSource : PeriodicService
 
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
-        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService(cancellationToken: stoppingToken);
+        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesServiceAsync(cancellationToken: stoppingToken);
         RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
 
@@ -143,9 +143,9 @@ public class RefreshDplnDataSource : PeriodicService
         Dictionary<int, int> dplbClueToGameClueMapping = new();
         foreach (RawPointOfInterest poi in allPois)
         {
-            string? nameFr = languagesService.French.Get(poi.NameId);
-            string? nameEn = languagesService.English.Get(poi.NameId);
-            string? nameEs = languagesService.Spanish.Get(poi.NameId);
+            string? nameFr = languagesService.French?.Get(poi.NameId);
+            string? nameEn = languagesService.English?.Get(poi.NameId);
+            string? nameEs = languagesService.Spanish?.Get(poi.NameId);
 
             string? nameFrWithoutAccent = nameFr?.RemoveAccents();
             string? nameEnWithoutAccent = nameEn?.RemoveAccents();

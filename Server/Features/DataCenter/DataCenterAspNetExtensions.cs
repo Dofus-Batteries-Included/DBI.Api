@@ -11,7 +11,7 @@ using Server.Infrastructure.Repository;
 
 namespace Server.Features.DataCenter;
 
-public static class DataCenterAspNetExtensions
+static class DataCenterAspNetExtensions
 {
     public static void ConfigureDataCenter(this IServiceCollection services)
     {
@@ -32,7 +32,7 @@ public static class DataCenterAspNetExtensions
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
         services.AddSingleton<WorldGraphServiceFactory>();
 
-        services.AddSingleton<MapsServiceFactory>();
+        services.AddSingleton<WorldServiceFactory>();
 
         services.AddHostedService<DownloadDataFromGithubReleases>();
 

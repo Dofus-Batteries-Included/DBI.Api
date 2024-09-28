@@ -11,6 +11,9 @@ using Server.Infrastructure.Repository;
 
 namespace Server.Features.TreasureSolver.Services.Clues;
 
+/// <summary>
+///     Export clue records.
+/// </summary>
 public class ExportCluesService
 {
     readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web)
@@ -27,6 +30,8 @@ public class ExportCluesService
     readonly IOptions<RepositoryOptions> _repositoryOptions;
     readonly ILogger<ExportCluesService> _logger;
 
+    /// <summary>
+    /// </summary>
     public ExportCluesService(
         FindCluesService findCluesService,
         LanguagesServiceFactory languagesServiceFactory,
@@ -48,6 +53,9 @@ public class ExportCluesService
         _repositoryOptions = repositoryOptions;
     }
 
+    /// <summary>
+    ///     Export clues
+    /// </summary>
     public async Task<File> ExportCluesAsync()
     {
         string version = Metadata.Version?.ToString() ?? "~dev";
@@ -97,18 +105,18 @@ public class ExportCluesService
 
     async Task<FileClue[]> GetCluesAsync()
     {
-        LanguagesService languages = await _languagesServiceFactory.CreateLanguagesService();
+        LanguagesService languages = await _languagesServiceFactory.CreateLanguagesServiceAsync();
         RawPointOfInterestsService rawPointOfInterestsService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync();
         return rawPointOfInterestsService.GetPointOfInterests()
             .Select(
                 c => new FileClue
                 {
                     ClueId = c.PoiId,
-                    NameFr = languages.French.Get(c.NameId),
-                    NameEn = languages.English.Get(c.NameId),
-                    NameEs = languages.Spanish.Get(c.NameId),
-                    NameDe = languages.German.Get(c.NameId),
-                    NamePt = languages.Portuguese.Get(c.NameId)
+                    NameFr = languages.French?.Get(c.NameId),
+                    NameEn = languages.English?.Get(c.NameId),
+                    NameEs = languages.Spanish?.Get(c.NameId),
+                    NameDe = languages.German?.Get(c.NameId),
+                    NamePt = languages.Portuguese?.Get(c.NameId)
                 }
             )
             .ToArray();
@@ -152,6 +160,9 @@ public class ExportCluesService
 
     IClueRecordsSource[] GetDataSources() => _sources.Concat(_staticCluesDataSourcesService.GetDataSources()).ToArray();
 
+    /// <summary>
+    ///     Representation of a file
+    /// </summary>
     public record struct File(string Name, Stream Content, string Type);
 
     class FileContent

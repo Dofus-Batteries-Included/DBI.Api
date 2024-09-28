@@ -1,4 +1,4 @@
-﻿namespace Server.Features.DataCenter.Controllers.Responses;
+﻿namespace Server.Features.DataCenter.Controllers.Versions.Responses;
 
 /// <summary>
 /// </summary>
