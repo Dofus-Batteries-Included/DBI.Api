@@ -97,7 +97,7 @@ public class ExportCluesService
 
     async Task<FileClue[]> GetCluesAsync()
     {
-        LanguagesService languages = await _languagesServiceFactory.CreateLanguagesService();
+        LanguagesService languages = await _languagesServiceFactory.CreateLanguagesServiceAsync();
         RawPointOfInterestsService rawPointOfInterestsService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync();
         return rawPointOfInterestsService.GetPointOfInterests()
             .Select(

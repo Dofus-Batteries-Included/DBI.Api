@@ -20,19 +20,19 @@ public class PathFinderPathsController : ControllerBase
 {
     readonly WorldGraphServiceFactory _worldGraphServiceFactory;
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
-    readonly MapsServiceFactory _mapsServiceFactory;
+    readonly WorldServiceFactory _worldServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
     public PathFinderPathsController(
         WorldGraphServiceFactory worldGraphServiceFactory,
         RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
-        MapsServiceFactory mapsServiceFactory,
+        WorldServiceFactory worldServiceFactory,
         ILoggerFactory loggerFactory
     )
     {
         _worldGraphServiceFactory = worldGraphServiceFactory;
         _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
-        _mapsServiceFactory = mapsServiceFactory;
+        _worldServiceFactory = worldServiceFactory;
         _loggerFactory = loggerFactory;
     }
 
@@ -40,7 +40,7 @@ public class PathFinderPathsController : ControllerBase
     public async Task<FindPathsResponse> FindPathsFromIdToId(long fromMapId, long toMapId, [FromQuery] FindPathsRequest request, CancellationToken cancellationToken = default)
     {
         WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, mapsService, fromMapId, request.FromCellNumber);
         if (fromNodes.Length == 0)
@@ -76,14 +76,14 @@ public class PathFinderPathsController : ControllerBase
     {
         WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(fromMapX, fromMapY), request.FromCellNumber);
         if (fromNodes.Length == 0)
         {
             throw new NotFoundException("Could not find start position.");
         }
-        
+
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, mapsService, toMapId, request.ToCellNumber);
         if (toNodes.Length == 0)
         {
@@ -112,14 +112,14 @@ public class PathFinderPathsController : ControllerBase
     {
         WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, mapsService, fromMapId, request.FromCellNumber);
         if (fromNodes.Length == 0)
         {
             throw new NotFoundException("Could not find start position.");
         }
-        
+
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(toMapX, toMapY), request.ToCellNumber);
         if (toNodes.Length == 0)
         {
@@ -149,14 +149,14 @@ public class PathFinderPathsController : ControllerBase
     {
         WorldGraphService worldGraphService = await _worldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
         WorldGraphNode[] fromNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(fromMapX, fromMapY), request.FromCellNumber);
         if (fromNodes.Length == 0)
         {
             throw new NotFoundException("Could not find start position.");
         }
-        
+
         WorldGraphNode[] toNodes = FindNodes(worldGraphService, rawMapPositionsService, mapsService, new Position(toMapX, toMapY), request.ToCellNumber);
         if (toNodes.Length == 0)
         {

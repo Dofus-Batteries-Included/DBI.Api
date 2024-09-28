@@ -23,7 +23,7 @@ public class LanguagesServiceFactory
         _ptLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NPt);
     }
 
-    public async Task<LanguagesService> CreateLanguagesService(string version = "latest", CancellationToken cancellationToken = default) =>
+    public async Task<LanguagesService> CreateLanguagesServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
         new()
         {
             French = await _frLanguageFactory.TryCreateServiceAsync(version, cancellationToken),

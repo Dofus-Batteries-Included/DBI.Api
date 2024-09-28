@@ -127,7 +127,7 @@ public class RefreshDplnDataSource : PeriodicService
 
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
-        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService(cancellationToken: stoppingToken);
+        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesServiceAsync(cancellationToken: stoppingToken);
         RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
 

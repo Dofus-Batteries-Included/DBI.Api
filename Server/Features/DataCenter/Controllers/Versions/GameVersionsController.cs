@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Features.DataCenter.Controllers.Responses;
+using Server.Features.DataCenter.Controllers.Versions.Responses;
 using Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Controllers;
+namespace Server.Features.DataCenter.Controllers.Versions;
 
 /// <summary>
 ///     Retrieve the available game versions.

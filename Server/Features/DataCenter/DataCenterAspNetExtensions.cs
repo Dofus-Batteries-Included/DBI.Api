@@ -32,7 +32,7 @@ public static class DataCenterAspNetExtensions
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
         services.AddSingleton<WorldGraphServiceFactory>();
 
-        services.AddSingleton<MapsServiceFactory>();
+        services.AddSingleton<WorldServiceFactory>();
 
         services.AddHostedService<DownloadDataFromGithubReleases>();
 

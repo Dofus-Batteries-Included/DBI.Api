@@ -67,7 +67,7 @@ public class FindCluesService
 
     async Task<IReadOnlyCollection<Clue>> GetCluesFromRecordsAsync(IEnumerable<ClueRecord> results)
     {
-        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesService();
+        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesServiceAsync();
         RawPointOfInterestsService rawPointOfInterestsService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync();
         ClueRecord[] records = results.GroupBy(r => r.ClueId).Select(g => g.OrderByDescending(r => r.RecordDate).First()).Where(r => r.Found).ToArray();
         return records.Select(
