@@ -44,6 +44,7 @@ static class DataCenterAspNetExtensions
                 settings.Description = "Data extracted from Dofus.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";
                 settings.OperationProcessors.Insert(0, new FilterOperationsByRoutePrefix("/data-center"));
+                settings.DocumentProcessors.Add(new SortTagsInDocument());
             }
         );
     }

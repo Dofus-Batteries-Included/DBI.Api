@@ -30,6 +30,7 @@ static class TreasureSolverAspNetExtensions
                 settings.Description = "Dofus Treasure Hunt solver using data collected by the players.";
                 settings.Version = Metadata.Version?.ToString() ?? "~dev";
                 settings.OperationProcessors.Insert(0, new FilterOperationsByRoutePrefix("/treasure-solver"));
+                settings.DocumentProcessors.Add(new SortTagsInDocument());
 
                 const string schemeName = "API key";
                 settings.AddSecurity(
