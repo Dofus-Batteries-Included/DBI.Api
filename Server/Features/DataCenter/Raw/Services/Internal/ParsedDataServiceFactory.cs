@@ -40,7 +40,12 @@ public abstract class ParsedDataServiceFactory<TService>
             return (actualVersion, service);
         }
 
-        IRawDataFile file = await _rawDataRepository.GetRawDataFileAsync(actualVersion, DataType, cancellationToken);
+        IRawDataFile? file = await _rawDataRepository.TryGetRawDataFileAsync(actualVersion, DataType, cancellationToken);
+        if (file == null)
+        {
+            return (actualVersion, default);
+        }
+
         TService? result = await CreateServiceImpl(file, cancellationToken);
         if (result == null)
         {
