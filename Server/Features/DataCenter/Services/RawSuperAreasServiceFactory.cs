@@ -9,6 +9,7 @@ public class MapsServiceFactory(
     RawSubAreasServiceFactory rawSubAreasServiceFactory,
     RawAreasServiceFactory rawAreasServiceFactory,
     RawSuperAreasServiceFactory rawSuperAreasServiceFactory,
+    RawWorldMapsServiceFactory rawWorldMapsServiceFactory,
     LanguagesServiceFactory languagesServiceFactory
 )
 {
@@ -19,6 +20,7 @@ public class MapsServiceFactory(
             await rawSubAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
             await rawAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
             await rawSuperAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
+            await rawWorldMapsServiceFactory.CreateServiceAsync(version, cancellationToken),
             await languagesServiceFactory.CreateLanguagesService(version, cancellationToken)
         );
 }

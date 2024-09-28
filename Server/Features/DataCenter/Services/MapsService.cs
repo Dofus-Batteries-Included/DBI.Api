@@ -12,6 +12,7 @@ public class MapsService(
     RawSubAreasService rawSubAreasService,
     RawAreasService rawAreasService,
     RawSuperAreasService rawSuperAreasService,
+    RawWorldMapsService rawWorldMapService,
     LanguagesService languagesService
 )
 {
@@ -29,16 +30,18 @@ public class MapsService(
         RawSuperArea? superArea = area?.SuperAreaId is null ? null : rawSuperAreasService.GetSuperArea(area.SuperAreaId.Value);
 
         int? worldMapId = subArea?.WorldMapId ?? area?.WorldMapId ?? superArea?.WorldMapId;
-        
+        RawWorldMap? worldMap = worldMapId is null ? null : rawWorldMapService.GetWorldMap(worldMapId.Value);
+
         return new Map
         {
             WorldMapId = worldMapId,
+            WorldMapName = worldMap is null ? null : languagesService.Get(worldMap.NameId),
             SuperAreaId = superArea?.Id,
-            SuperAreaName = superArea == null ? null : languagesService.Get(superArea.NameId),
+            SuperAreaName = superArea is null ? null : languagesService.Get(superArea.NameId),
             AreaId = area?.Id,
-            AreaName = area == null ? null : languagesService.Get(area.NameId),
+            AreaName = area is null ? null : languagesService.Get(area.NameId),
             SubAreaId = subArea?.Id,
-            SubAreaName = subArea == null ? null : languagesService.Get(subArea.NameId),
+            SubAreaName = subArea is null ? null : languagesService.Get(subArea.NameId),
             MapId = mapId,
             Name = languagesService.Get(rawMapPosition.NameId),
             Position = new Position(rawMapPosition.PosX, rawMapPosition.PosY),
