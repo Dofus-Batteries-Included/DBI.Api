@@ -22,7 +22,12 @@ public interface IRawDataRepository
     Task<IReadOnlyCollection<string>> GetAvailableVersionsAsync();
 
     /// <summary>
-    ///     Get a file containing the requested data for the requested version of the game.
+    ///     Try to get the file containing the requested data for the requested version of the game.
+    /// </summary>
+    Task<IRawDataFile?> TryGetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Get the file containing the requested data for the requested version of the game.
     /// </summary>
     Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default);
 }

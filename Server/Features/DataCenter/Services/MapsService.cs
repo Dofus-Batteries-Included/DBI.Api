@@ -7,40 +7,43 @@ using Server.Features.DataCenter.Raw.Services.Maps;
 namespace Server.Features.DataCenter.Services;
 
 public class MapsService(
-    RawMapsService rawMapsService,
-    RawMapPositionsService rawMapPositionsService,
-    RawSubAreasService rawSubAreasService,
-    RawAreasService rawAreasService,
-    RawSuperAreasService rawSuperAreasService,
-    LanguagesService languagesService
+    RawMapsService? rawMapsService,
+    RawMapPositionsService? rawMapPositionsService,
+    RawSubAreasService? rawSubAreasService,
+    RawAreasService? rawAreasService,
+    RawSuperAreasService? rawSuperAreasService,
+    RawWorldMapsService? rawWorldMapService,
+    LanguagesService? languagesService
 )
 {
     public Map? GetMap(long mapId)
     {
-        RawMap? rawMap = rawMapsService.GetMap(mapId);
-        RawMapPosition? rawMapPosition = rawMapPositionsService.GetMap(mapId);
+        RawMap? rawMap = rawMapsService?.GetMap(mapId);
+        RawMapPosition? rawMapPosition = rawMapPositionsService?.GetMap(mapId);
         if (rawMap == null || rawMapPosition == null)
         {
             return null;
         }
 
-        RawSubArea? subArea = rawSubAreasService.GetSubArea(rawMapPosition.SubAreaId);
-        RawArea? area = subArea is null ? null : rawAreasService.GetArea(subArea.AreaId);
-        RawSuperArea? superArea = area?.SuperAreaId is null ? null : rawSuperAreasService.GetSuperArea(area.SuperAreaId.Value);
+        RawSubArea? subArea = rawSubAreasService?.GetSubArea(rawMapPosition.SubAreaId);
+        RawArea? area = subArea is null ? null : rawAreasService?.GetArea(subArea.AreaId);
+        RawSuperArea? superArea = area?.SuperAreaId is null ? null : rawSuperAreasService?.GetSuperArea(area.SuperAreaId.Value);
 
         int? worldMapId = subArea?.WorldMapId ?? area?.WorldMapId ?? superArea?.WorldMapId;
-        
+        RawWorldMap? worldMap = worldMapId is null ? null : rawWorldMapService?.GetWorldMap(worldMapId.Value);
+
         return new Map
         {
             WorldMapId = worldMapId,
+            WorldMapName = worldMap is null ? null : languagesService?.Get(worldMap.NameId),
             SuperAreaId = superArea?.Id,
-            SuperAreaName = superArea == null ? null : languagesService.Get(superArea.NameId),
+            SuperAreaName = superArea is null ? null : languagesService?.Get(superArea.NameId),
             AreaId = area?.Id,
-            AreaName = area == null ? null : languagesService.Get(area.NameId),
+            AreaName = area is null ? null : languagesService?.Get(area.NameId),
             SubAreaId = subArea?.Id,
-            SubAreaName = subArea == null ? null : languagesService.Get(subArea.NameId),
+            SubAreaName = subArea is null ? null : languagesService?.Get(subArea.NameId),
             MapId = mapId,
-            Name = languagesService.Get(rawMapPosition.NameId),
+            MapName = languagesService?.Get(rawMapPosition.NameId),
             Position = new Position(rawMapPosition.PosX, rawMapPosition.PosY),
             CellsCount = rawMap.Cells.Count
         };
@@ -48,7 +51,7 @@ public class MapsService(
 
     public Cell? GetCell(long mapId, int cellNumber)
     {
-        RawMap? rawMap = rawMapsService.GetMap(mapId);
+        RawMap? rawMap = rawMapsService?.GetMap(mapId);
         RawCell? cell = rawMap?.Cells.GetValueOrDefault(cellNumber);
         if (cell == null)
         {

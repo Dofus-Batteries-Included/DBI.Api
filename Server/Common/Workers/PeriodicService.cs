@@ -5,17 +5,17 @@ public abstract class PeriodicService : BackgroundService
     readonly TimeSpan _period;
     bool _triggerAsap;
 
-    protected PeriodicService(TimeSpan period, ILogger<PeriodicService> logger)
+    protected PeriodicService(TimeSpan period, ILogger logger)
     {
         _period = period;
         Logger = logger;
     }
 
-    protected ILogger<PeriodicService> Logger { get; }
+    protected ILogger Logger { get; }
 
     public void TriggerAsap() => _triggerAsap = true;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override sealed async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await OnStartAsync(stoppingToken);
 

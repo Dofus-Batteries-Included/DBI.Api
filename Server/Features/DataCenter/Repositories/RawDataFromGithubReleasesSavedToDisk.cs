@@ -29,25 +29,42 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
     public Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
     {
+        (IRawDataFile? file, string? errorMessage) = TryGetRawDataFileImpl(version, type);
+        if (file == null)
+        {
+            throw new NotFoundException(errorMessage ?? "Could not find data.");
+        }
+
+        return Task.FromResult(file);
+    }
+
+    public Task<IRawDataFile?> TryGetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
+    {
+        (IRawDataFile? file, string? _) = TryGetRawDataFileImpl(version, type);
+        return Task.FromResult(file);
+    }
+
+    (IRawDataFile? file, string? ErrorMessage) TryGetRawDataFileImpl(string version, RawDataType type)
+    {
         string? actualVersion = GetActualVersion(version);
         if (actualVersion == null)
         {
-            throw new NotFoundException($"Could not find data for version {actualVersion}.");
+            return (null, $"Could not find data for version {version}.");
         }
 
         string versionPath = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, actualVersion);
         if (!Directory.Exists(versionPath))
         {
-            throw new NotFoundException($"Could not find data for version {actualVersion}.");
+            return (null, $"Could not find data for version {actualVersion}.");
         }
 
         string path = Path.Join(versionPath, GetFilename(type));
         if (!Path.Exists(path))
         {
-            throw new NotFoundException($"Could not find data for {type} in version {actualVersion}.");
+            return (null, $"Could not find data for {type} in version {actualVersion}.");
         }
 
-        return Task.FromResult<IRawDataFile>(new File(path, actualVersion));
+        return (new File(path, actualVersion), null);
     }
 
     public async Task<SavedDataSummary> GetSavedDataSummaryAsync(CancellationToken cancellationToken = default)
@@ -68,6 +85,12 @@ class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         }
 
         return new SavedDataSummary(versions, versionsMetadata);
+    }
+
+    public async Task<DdcMetadata?> GetSavedMetadataAsync(string version, CancellationToken cancellationToken = default)
+    {
+        string path = Path.Join(_repositoryOptions.Value.DataCenterRawDataPath, version);
+        return await ReadDdcMetadataAsync(path, cancellationToken);
     }
 
     public async Task SaveRawDataFilesAsync(DownloadDataFromGithubReleases.Release release, string gameVersion, ZipArchive archive, CancellationToken cancellationToken = default)
