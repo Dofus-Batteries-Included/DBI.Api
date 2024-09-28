@@ -37,7 +37,6 @@ public class FindPathController : ControllerBase
 
     FindPathResponse FindPathImpl(WorldGraphService worldGraphService, MapsService mapsService, long fromMapId, int fromMapCellNumber, long toMapId, int toMapCellNumber)
     {
-        Map? fromMap = mapsService.GetMap(fromMapId);
         Cell? fromCell = mapsService.GetCell(fromMapId, fromMapCellNumber);
         if (fromCell == null)
         {
@@ -50,7 +49,6 @@ public class FindPathController : ControllerBase
             throw new NotFoundException("Could not find start position.");
         }
 
-        Map? toMap = mapsService.GetMap(toMapId);
         Cell? toCell = mapsService.GetCell(toMapId, toMapCellNumber);
         if (toCell == null)
         {
