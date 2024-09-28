@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Domains.Identity.Models.Entities;
-using Server.Domains.TreasureSolver.Models.Entities;
+using Server.Features.Identity.Models.Entities;
+using Server.Features.TreasureSolver.Models.Entities;
 
 namespace Server.Infrastructure.Database;
 

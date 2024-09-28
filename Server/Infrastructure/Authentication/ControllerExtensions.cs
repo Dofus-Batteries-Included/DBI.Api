@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Server.Domains.Identity.Models.Entities;
+using Server.Features.Identity.Models.Entities;
 using Server.Infrastructure.Database;
 
 namespace Server.Infrastructure.Authentication;
