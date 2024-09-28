@@ -5,6 +5,9 @@ using Server.Features.DataCenter.Services;
 
 namespace Server.Features.DataCenter.Controllers.World;
 
+/// <summary>
+///     Areas endpoints
+/// </summary>
 [Route("data-center/versions/{gameVersion}/world/areas")]
 [Tags("World - Areas")]
 [ApiController]
@@ -12,6 +15,8 @@ public class AreasController : ControllerBase
 {
     readonly WorldServiceFactory _worldServiceFactory;
 
+    /// <summary>
+    /// </summary>
     public AreasController(WorldServiceFactory worldServiceFactory)
     {
         _worldServiceFactory = worldServiceFactory;

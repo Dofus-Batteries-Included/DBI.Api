@@ -6,7 +6,7 @@ using Server.Features.DataCenter.Services;
 namespace Server.Features.DataCenter.Controllers.World;
 
 /// <summary>
-///     Retrieve raw data in JSON files.
+///     Maps endpoints
 /// </summary>
 [Route("data-center/versions/{gameVersion}/world/maps")]
 [Tags("World - Maps")]
@@ -15,11 +15,16 @@ public class MapsController : ControllerBase
 {
     readonly WorldServiceFactory _worldServiceFactory;
 
+    /// <summary>
+    /// </summary>
     public MapsController(WorldServiceFactory worldServiceFactory)
     {
         _worldServiceFactory = worldServiceFactory;
     }
 
+    /// <summary>
+    ///     Get map
+    /// </summary>
     [HttpGet("{mapId:long}")]
     public async Task<Map> GetMap(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
@@ -27,6 +32,9 @@ public class MapsController : ControllerBase
         return worldService.GetMap(mapId) ?? throw new NotFoundException($"Could not find map in version {gameVersion}.");
     }
 
+    /// <summary>
+    ///     Get map cells
+    /// </summary>
     [HttpGet("{mapId:long}/cells")]
     public async Task<IEnumerable<Cell>> GetMapCells(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
@@ -34,6 +42,9 @@ public class MapsController : ControllerBase
         return worldService.GetCells(mapId) ?? throw new NotFoundException($"Could not find map cells in version {gameVersion}.");
     }
 
+    /// <summary>
+    ///     Get map cell
+    /// </summary>
     [HttpGet("{mapId:long}/cells/{cellNumber:int}")]
     public async Task<Cell> GetMapCell(long mapId, int cellNumber, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {

@@ -5,6 +5,9 @@ using Server.Features.DataCenter.Services;
 
 namespace Server.Features.DataCenter.Controllers.World;
 
+/// <summary>
+///     Super Areas endpoints
+/// </summary>
 [Route("data-center/versions/{gameVersion}/world/super-areas")]
 [Tags("World - Super Areas")]
 [ApiController]
@@ -12,6 +15,8 @@ public class SuperAreasController : ControllerBase
 {
     readonly WorldServiceFactory _worldServiceFactory;
 
+    /// <summary>
+    /// </summary>
     public SuperAreasController(WorldServiceFactory worldServiceFactory)
     {
         _worldServiceFactory = worldServiceFactory;
