@@ -8,7 +8,7 @@ namespace Server.Features.DataCenter.Controllers;
 /// <summary>
 ///     Retrieve raw data in JSON files.
 /// </summary>
-[Microsoft.AspNetCore.Components.Route("data-center/versions/{gameVersion}/maps")]
+[Route("data-center/versions/{gameVersion}/maps")]
 [Tags("Maps")]
 [ApiController]
 public class MapsController : ControllerBase
@@ -21,7 +21,7 @@ public class MapsController : ControllerBase
     }
 
     [HttpGet("{mapId:long}")]
-    public async Task<Map> GetMap(string gameVersion, long mapId, CancellationToken cancellationToken)
+    public async Task<Map> GetMap(long mapId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
         MapsService mapsService = await _mapsServiceFactory.CreateServiceAsync(gameVersion, cancellationToken);
         return mapsService.GetMap(mapId) ?? throw new NotFoundException("Could not find map.");

@@ -13,7 +13,7 @@ public class Map
     public required long? SubAreaId { get; init; }
     public required LocalizedText? SubAreaName { get; init; }
     public required long MapId { get; init; }
-    public required LocalizedText Name { get; init; }
+    public required LocalizedText? Name { get; init; }
     public required Position Position { get; init; }
     public required int CellsCount { get; init; }
 }

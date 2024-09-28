@@ -15,12 +15,12 @@ public class MapsServiceFactory(
 {
     public async Task<MapsService> CreateServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
         new(
-            await rawMapsServiceFactory.CreateServiceAsync(version, cancellationToken),
-            await rawMapPositionsServiceFactory.CreateServiceAsync(version, cancellationToken),
-            await rawSubAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
-            await rawAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
-            await rawSuperAreasServiceFactory.CreateServiceAsync(version, cancellationToken),
-            await rawWorldMapsServiceFactory.CreateServiceAsync(version, cancellationToken),
+            await rawMapsServiceFactory.TryCreateServiceAsync(version, cancellationToken),
+            await rawMapPositionsServiceFactory.TryCreateServiceAsync(version, cancellationToken),
+            await rawSubAreasServiceFactory.TryCreateServiceAsync(version, cancellationToken),
+            await rawAreasServiceFactory.TryCreateServiceAsync(version, cancellationToken),
+            await rawSuperAreasServiceFactory.TryCreateServiceAsync(version, cancellationToken),
+            await rawWorldMapsServiceFactory.TryCreateServiceAsync(version, cancellationToken),
             await languagesServiceFactory.CreateLanguagesService(version, cancellationToken)
         );
 }
