@@ -217,7 +217,7 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         {
             _filepath = filepath;
             Version = version;
-            Name = Path.GetFileName(filepath);
+            Name = $"{Path.GetFileNameWithoutExtension(filepath)}.json";
         }
 
         public string Name { get; }
