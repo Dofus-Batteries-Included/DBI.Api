@@ -1,6 +1,6 @@
 ﻿using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Models.WorldGraphs;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 using Server.Features.DataCenter.Services;
 using Server.Features.PathFinder.Models;
@@ -13,20 +13,20 @@ class AStarService
 {
     const int MaxIterations = 100000;
 
-    readonly WorldGraphService _worldGraphService;
+    readonly RawWorldGraphService _rawWorldGraphService;
     readonly MapsService _mapsService;
     readonly ILogger _logger;
 
     readonly Dictionary<(long, long), Path?> _knownPaths = new();
 
-    public AStarService(WorldGraphService worldGraphService, MapsService mapsService, ILogger<AStarService> logger)
+    public AStarService(RawWorldGraphService rawWorldGraphService, MapsService mapsService, ILogger<AStarService> logger)
     {
-        _worldGraphService = worldGraphService;
+        _rawWorldGraphService = rawWorldGraphService;
         _mapsService = mapsService;
         _logger = logger;
     }
 
-    public Path? GetShortestPath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
+    public Path? GetShortestPath(RawWorldGraphNode sourceNode, RawWorldGraphNode targetNode)
     {
         Map? sourceMap = _mapsService.GetMap(sourceNode);
         Map? targetMap = _mapsService.GetMap(targetNode);
@@ -56,11 +56,11 @@ class AStarService
         return _knownPaths[(sourceNode.Id, targetNode.Id)];
     }
 
-    void ComputePath(WorldGraphNode sourceNode, WorldGraphNode targetNode)
+    void ComputePath(RawWorldGraphNode sourceNode, RawWorldGraphNode targetNode)
     {
         Map? targetMap = _mapsService.GetMap(targetNode);
 
-        Dictionary<WorldGraphNode, WorldGraphNode> cameFrom = new();
+        Dictionary<RawWorldGraphNode, RawWorldGraphNode> cameFrom = new();
 
         if (!Explore(sourceNode, targetNode, cameFrom))
         {
@@ -70,10 +70,10 @@ class AStarService
 
         List<PathStep> result = [];
 
-        WorldGraphNode currentNode = targetNode;
+        RawWorldGraphNode currentNode = targetNode;
         while (cameFrom.ContainsKey(currentNode))
         {
-            WorldGraphNode previous = cameFrom[currentNode];
+            RawWorldGraphNode previous = cameFrom[currentNode];
 
             PathStep step = ComputeStep(previous, currentNode);
             result.Add(step);
@@ -90,15 +90,15 @@ class AStarService
         }
     }
 
-    PathStep ComputeStep(WorldGraphNode current, WorldGraphNode next)
+    PathStep ComputeStep(RawWorldGraphNode current, RawWorldGraphNode next)
     {
         Map? currentMap = _mapsService.GetMap(current);
         PathMap currentPathMap = new() { MapId = current.MapId, MapPosition = currentMap?.Position, WorldGraphNodeId = current.Id };
 
-        WorldGraphEdge[] edges = _worldGraphService.GetEdges(current.Id, next.Id).ToArray();
-        WorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
+        RawWorldGraphEdge[] edges = _rawWorldGraphService.GetEdges(current.Id, next.Id).ToArray();
+        RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
 
-        WorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is WorldGraphEdgeType.Scroll or WorldGraphEdgeType.ScrollAction);
+        RawWorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is RawWorldGraphEdgeType.Scroll or RawWorldGraphEdgeType.ScrollAction);
 
         if (scrollTransition is { Direction: not null })
         {
@@ -112,11 +112,11 @@ class AStarService
         return new PathStep { Map = currentPathMap };
     }
 
-    bool Explore(WorldGraphNode sourceNode, WorldGraphNode targetNode, IDictionary<WorldGraphNode, WorldGraphNode> cameFrom)
+    bool Explore(RawWorldGraphNode sourceNode, RawWorldGraphNode targetNode, IDictionary<RawWorldGraphNode, RawWorldGraphNode> cameFrom)
     {
-        HashSet<WorldGraphNode> closed = [];
-        Dictionary<WorldGraphNode, int> open = [];
-        Dictionary<WorldGraphNode, int> openCosts = [];
+        HashSet<RawWorldGraphNode> closed = [];
+        Dictionary<RawWorldGraphNode, int> open = [];
+        Dictionary<RawWorldGraphNode, int> openCosts = [];
 
         open[sourceNode] = ComputeDistance(sourceNode, targetNode);
         openCosts[sourceNode] = 0;
@@ -124,7 +124,7 @@ class AStarService
         int iteration = 0;
         while (open.Count > 0 && iteration < MaxIterations)
         {
-            WorldGraphNode currentNode = open.MinBy(kv => kv.Value).Key;
+            RawWorldGraphNode currentNode = open.MinBy(kv => kv.Value).Key;
             open.Remove(currentNode);
 
             if (currentNode == targetNode)
@@ -136,7 +136,7 @@ class AStarService
 
             foreach (long neighborId in GetNeighbors(currentNode))
             {
-                WorldGraphNode? neighborNode = _worldGraphService.GetNode(neighborId);
+                RawWorldGraphNode? neighborNode = _rawWorldGraphService.GetNode(neighborId);
                 if (neighborNode == null)
                 {
                     continue;
@@ -165,13 +165,13 @@ class AStarService
         return false;
     }
 
-    IEnumerable<long> GetNeighbors(WorldGraphNode nodeId)
+    IEnumerable<long> GetNeighbors(RawWorldGraphNode nodeId)
     {
-        IEnumerable<WorldGraphEdge> edges = _worldGraphService.GetEdgesFrom(nodeId.Id);
+        IEnumerable<RawWorldGraphEdge> edges = _rawWorldGraphService.GetEdgesFrom(nodeId.Id);
         return edges.Select(e => e.To);
     }
 
-    int ComputeDistance(WorldGraphNode from, WorldGraphNode to)
+    int ComputeDistance(RawWorldGraphNode from, RawWorldGraphNode to)
     {
         Map? fromMap = _mapsService.GetMap(from.MapId);
         if (fromMap is null)

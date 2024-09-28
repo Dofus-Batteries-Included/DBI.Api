@@ -4,7 +4,7 @@ using Server.Features.DataCenter.Models;
 using Server.Features.DataCenter.Raw.Models;
 using Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Controllers.Raw;
+namespace Server.Features.DataCenter.Raw.Controllers;
 
 /// <summary>
 ///     Retrieve raw data in JSON files.

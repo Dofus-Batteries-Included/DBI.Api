@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Server.Features.DataCenter.Models.WorldGraphs;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 namespace Server.Features.PathFinder.Models;
 
@@ -23,5 +23,5 @@ public class ScrollStep : PathStep
     /// <summary>
     ///     The direction of the scroll to reach the next map.
     /// </summary>
-    public required WorldGraphEdgeDirection Direction { get; init; }
+    public required RawWorldGraphEdgeDirection Direction { get; init; }
 }

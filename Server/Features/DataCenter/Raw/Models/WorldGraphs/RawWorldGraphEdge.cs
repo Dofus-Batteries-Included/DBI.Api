@@ -1,8 +1,8 @@
-﻿namespace Server.Features.DataCenter.Models.WorldGraphs;
+﻿namespace Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class WorldGraphEdge
+public class RawWorldGraphEdge
 {
     /// <summary>
     ///     The ID of the source node
@@ -14,5 +14,5 @@ public class WorldGraphEdge
     /// </summary>
     public long To { get; set; }
 
-    public IReadOnlyCollection<WorldGraphEdgeTransition>? Transitions { get; set; }
+    public IReadOnlyCollection<RawWorldGraphEdgeTransition>? Transitions { get; set; }
 }
