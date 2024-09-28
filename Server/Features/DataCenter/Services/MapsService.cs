@@ -28,8 +28,11 @@ public class MapsService(
         RawArea? area = subArea is null ? null : rawAreasService.GetArea(subArea.AreaId);
         RawSuperArea? superArea = area?.SuperAreaId is null ? null : rawSuperAreasService.GetSuperArea(area.SuperAreaId.Value);
 
+        int? worldMapId = subArea?.WorldMapId ?? area?.WorldMapId ?? superArea?.WorldMapId;
+        
         return new Map
         {
+            WorldMapId = worldMapId,
             SuperAreaId = superArea?.Id,
             SuperAreaName = superArea == null ? null : languagesService.Get(superArea.NameId),
             AreaId = area?.Id,
