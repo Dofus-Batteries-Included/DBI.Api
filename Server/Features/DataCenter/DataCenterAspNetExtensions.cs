@@ -23,6 +23,7 @@ public static class DataCenterAspNetExtensions
         );
         services.AddSingleton<IRawDataRepository, RawDataFromGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromGithubReleasesSavedToDisk>());
         services.AddSingleton<LanguagesServiceFactory>();
+        services.AddSingleton<RawWorldMapsServiceFactory>();
         services.AddSingleton<RawSuperAreasServiceFactory>();
         services.AddSingleton<RawAreasServiceFactory>();
         services.AddSingleton<RawSubAreasServiceFactory>();
