@@ -59,13 +59,22 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
             return (null, $"Could not find data for version {actualVersion}.");
         }
 
-        string path = Path.Join(versionPath, GetFilename(type));
-        if (!Path.Exists(path))
+        string filename = GetFilename(type);
+
+        string compressedFileName = $"{Path.GetFileNameWithoutExtension(filename)}.bin";
+        string compressedFilePath = Path.Join(versionPath, compressedFileName);
+        if (Path.Exists(compressedFilePath))
         {
-            return (null, $"Could not find data for {type} in version {actualVersion}.");
+            return (new BrotliCompressedFile(compressedFilePath, actualVersion), null);
         }
 
-        return (new File(path, actualVersion), null);
+        string path = Path.Join(versionPath, filename);
+        if (Path.Exists(path))
+        {
+            return (new File(path, actualVersion), null);
+        }
+
+        return (null, $"Could not find data for {type} in version {actualVersion}.");
     }
 
     public async Task<SavedDataSummary> GetSavedDataSummaryAsync(CancellationToken cancellationToken = default)
@@ -107,7 +116,8 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
         foreach (ZipArchiveEntry entry in archive.Entries)
         {
-            string entryFullPath = Path.Join(path, entry.FullName);
+            string fileName = Path.GetFileNameWithoutExtension(entry.FullName);
+            string entryFullPath = Path.Join(path, $"{fileName}.bin");
             string? entryDirectory = Path.GetDirectoryName(entryFullPath);
             if (entryDirectory != null && !Directory.Exists(entryDirectory))
             {
@@ -116,9 +126,9 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 
             _logger.LogDebug("Writing file {Path}...", entryFullPath);
 
-            await using FileStream file = System.IO.File.OpenWrite(entryFullPath);
+            await using BrotliStream encodeStream = new(System.IO.File.OpenWrite(entryFullPath), CompressionLevel.Optimal, false);
             await using Stream entryStream = entry.Open();
-            await entryStream.CopyToAsync(file, cancellationToken);
+            await entryStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
         if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
@@ -197,6 +207,23 @@ partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
         public string Version { get; }
         public string ContentType { get; } = "application/json";
         public Stream OpenRead() => System.IO.File.OpenRead(_filepath);
+    }
+
+    class BrotliCompressedFile : IRawDataFile
+    {
+        readonly string _filepath;
+
+        public BrotliCompressedFile(string filepath, string version)
+        {
+            _filepath = filepath;
+            Version = version;
+            Name = Path.GetFileName(filepath);
+        }
+
+        public string Name { get; }
+        public string Version { get; }
+        public string ContentType { get; } = "application/json";
+        public Stream OpenRead() => new BrotliStream(System.IO.File.OpenRead(_filepath), CompressionMode.Decompress, false);
     }
 
     public class SavedDataSummary
