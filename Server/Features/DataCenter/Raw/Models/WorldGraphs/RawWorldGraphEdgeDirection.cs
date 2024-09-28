@@ -5,7 +5,7 @@
 /// <summary>
 ///     Type of <c>Core.PathFinding.WorldPathfinding.Transition.m_direction</c>
 /// </summary>
-public enum WorldGraphEdgeDirection
+public enum RawWorldGraphEdgeDirection
 {
     Random = -4, // 0xFFFFFFFC
     Same = -3, // 0xFFFFFFFD

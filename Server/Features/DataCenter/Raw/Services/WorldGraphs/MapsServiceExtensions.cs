@@ -6,5 +6,5 @@ namespace Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
 static class MapsServiceExtensions
 {
-    public static Map? GetMap(this MapsService service, WorldGraphNode node) => service.GetMap(node.MapId);
+    public static Map? GetMap(this MapsService service, RawWorldGraphNode node) => service.GetMap(node.MapId);
 }

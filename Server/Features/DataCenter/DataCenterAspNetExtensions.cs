@@ -30,7 +30,7 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawMapsServiceFactory>();
         services.AddSingleton<RawMapPositionsServiceFactory>();
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
-        services.AddSingleton<WorldGraphServiceFactory>();
+        services.AddSingleton<RawWorldGraphServiceFactory>();
 
         services.AddSingleton<WorldServiceFactory>();
 

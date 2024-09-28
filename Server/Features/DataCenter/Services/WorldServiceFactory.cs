@@ -14,7 +14,7 @@ public class WorldServiceFactory(
     RawAreasServiceFactory rawAreasServiceFactory,
     RawSuperAreasServiceFactory rawSuperAreasServiceFactory,
     RawWorldMapsServiceFactory rawWorldMapsServiceFactory,
-    WorldGraphServiceFactory rawWorldGraphServiceFactory,
+    RawWorldGraphServiceFactory rawRawWorldGraphServiceFactory,
     LanguagesServiceFactory languagesServiceFactory
 )
 {
@@ -78,5 +78,5 @@ public class WorldServiceFactory(
     ///     Create an instance of MapsService for the given version of the game.
     /// </summary>
     public async Task<WorldGraphService> CreateWorldGraphServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
-        new(await rawWorldGraphServiceFactory.TryCreateServiceAsync(version, cancellationToken));
+        new(await rawRawWorldGraphServiceFactory.TryCreateServiceAsync(version, cancellationToken));
 }

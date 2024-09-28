@@ -23,5 +23,5 @@ public class ScrollStep : PathStep
     /// <summary>
     ///     The direction of the scroll to reach the next map.
     /// </summary>
-    public required WorldGraphEdgeDirection Direction { get; init; }
+    public required RawWorldGraphEdgeDirection Direction { get; init; }
 }

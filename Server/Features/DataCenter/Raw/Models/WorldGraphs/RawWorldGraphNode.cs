@@ -2,7 +2,7 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class WorldGraphNode : IEquatable<WorldGraphNode>
+public class RawWorldGraphNode : IEquatable<RawWorldGraphNode>
 {
     /// <summary>
     ///     The unique ID of the node
@@ -22,7 +22,7 @@ public class WorldGraphNode : IEquatable<WorldGraphNode>
     /// </summary>
     public int ZoneId { get; init; }
 
-    public bool Equals(WorldGraphNode? other)
+    public bool Equals(RawWorldGraphNode? other)
     {
         if (other is null)
         {
@@ -49,12 +49,12 @@ public class WorldGraphNode : IEquatable<WorldGraphNode>
         {
             return false;
         }
-        return Equals((WorldGraphNode)obj);
+        return Equals((RawWorldGraphNode)obj);
     }
 
     public override int GetHashCode() => Id.GetHashCode();
 
-    public static bool operator ==(WorldGraphNode? left, WorldGraphNode? right) => Equals(left, right);
+    public static bool operator ==(RawWorldGraphNode? left, RawWorldGraphNode? right) => Equals(left, right);
 
-    public static bool operator !=(WorldGraphNode? left, WorldGraphNode? right) => !Equals(left, right);
+    public static bool operator !=(RawWorldGraphNode? left, RawWorldGraphNode? right) => !Equals(left, right);
 }

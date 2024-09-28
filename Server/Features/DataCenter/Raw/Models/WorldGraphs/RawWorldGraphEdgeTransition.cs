@@ -2,17 +2,17 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class WorldGraphEdgeTransition
+public class RawWorldGraphEdgeTransition
 {
     /// <summary>
     ///     The type of transition
     /// </summary>
-    public WorldGraphEdgeType? Type { get; set; }
+    public RawWorldGraphEdgeType? Type { get; set; }
 
     /// <summary>
     ///     The direction of the transition
     /// </summary>
-    public WorldGraphEdgeDirection? Direction { get; set; }
+    public RawWorldGraphEdgeDirection? Direction { get; set; }
 
     /// <summary>
     ///     The ID of the map

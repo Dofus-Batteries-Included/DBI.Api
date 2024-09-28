@@ -5,7 +5,7 @@
 /// <summary>
 ///     Type of <c>Core.PathFinding.WorldPathfinding.Transition.m_type</c>
 /// </summary>
-public enum WorldGraphEdgeType
+public enum RawWorldGraphEdgeType
 {
     Unspecified = 0,
     Scroll = 1,

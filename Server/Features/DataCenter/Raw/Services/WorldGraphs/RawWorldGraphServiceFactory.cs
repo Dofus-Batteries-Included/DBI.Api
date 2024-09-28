@@ -9,21 +9,21 @@ namespace Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class WorldGraphServiceFactory : ParsedDataServiceFactory<WorldGraphService>
+public class RawWorldGraphServiceFactory : ParsedDataServiceFactory<RawWorldGraphService>
 {
     readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
     };
 
-    public WorldGraphServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.WorldGraph)
+    public RawWorldGraphServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.WorldGraph)
     {
     }
 
-    protected override async Task<WorldGraphService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
+    protected override async Task<RawWorldGraphService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
     {
         await using Stream stream = file.OpenRead();
-        WorldGraph? data = await JsonSerializer.DeserializeAsync<WorldGraph>(stream, _jsonSerializerOptions, cancellationToken);
-        return data == null ? null : new WorldGraphService(data);
+        RawWorldGraph? data = await JsonSerializer.DeserializeAsync<RawWorldGraph>(stream, _jsonSerializerOptions, cancellationToken);
+        return data == null ? null : new RawWorldGraphService(data);
     }
 }
