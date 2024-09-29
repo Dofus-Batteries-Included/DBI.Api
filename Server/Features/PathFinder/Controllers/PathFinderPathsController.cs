@@ -11,6 +11,7 @@ using Server.Features.DataCenter.Services;
 using Server.Features.PathFinder.Controllers.Requests;
 using Server.Features.PathFinder.Controllers.Responses;
 using Server.Features.PathFinder.Services;
+using Server.Features.PathFinder.Services.PathFinding;
 
 namespace Server.Features.PathFinder.Controllers;
 
@@ -85,11 +86,14 @@ public class PathFinderPathsController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        AStarService aStarService = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
+        AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStar>());
+        PathFinderService pathFinderService = new(pathFindingStrategy, rawWorldGraphService, mapsService);
 
         return new FindPathsResponse
         {
-            Paths = fromNodes.SelectMany(fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = aStarService.GetShortestPath(fromNode, toNode) }))
+            Paths = fromNodes.SelectMany(
+                    fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinderService.GetShortestPath(fromNode, toNode) })
+                )
                 .Where(p => p.Path != null)
                 .Select(p => p.Path!)
                 .ToArray()
