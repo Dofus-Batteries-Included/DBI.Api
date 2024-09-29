@@ -17,5 +17,10 @@ public class FindNextMapResponse
     /// <summary>
     ///     The map in which the clue has been found, if any.
     /// </summary>
-    public required MapNodeWithPosition? Map { get; init; }
+    public MapNodeWithPosition? Map { get; init; }
+
+    /// <summary>
+    ///     The number of maps to traverse to reach the destination.
+    /// </summary>
+    public int? Distance { get; init; }
 }

@@ -1,7 +1,6 @@
 ﻿using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
 using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.Maps;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 using Server.Features.DataCenter.Services;
 using Server.Features.PathFinder.Services;
@@ -17,7 +16,6 @@ namespace Server.Features.TreasureSolver.Services;
 public class TreasureSolverService(
     FindCluesService findCluesService,
     RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
-    RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
     WorldServiceFactory worldServiceFactory,
     ILoggerFactory loggerFactory
 )
@@ -31,7 +29,12 @@ public class TreasureSolverService(
     /// <remarks>
     ///     This method is the most reliable: it starts from a node and goes through the graph.
     /// </remarks>
-    public async Task<MapNodeWithPosition?> FindNextNodeAsync(long startNodeId, Direction direction, int clueId, CancellationToken cancellationToken = default)
+    public async Task<FindNextNodeContainingClueResult> FindNextNodeContainingClueAsync(
+        long startNodeId,
+        Direction direction,
+        int clueId,
+        CancellationToken cancellationToken = default
+    )
     {
         RawWorldGraphService rawWorldGraphService = await rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
@@ -39,21 +42,29 @@ public class TreasureSolverService(
         RawWorldGraphNode? startNode = rawWorldGraphService.GetNode(startNodeId);
         if (startNode == null)
         {
-            return null;
+            return new FindNextNodeContainingClueResult(false, null, null);
         }
 
         AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, loggerFactory.CreateLogger<AStar>());
         PathFinderService pathFinderService = new(pathFindingStrategy, rawWorldGraphService, mapsService);
 
+        int distance = 1;
         foreach (MapNodeWithPosition node in pathFinderService.EnumerateNodesInDirection(startNode, direction))
         {
             IReadOnlyCollection<Clue> clues = await findCluesService.FindCluesInMapAsync(node.MapId);
             if (clues.Any(c => c.ClueId == clueId))
             {
-                return node;
+                return new FindNextNodeContainingClueResult(true, node, distance);
             }
+
+            distance++;
         }
 
-        return null;
+        return new FindNextNodeContainingClueResult(false, null, null);
     }
 }
+
+/// <summary>
+///     The result of <see cref="TreasureSolverService.FindNextNodeContainingClueAsync" />
+/// </summary>
+public readonly record struct FindNextNodeContainingClueResult(bool Found, MapNodeWithPosition? Map, int? Distance);
