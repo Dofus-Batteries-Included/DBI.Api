@@ -296,84 +296,105 @@ curl -X 'GET' \
 Internally, the path finder requires the start and end node in the graph to search for a path between them.
 The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
 - `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.\
-  __Example__:
-  - Request
-  ```
-  curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-nodes' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "search": "by-id",
-    "nodeId": 7911
-  }'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "id": 7911,
-      "mapId": 106693122,
-      "zoneId": 2
-    }
-  ]
-  ```
+  <details>
+    <summary>
+      <b>Example</b>
+    </summary>
+
+    __Request__
+    ```
+    curl -X 'POST' \
+      'http://localhost:5274/path-finder/path/find-nodes' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "search": "by-id",
+      "nodeId": 7911
+    }'
+    ```
+    
+    __Response__
+    ```json
+    [
+      {
+        "id": 7911,
+        "mapId": 106693122,
+        "zoneId": 2
+      }
+    ]
+    ```
+  </details>
+
 - `FindNodeByMap`, from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.\
-  __Example__:
-  - Request
-  ```
-  curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-nodes' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "search": "by-map",
-    "mapId": 106693122,
-    "cellNumber": 425
-  }'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "id": 10115,
+  <details>
+    <summary>
+      <b>Example</b>
+    </summary>
+
+    __Request__
+    ```
+    curl -X 'POST' \
+      'http://localhost:5274/path-finder/path/find-nodes' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "search": "by-map",
       "mapId": 106693122,
-      "zoneId": 1
-    }
-  ]
+      "cellNumber": 425
+    }'
+    ```
+    
+    __Response__
+    ```json
+    [
+      {
+        "id": 10115,
+        "mapId": 106693122,
+        "zoneId": 1
+      }
+    ]
   ```
+  </details>
+
 - `FindNodeByMap`, from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.\
-  __Example__:
-  - Request
+  <details>
+    <summary>
+      <b>Example</b>
+    </summary>
+  
+    __Request__
+    ```
+    curl -X 'POST' \
+      'http://localhost:5274/path-finder/path/find-nodes' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "search": "by-map",
+      "mapId": 106693122
+    }'
+    ```
+    
+    __Response__
+    ```json
+    [
+      {
+        "id": 7911,
+        "mapId": 106693122,
+        "zoneId": 2
+      },
+      {
+        "id": 10115,
+        "mapId": 106693122,
+        "zoneId": 1
+      }
+    ]
   ```
-  curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-nodes' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "search": "by-map",
-    "mapId": 106693122
-  }'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "id": 7911,
-      "mapId": 106693122,
-      "zoneId": 2
-    },
-    {
-      "id": 10115,
-      "mapId": 106693122,
-      "zoneId": 1
-    }
-  ]
-  ```
+  </details>
+
 - `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.\
   <details>
     <summary>
-      <b>Example:</b>
+      <b>Example</b>
     </summary>
   
     __Request__
