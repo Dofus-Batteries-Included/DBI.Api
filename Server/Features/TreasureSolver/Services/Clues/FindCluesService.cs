@@ -1,5 +1,4 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Raw.Models;
+﻿using Server.Features.DataCenter.Raw.Models;
 using Server.Features.DataCenter.Raw.Services.I18N;
 using Server.Features.DataCenter.Raw.Services.Maps;
 using Server.Features.DataCenter.Raw.Services.PointOfInterests;
@@ -95,7 +94,7 @@ public class FindCluesService
                 r =>
                 {
                     RawPointOfInterest? poi = rawPointOfInterestsService.GetPointOfInterest(r.ClueId);
-                    return new Clue { ClueId = r.ClueId, Name = poi != null ? languagesService.Get(poi.NameId) : new LocalizedText() };
+                    return new Clue { ClueId = r.ClueId, Name = poi != null ? languagesService.Get(poi.NameId) : null };
                 }
             )
             .ToArray();
