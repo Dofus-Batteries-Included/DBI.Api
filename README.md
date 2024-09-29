@@ -2,9 +2,14 @@
 
 APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.Plugins).
 
-## Data Center
-
-Data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository exposed through REST APIs.
+- [Treasure Solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
+  - [How to use the treasure solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-use-the-treasure-solver)
+    - [Find next clue](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#find-next-clue) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextPosition)
+    - [Export clues data](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#export-clues-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_ExportClues)
+  - [How to register clues](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-register-clues)
+    - [Register account](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-account) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=identity#/Registration/Registration_Register)
+    - [Register clues](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-clues) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_RegisterClues)
+- [Data Center](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
 
 ## Treasure Solver
 
@@ -134,3 +139,7 @@ curl -X 'POST' \
   ]
 }'
 ```
+
+## Data Center
+
+Data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository exposed through REST APIs.
