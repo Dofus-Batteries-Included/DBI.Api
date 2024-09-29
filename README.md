@@ -32,23 +32,29 @@ In addition to the endpoints to find treasure hunt clues or export all of them a
 
 Call the `Find next position` (or the `Find next map`) endpoint with the start position, the direction and the clue ID.
 
-__Example__
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/treasure-solver/-26/29/West/965' \
-  -H 'accept: application/json'
-```
-- Response
-```json
-{
-  "found": true,
-  "mapPosition": {
-    "x": -30,
-    "y": 29
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/treasure-solver/-26/29/West/965' \
+    -H 'accept: application/json'
+  ```
+
+  __Response__
+  ```json
+  {
+    "found": true,
+    "mapPosition": {
+      "x": -30,
+      "y": 29
+    }
   }
-}
-```
+  ```
+</details>
 
 #### Export clues data
 
@@ -84,13 +90,18 @@ The exported file looks like:
 }
 ```
 
-__Example__
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/treasure-solver/clues/export' \
-  -H 'accept: application/json'
-```
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/treasure-solver/clues/export' \
+    -H 'accept: application/json'
+  ```
+</details>
 
 ### How to register clues
 
@@ -103,17 +114,23 @@ API keys are used to associate clues to accounts, which allow to deduplicate rec
 
 First call the `Register account` endpoint and provide the dofus account ID and dofus account nickname that will be the author of the clues. The endpoint returns an API key that should be provided to the server in the `Authorization` header.
 
-__Example__
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/identity/register?accountId={ACCOUNT_ID}&accountName={ACCOUNT_NAME}' \
-  -H 'accept: application/json'
-```
-- Response
-```json
-"ed2defea-5925-45e5-b286-d31d10194e6f"
-```
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/identity/register?accountId={ACCOUNT_ID}&accountName={ACCOUNT_NAME}' \
+    -H 'accept: application/json'
+  ```
+
+  __Response__
+  ```json
+  "ed2defea-5925-45e5-b286-d31d10194e6f"
+  ```
+</details>
 
 #### Register clues
 
@@ -123,29 +140,34 @@ Once the API key has been retrieved, it can be used to register clues.
 In order to minimize chattiness, multiple clues can be registered in a single request. Each clue can be marked as found or not. 
 Clues that are marked as not found are removed from the data sets.
 
-__Example__
-- Request
-```
-curl -X 'POST' \
-  'http://localhost:5274/treasure-solver/clues' \
-  -H 'accept: */*' \
-  -H 'Authorization: ed2defea-5925-45e5-b286-d31d10194e6f' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "clues": [
-    {
-      "mapId": 123,
-      "clueId": 456,
-      "found": true
-    },
-    {
-      "mapId": 147,
-      "clueId": 258,
-      "found": true
-    }
-  ]
-}'
-```
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/treasure-solver/clues' \
+    -H 'accept: */*' \
+    -H 'Authorization: ed2defea-5925-45e5-b286-d31d10194e6f' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "clues": [
+      {
+        "mapId": 123,
+        "clueId": 456,
+        "found": true
+      },
+      {
+        "mapId": 147,
+        "clueId": 258,
+        "found": true
+      }
+    ]
+  }'
+  ```
+</details>
 
 ## Path Finder
 
@@ -166,7 +188,7 @@ The graph is defined as follows:
 - Nodes are zones of a map. Most maps have only one zone but maps that have multiple dissociated areas have multiple zones.\
   <details>
     <summary>
-      <b>Example</b>: the data center API exposes an endpoint to get all the nodes of a given map, <a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap" target="_blank">try it!</a>
+      <b>Example</b>: the data center API exposes an endpoint to get all the nodes of a given map, <a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap">try it!</a>
     </summary>
   
     __Request__
@@ -196,7 +218,7 @@ The graph is defined as follows:
 - Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.\
   <details>
     <summary>
-      <b>Example</b>: the data center API exposes an endpoint to get all the edges from a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap" target="_blank">try it!</a>) or to a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap" target="_blank">try it!</a>
+      <b>Example</b>: the data center API exposes an endpoint to get all the edges from a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap">try it!</a>) or to a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap">try it!</a>
     </summary>
   
     __Request__
@@ -693,29 +715,35 @@ It can either be a version of the game for which the extractor has released data
 
 The `GET /data-center/versions` endpoints returns the list of available versions, and the latest one.
 
-__Example__
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/data-center/game-versions' \
-  -H 'accept: application/json'
-```
-- Response
-```json
-{
-  "latest": "2.73.38.36",
-  "versions": [
-    "2.73.22.22",
-    "2.73.31.26",
-    "2.73.32.27",
-    "2.73.34.30",
-    "2.73.35.32",
-    "2.73.36.33",
-    "2.73.37.34",
-    "2.73.38.36"
-  ]
-}
-```
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/game-versions' \
+    -H 'accept: application/json'
+  ```
+
+  __Response__
+  ```json
+  {
+    "latest": "2.73.38.36",
+    "versions": [
+      "2.73.22.22",
+      "2.73.31.26",
+      "2.73.32.27",
+      "2.73.34.30",
+      "2.73.35.32",
+      "2.73.36.33",
+      "2.73.37.34",
+      "2.73.38.36"
+    ]
+  }
+  ```
+</details>
 
 ### Raw data
 
@@ -738,53 +766,59 @@ There are a lot more that could be implemented.\
 Suggestions are very welcome, please open an issue if you'd like a specific piece of data exposed through a structured API. 
 Alternatively, you can open a PR and contribute yourself. Please open an issue or [join the discord](https://discord.com/invite/HzE9RgYPW5) to get help in doing so.
 
-__Example__
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/75497730' \
-  -H 'accept: application/json'
-```
-- Response
-```json
-{
-  "worldMapId": 1,
-  "worldMapName": {
-    "french": "Monde des Douze",
-    "english": "World of Twelve",
-    "spanish": "Mundo de los Doce",
-    "german": "Die Welt der Zwölf",
-    "portuguese": "Mundo dos Doze"
-  },
-  "superAreaId": 0,
-  "superAreaName": {
-    "french": "Monde des Douze",
-    "english": "World of Twelve",
-    "spanish": "Mundo de los Doce",
-    "german": "Die Welt der Zwölf",
-    "portuguese": "Mundo dos Doze"
-  },
-  "areaId": 28,
-  "areaName": {
-    "french": "Montagne des Koalaks",
-    "english": "Koalak Mountain",
-    "spanish": "Montaña de los koalaks",
-    "german": "Koalak-Gebirge",
-    "portuguese": "Montanha dos Koalaks"
-  },
-  "subAreaId": 231,
-  "subAreaName": {
-    "french": "Lacs enchantés",
-    "english": "Enchanted Lakes",
-    "spanish": "Lagos encantados",
-    "german": "Verzauberte Seen",
-    "portuguese": "Lagos Encantados"
-  },
-  "mapId": 75497730,
-  "position": {
-    "x": -20,
-    "y": -5
-  },
-  "cellsCount": 560
-}
-``` 
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/75497730' \
+    -H 'accept: application/json'
+  ```
+
+  __Response__
+  ```json
+  {
+    "worldMapId": 1,
+    "worldMapName": {
+      "french": "Monde des Douze",
+      "english": "World of Twelve",
+      "spanish": "Mundo de los Doce",
+      "german": "Die Welt der Zwölf",
+      "portuguese": "Mundo dos Doze"
+    },
+    "superAreaId": 0,
+    "superAreaName": {
+      "french": "Monde des Douze",
+      "english": "World of Twelve",
+      "spanish": "Mundo de los Doce",
+      "german": "Die Welt der Zwölf",
+      "portuguese": "Mundo dos Doze"
+    },
+    "areaId": 28,
+    "areaName": {
+      "french": "Montagne des Koalaks",
+      "english": "Koalak Mountain",
+      "spanish": "Montaña de los koalaks",
+      "german": "Koalak-Gebirge",
+      "portuguese": "Montanha dos Koalaks"
+    },
+    "subAreaId": 231,
+    "subAreaName": {
+      "french": "Lacs enchantés",
+      "english": "Enchanted Lakes",
+      "spanish": "Lagos encantados",
+      "german": "Verzauberte Seen",
+      "portuguese": "Lagos Encantados"
+    },
+    "mapId": 75497730,
+    "position": {
+      "x": -20,
+      "y": -5
+    },
+    "cellsCount": 560
+  }
+  ``` 
+</details>
