@@ -713,7 +713,7 @@ The [data center API](https://api.dofusbatteriesincluded.fr/swagger/index.html?u
 Most endpoints ask for a version to use when getting the data. 
 It can either be a version of the game for which the extractor has released data (see releases of the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository) or the special value `latest` that will get the data from the higher version.
 
-The `GET /data-center/versions` endpoints returns the list of available versions, and the latest one.
+The [Get available versions](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions) endpoint returns the list of available versions, and the latest one.
 
 <details>
   <summary>
