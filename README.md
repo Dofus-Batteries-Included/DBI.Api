@@ -3,6 +3,13 @@
 APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.Plugins).
 
 __Summary__
+- [Data Center](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
+  - [Game versions](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#game-versions) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
+  - [Raw data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#raw-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+  - [Structured data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#structured-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
+- [Path Finder](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#path-finder)
+  - [The tricky part about paths](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#the-tricky-part-about-paths)
+  - [How to search for a path](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#how-to-search-for-a-path) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
 - [Treasure Solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
   - [How to use the treasure solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-use-the-treasure-solver)
     - [Find next clue](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#find-next-clue) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextPosition)
@@ -10,163 +17,126 @@ __Summary__
   - [How to register clues](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-register-clues)
     - [Register account](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-account) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=identity#/Registration/Registration_Register)
     - [Register clues](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-clues) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_RegisterClues)
-- [Path Finder](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#path-finder)
-  - [The tricky part about paths](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#the-tricky-part-about-paths)
-  - [How to search for a path](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#how-to-search-for-a-path) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
-- [Data Center](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
-  - [Game versions](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#game-versions) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
-  - [Raw data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#raw-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
-  - [Structured data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#structured-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
 
-## Treasure Solver
+## Data Center
 
-The [treasure solver API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver) can solve Dofus treasure hunts using data collected by the players. 
-In addition to the endpoints to find treasure hunt clues or export all of them as JSON, the API exposes endpoints to register new clues. \
- The [DBI.TreasureSolver](https://github.com/Dofus-Batteries-Included/DBI.Plugins/tree/main/src/TreasureSolver) plugins automatically registers clues while the player performs their hunts.
+The [data center API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center) exposes data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository. The underlying data is the foundation on which the other APIs rest.
 
-### How to use the treasure solver
+### Game versions
 
-#### Find next clue
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
 
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextPosition)
+Most endpoints ask for a version to use when getting the data.
+It can either be a version of the game for which the extractor has released data (see releases of the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository) or the special value `latest` that will get the data from the higher version.
 
-Call the `Find next position` (or the `Find next map`) endpoint with the start position, the direction and the clue ID.
+The [Get available versions](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions) endpoint returns the list of available versions, and the latest one.
 
 <details>
   <summary>
     <b>Example</b>
   </summary>
 
-  __Request__
+__Request__
   ```
   curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/treasure-solver/-26/29/West/965' \
+    'https://api.dofusbatteriesincluded.fr/data-center/game-versions' \
     -H 'accept: application/json'
   ```
 
-  __Response__
+__Response__
   ```json
   {
-    "found": true,
-    "mapPosition": {
-      "x": -30,
-      "y": 29
-    }
-  }
-  ```
-</details>
-
-#### Export clues data
-
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_ExportClues)
-
-Call the `Export clues` endpoint to download a JSON file containing all the clues that have been registered.
-The exported file looks like:
-```json
-{
-  "version": "1.2.3", # API version
-  "last-modification-date": "2024-09-08T22:35:48.3123551+02:00",
-  "clues": [
-   {
-      "clue-id": 123,
-      "name-fr": "...",
-      "name-en": "...",
-      "name-es": "...",
-      "name-de": "...",
-      "name-pt": "..."
-   },
-   ...
-  ],
-  "maps": {
-    "456": { # Map ID
-      "position": { "x": 45, "y": 67 },
-      "clues": [
-        147,
-        258
-      ]
-    },
-    ...
-  }
-}
-```
-
-<details>
-  <summary>
-    <b>Example</b>
-  </summary>
-
-  __Request__
-  ```
-  curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/treasure-solver/clues/export' \
-    -H 'accept: application/json'
-  ```
-</details>
-
-### How to register clues
-
-The `Register clues` endpoint requires an API key.
-API keys are used to associate clues to accounts, which allow to deduplicate records: the `(author, clue-id, map-id)` tuple is unique in the records database.
-
-#### Register account
-
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=identity#/Registration/Registration_Register)
-
-First call the `Register account` endpoint and provide the dofus account ID and dofus account nickname that will be the author of the clues. The endpoint returns an API key that should be provided to the server in the `Authorization` header.
-
-<details>
-  <summary>
-    <b>Example</b>
-  </summary>
-
-  __Request__
-  ```
-  curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/identity/register?accountId={ACCOUNT_ID}&accountName={ACCOUNT_NAME}' \
-    -H 'accept: application/json'
-  ```
-
-  __Response__
-  ```json
-  "ed2defea-5925-45e5-b286-d31d10194e6f"
-  ```
-</details>
-
-#### Register clues
-
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_RegisterClues)
-
-Once the API key has been retrieved, it can be used to register clues. 
-In order to minimize chattiness, multiple clues can be registered in a single request. Each clue can be marked as found or not. 
-Clues that are marked as not found are removed from the data sets.
-
-<details>
-  <summary>
-    <b>Example</b>
-  </summary>
-
-  __Request__
-  ```
-  curl -X 'POST' \
-    'http://localhost:5274/treasure-solver/clues' \
-    -H 'accept: */*' \
-    -H 'Authorization: ed2defea-5925-45e5-b286-d31d10194e6f' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "clues": [
-      {
-        "mapId": 123,
-        "clueId": 456,
-        "found": true
-      },
-      {
-        "mapId": 147,
-        "clueId": 258,
-        "found": true
-      }
+    "latest": "2.73.38.36",
+    "versions": [
+      "2.73.22.22",
+      "2.73.31.26",
+      "2.73.32.27",
+      "2.73.34.30",
+      "2.73.35.32",
+      "2.73.36.33",
+      "2.73.37.34",
+      "2.73.38.36"
     ]
-  }'
+  }
   ```
+</details>
+
+### Raw data
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+
+Raw data from the repository exposed as JSON files.
+
+__Note__: the data for `maps` is huge because it is a JSON containing all the maps of the game and all their cells.
+It is approx 1.5 GB if uncompressed, and merely 40 MB when compressed.
+The API server handles Brotli, GZip and Deflate compression, use it!
+
+### Structured data
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
+
+All the other endpoints are for structured data. For example the `World - Maps` endpoint read data from `maps`, `map-positions`, `sub-areas`, `areas`, `super-areas`, `world-maps` and `i18n**` raw files to build their response.
+
+For now there are only a few structured data endpoints as an example of how they can be added to the data center APIs project.
+There are a lot more that could be implemented.\
+Suggestions are very welcome, please open an issue if you'd like a specific piece of data exposed through a structured API.
+Alternatively, you can open a PR and contribute yourself. Please open an issue or [join the discord](https://discord.com/invite/HzE9RgYPW5) to get help in doing so.
+
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+__Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/75497730' \
+    -H 'accept: application/json'
+  ```
+
+__Response__
+  ```json
+  {
+    "worldMapId": 1,
+    "worldMapName": {
+      "french": "Monde des Douze",
+      "english": "World of Twelve",
+      "spanish": "Mundo de los Doce",
+      "german": "Die Welt der Zwölf",
+      "portuguese": "Mundo dos Doze"
+    },
+    "superAreaId": 0,
+    "superAreaName": {
+      "french": "Monde des Douze",
+      "english": "World of Twelve",
+      "spanish": "Mundo de los Doce",
+      "german": "Die Welt der Zwölf",
+      "portuguese": "Mundo dos Doze"
+    },
+    "areaId": 28,
+    "areaName": {
+      "french": "Montagne des Koalaks",
+      "english": "Koalak Mountain",
+      "spanish": "Montaña de los koalaks",
+      "german": "Koalak-Gebirge",
+      "portuguese": "Montanha dos Koalaks"
+    },
+    "subAreaId": 231,
+    "subAreaName": {
+      "french": "Lacs enchantés",
+      "english": "Enchanted Lakes",
+      "spanish": "Lagos encantados",
+      "german": "Verzauberte Seen",
+      "portuguese": "Lagos Encantados"
+    },
+    "mapId": 75497730,
+    "position": {
+      "x": -20,
+      "y": -5
+    },
+    "cellsCount": 560
+  }
+  ``` 
 </details>
 
 ## Path Finder
@@ -335,7 +305,7 @@ __Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, i
 [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
 
 Internally, the path finder requires the start and end node in the graph to search for a path between them.
-The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
+The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
 
 - `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.
   <details>
@@ -346,7 +316,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://localhost:5274/path-finder/path/find-nodes' \
+      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -380,7 +350,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://localhost:5274/path-finder/path/find-nodes' \
+      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -415,7 +385,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://localhost:5274/path-finder/path/find-nodes' \
+      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -458,7 +428,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://localhost:5274/path-finder/path/find-nodes' \
+      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -504,7 +474,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```
   </details>
 
-The [Find paths](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
+The [Find paths](http://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
 It then extract all the candidates for the start and the end and computes all the paths between all the candidates.
 
 <details>
@@ -515,7 +485,7 @@ It then extract all the candidates for the start and the end and computes all th
   __Request__
   ```
   curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-paths' \
+    'http://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -616,7 +586,7 @@ It then extract all the candidates for the start and the end and computes all th
   __Request__
   ```
   curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-paths' \
+    'http://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -744,18 +714,22 @@ It then extract all the candidates for the start and the end and computes all th
   ```
 </details>
 
-## Data Center
+## Treasure Solver
 
-The [data center API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center) exposes data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository.
+The [treasure solver API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver) can solve Dofus treasure hunts using data collected by the players.
+In addition to the endpoints to find treasure hunt clues or export all of them as JSON, the API exposes endpoints to register new clues. \
+The [DBI.TreasureSolver](https://github.com/Dofus-Batteries-Included/DBI.Plugins/tree/main/src/TreasureSolver) plugins automatically registers clues while the player performs their hunts.
 
-### Game versions
+### How to use the treasure solver
 
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
+#### Find next clue
 
-Most endpoints ask for a version to use when getting the data. 
-It can either be a version of the game for which the extractor has released data (see releases of the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository) or the special value `latest` that will get the data from the higher version.
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextPosition)
 
-The [Get available versions](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions) endpoint returns the list of available versions, and the latest one.
+The treasure solver uses the path finder to find the adjacent maps during the treasure hunts. It also uses the same `FindNodeRequest` system to find the starting position.
+See [Path Finder - The tricky part about paths](https://github.com/Dofus-Batteries-Included/DBI.Api#the-tricky-part-about-paths).
+
+To solve a step of the treasure hunt, call the [Find next clue](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextClue) endpoint with the request to find the start node, the direction and the clue ID.
 
 <details>
   <summary>
@@ -764,103 +738,147 @@ The [Get available versions](https://api.dofusbatteriesincluded.fr/swagger/index
 
   __Request__
   ```
-  curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/data-center/game-versions' \
-    -H 'accept: application/json'
+  curl -X 'POST' \
+    'http://api.dofusbatteriesincluded.fr/treasure-solver/find-next-clue' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "start": {
+      "search": "by-map",
+      "mapId": 68552449
+    },
+    "direction": "west",
+    "clueId": 968
+  }'
   ```
 
   __Response__
   ```json
   {
-    "latest": "2.73.38.36",
-    "versions": [
-      "2.73.22.22",
-      "2.73.31.26",
-      "2.73.32.27",
-      "2.73.34.30",
-      "2.73.35.32",
-      "2.73.36.33",
-      "2.73.37.34",
-      "2.73.38.36"
-    ]
+    "found": true,
+    "map": {
+      "mapPosition": {
+        "x": 4,
+        "y": -9
+      },
+      "nodeId": 9826,
+      "mapId": 190579205,
+      "zoneId": 1
+    },
+    "distance": 1
   }
   ```
 </details>
 
-### Raw data
+#### Export clues data
 
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_ExportClues)
 
-Raw data from the repository exposed as JSON files.
-
-__Note__: the data for `maps` is huge because it is a JSON containing all the maps of the game and all their cells. 
-It is approx 1.5 GB if uncompressed, and merely 40 MB when compressed. 
-The API server handles Brotli, GZip and Deflate compression, use it!
-
-### Structured data
-
-[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
-
-All the other endpoints are for structured data. For example the `World - Maps` endpoint read data from `maps`, `map-positions`, `sub-areas`, `areas`, `super-areas`, `world-maps` and `i18n**` raw files to build their response.
-
-For now there are only a few structured data endpoints as an example of how they can be added to the data center APIs project. 
-There are a lot more that could be implemented.\
-Suggestions are very welcome, please open an issue if you'd like a specific piece of data exposed through a structured API. 
-Alternatively, you can open a PR and contribute yourself. Please open an issue or [join the discord](https://discord.com/invite/HzE9RgYPW5) to get help in doing so.
+Call the `Export clues` endpoint to download a JSON file containing all the clues that have been registered.
+The exported file looks like:
+```json
+{
+  "version": "1.2.3", # API version
+  "last-modification-date": "2024-09-08T22:35:48.3123551+02:00",
+  "clues": [
+   {
+      "clue-id": 123,
+      "name-fr": "...",
+      "name-en": "...",
+      "name-es": "...",
+      "name-de": "...",
+      "name-pt": "..."
+   },
+   ...
+  ],
+  "maps": {
+    "456": { # Map ID
+      "position": { "x": 45, "y": 67 },
+      "clues": [
+        147,
+        258
+      ]
+    },
+    ...
+  }
+}
+```
 
 <details>
   <summary>
     <b>Example</b>
   </summary>
 
-  __Request__
+__Request__
   ```
   curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/75497730' \
+    'https://api.dofusbatteriesincluded.fr/treasure-solver/clues/export' \
+    -H 'accept: application/json'
+  ```
+</details>
+
+### How to register clues
+
+The `Register clues` endpoint requires an API key.
+API keys are used to associate clues to accounts, which allow to deduplicate records: the `(author, clue-id, map-id)` tuple is unique in the records database.
+
+#### Register account
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=identity#/Registration/Registration_Register)
+
+First call the `Register account` endpoint and provide the dofus account ID and dofus account nickname that will be the author of the clues. The endpoint returns an API key that should be provided to the server in the `Authorization` header.
+
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+__Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/identity/register?accountId={ACCOUNT_ID}&accountName={ACCOUNT_NAME}' \
     -H 'accept: application/json'
   ```
 
-  __Response__
+__Response__
   ```json
-  {
-    "worldMapId": 1,
-    "worldMapName": {
-      "french": "Monde des Douze",
-      "english": "World of Twelve",
-      "spanish": "Mundo de los Doce",
-      "german": "Die Welt der Zwölf",
-      "portuguese": "Mundo dos Doze"
-    },
-    "superAreaId": 0,
-    "superAreaName": {
-      "french": "Monde des Douze",
-      "english": "World of Twelve",
-      "spanish": "Mundo de los Doce",
-      "german": "Die Welt der Zwölf",
-      "portuguese": "Mundo dos Doze"
-    },
-    "areaId": 28,
-    "areaName": {
-      "french": "Montagne des Koalaks",
-      "english": "Koalak Mountain",
-      "spanish": "Montaña de los koalaks",
-      "german": "Koalak-Gebirge",
-      "portuguese": "Montanha dos Koalaks"
-    },
-    "subAreaId": 231,
-    "subAreaName": {
-      "french": "Lacs enchantés",
-      "english": "Enchanted Lakes",
-      "spanish": "Lagos encantados",
-      "german": "Verzauberte Seen",
-      "portuguese": "Lagos Encantados"
-    },
-    "mapId": 75497730,
-    "position": {
-      "x": -20,
-      "y": -5
-    },
-    "cellsCount": 560
-  }
-  ``` 
+  "ed2defea-5925-45e5-b286-d31d10194e6f"
+  ```
+</details>
+
+#### Register clues
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_RegisterClues)
+
+Once the API key has been retrieved, it can be used to register clues.
+In order to minimize chattiness, multiple clues can be registered in a single request. Each clue can be marked as found or not.
+Clues that are marked as not found are removed from the data sets.
+
+<details>
+  <summary>
+    <b>Example</b>
+  </summary>
+
+__Request__
+  ```
+  curl -X 'POST' \
+    'http://api.dofusbatteriesincluded.fr/treasure-solver/clues' \
+    -H 'accept: */*' \
+    -H 'Authorization: ed2defea-5925-45e5-b286-d31d10194e6f' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "clues": [
+      {
+        "mapId": 123,
+        "clueId": 456,
+        "found": true
+      },
+      {
+        "mapId": 147,
+        "clueId": 258,
+        "found": true
+      }
+    ]
+  }'
+  ```
 </details>
