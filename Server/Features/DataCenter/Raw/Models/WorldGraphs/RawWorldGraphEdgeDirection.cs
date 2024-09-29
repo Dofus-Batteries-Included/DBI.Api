@@ -1,11 +1,11 @@
-﻿namespace Server.Features.DataCenter.Models.WorldGraphs;
+﻿namespace Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 /// <summary>
 ///     Type of <c>Core.PathFinding.WorldPathfinding.Transition.m_direction</c>
 /// </summary>
-public enum WorldGraphEdgeDirection
+public enum RawWorldGraphEdgeDirection
 {
     Random = -4, // 0xFFFFFFFC
     Same = -3, // 0xFFFFFFFD

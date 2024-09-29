@@ -3,7 +3,7 @@ namespace Server.Features.DataCenter.Models.Maps;
 /// <summary>
 ///     A cell in a map.
 /// </summary>
-public class Cell
+public class MapCell
 {
     /// <summary>
     ///     The unique ID of the containing map.

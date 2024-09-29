@@ -59,13 +59,13 @@ public class MapsService(
         return rawMap == null || rawMapPosition == null ? null : Cook(rawMapPosition, rawMap);
     }
 
-    public IEnumerable<Cell>? GetCells(long mapId)
+    public IEnumerable<MapCell>? GetCells(long mapId)
     {
         RawMap? rawMap = rawMapsService?.GetMap(mapId);
         return rawMap?.Cells.Values.Select(c => Cook(mapId, c));
     }
 
-    public Cell? GetCell(long mapId, int cellNumber)
+    public MapCell? GetCell(long mapId, int cellNumber)
     {
         RawMap? rawMap = rawMapsService?.GetMap(mapId);
         RawCell? cell = rawMap?.Cells.GetValueOrDefault(cellNumber);
@@ -96,7 +96,7 @@ public class MapsService(
         };
     }
 
-    static Cell Cook(long mapId, RawCell cell) =>
+    static MapCell Cook(long mapId, RawCell cell) =>
         new()
         {
             MapId = mapId,
