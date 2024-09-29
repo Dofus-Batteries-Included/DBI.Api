@@ -271,7 +271,7 @@ __Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, i
 
 <details>
     <summary>
-      <b>Example</b>: (the data center API exposes an endpoint to get all the cells of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetMapCells))
+      <b>Example</b>: the data center API exposes an endpoint to get all the cells of a given map, <a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetMapCells">try it!</a>
     </summary>
 
   __Request__
