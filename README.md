@@ -16,8 +16,8 @@ APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.P
 
 ## Treasure Solver
 
-Dofus Treasure Hunt solver using data collected by the players. 
-In addition to the endpoints to find treasure hunt clues, the API exposes endpoints to register new clues.
+The [treasure solver API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver) can solve Dofus treasure hunts using data collected by the players. 
+In addition to the endpoints to find treasure hunt clues or export all of them as JSON, the API exposes endpoints to register new clues. \
  The [DBI.TreasureSolver](https://github.com/Dofus-Batteries-Included/DBI.Plugins/tree/main/src/TreasureSolver) plugins automatically registers clues while the player performs their hunts.
 
 ### How to use the treasure solver
@@ -143,9 +143,344 @@ curl -X 'POST' \
 }'
 ```
 
+## Path Finder
+
+The [path finder API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder) computes paths between maps of the game.
+
+### The tricky part about paths
+
+The first issue is that map coordinates are not unique: there are multiple worlds, and multiple levels in a given world, so multiple maps can have the same map coordinates. 
+The unique identifier of a map is its `mapId`. 
+The path finder cannot use the coordinates, it needs the map ID.
+
+The second issue is that the maps of the game can be subdivided into multiple zones dissociated zones: the player cannot go from one zone to the other without going through other maps.
+For example, this is a common occurence in the wabbit islands. \
+It means that we need to know for each map the available zones and how they connect with the zones of the adjacent maps, and we need to know the zones from which we start and end the path searches.
+
+Thankfully, the creators of the game have included what they call a `worldgraph` in the game files. It is extracted by the [DDC](https://github.com/Dofus-Batteries-Included/DDC) project and saved to a file called `world-graph`.\
+The graph is defined as follows:
+- Nodes are zones of a map. Most maps have only one zone but maps that have multiple dissociated areas have multiple zones.\
+  __Example__: (the data center API exposes an endpoint to get all the nodes of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap))
+  - Request
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/nodes' \
+    -H 'accept: application/json'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "id": 7911,
+      "mapId": 106693122,
+      "zoneId": 2
+    },
+    {
+      "id": 10115,
+      "mapId": 106693122,
+      "zoneId": 1
+    }
+  ]
+  ```
+- Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.\
+  __Example__: (the data center API exposes an endpoint to get all the edges from a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap)) or to a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap)))
+  - Request
+  ```
+  curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/99615238/transitions/outgoing' \
+  -H 'accept: application/json'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "$type": "scroll",
+      "direction": "west",
+      "from": {
+        "id": 5239,
+        "mapId": 99615238,
+        "zoneId": 1
+      },
+      "to": {
+        "id": 5240,
+        "mapId": 99614726,
+        "zoneId": 1
+      }
+    },
+    {
+      "$type": "scroll",
+      "direction": "south",
+      "from": {
+        "id": 5239,
+        "mapId": 99615238,
+        "zoneId": 1
+      },
+      "to": {
+        "id": 6586,
+        "mapId": 99615239,
+        "zoneId": 1
+      }
+    }
+  ]
+  ```
+  
+The only missing piece is how to find the nodes of the graph that correspond to the start and end map of a path search.
+The data is located in the cells of the maps, that are also extracted by the [DDC](https://github.com/Dofus-Batteries-Included/DDC) project and saved to a file called `maps`. \
+Each cell has a `linkedZone` field that is a 2-bytes value, the first byte is the `zoneId`.
+
+__Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, it seems to be the case but I have no guarantees.
+
+__Example__: (the data center API exposes an endpoint to get all the cells of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetMapCells))
+- Request
+```
+curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/cells' \
+  -H 'accept: application/json'
+```
+- Response
+```json
+[
+  {
+    "mapId": 106693122,
+    "cellNumber": 0,
+    "floor": 0,
+    "moveZone": 0,
+    "linkedZone": 0,
+    "speed": 0,
+    "los": true,
+    "visible": false,
+    "nonWalkableDuringFight": false,
+    "nonWalkableDuringRp": false,
+    "havenbagCell": false
+  },
+  ...,
+  {
+    "mapId": 106693122,
+    "cellNumber": 155,
+    "floor": 0,
+    "moveZone": 0,
+    "linkedZone": 32,
+    "speed": 0,
+    "los": true,
+    "visible": false,
+    "nonWalkableDuringFight": true,
+    "nonWalkableDuringRp": false,
+    "havenbagCell": false
+  },
+  ...,
+  {
+    "mapId": 106693122,
+    "cellNumber": 264,
+    "floor": 0,
+    "moveZone": 0,
+    "linkedZone": 17,
+    "speed": 0,
+    "los": true,
+    "visible": false,
+    "nonWalkableDuringFight": false,
+    "nonWalkableDuringRp": false,
+    "havenbagCell": false
+  },
+  ...
+]
+```
+
+### How to search for a path
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
+
+Internally, the path finder requires the start and end node in the graph to search for a path between them. 
+The path finder API exposes multiple ways to provide that information:
+- from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.
+- from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.
+- from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.
+- from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates, especially in lower ranges because maps from Astrub and Incarnam will both be considered.
+
+The endpoints of the path finder allow to find the start or end node using either:
+- the `nodeId`
+- the `mapId`
+- the map coordinates
+The endpoints also take the `cellNumber` as an optional argument. Providing the cell number helps reduce the number of node candidates for a map.
+
+With that information, the path finder finds all the candidates for the start node, all the candidates for the end node, and computes all the paths between all the candidates.
+
+__Example__: in this example we provide both the map ids and the cell numbers, there is only one candidate for the start and end node so we get the only possible path between them
+- Request
+```
+curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/path-finder/path/from/75497730/to/75498242?FromCellNumber=425&ToCellNumber=430' \
+  -H 'accept: application/json'
+```
+- Response
+```json
+{
+  "paths": [
+    {
+      "from": {
+        "mapId": 75497730,
+        "mapPosition": {
+          "x": -20,
+          "y": -5
+        },
+        "worldGraphNodeId": 5609
+      },
+      "to": {
+        "mapId": 75498242,
+        "mapPosition": {
+          "x": -19,
+          "y": -5
+        },
+        "worldGraphNodeId": 1667
+      },
+      "steps": [
+        {
+          "$type": "scroll",
+          "direction": "north",
+          "map": {
+            "mapId": 75497730,
+            "mapPosition": {
+              "x": -20,
+              "y": -5
+            },
+            "worldGraphNodeId": 5609
+          }
+        },
+        {
+          "$type": "scroll",
+          "direction": "south",
+          "map": {
+            "mapId": 75497731,
+            "mapPosition": {
+              "x": -20,
+              "y": -6
+            },
+            "worldGraphNodeId": 7076
+          }
+        },
+        {
+          "$type": "scroll",
+          "direction": "east",
+          "map": {
+            "mapId": 75497730,
+            "mapPosition": {
+              "x": -20,
+              "y": -5
+            },
+            "worldGraphNodeId": 7095
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+__Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes
+- Request
+```
+curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/path-finder/path/from/75497730/to/75498242' \
+  -H 'accept: application/json'
+```
+- Response
+```json
+{
+  "paths": [
+    {
+      "from": {
+        "mapId": 75497730,
+        "mapPosition": {
+          "x": -20,
+          "y": -5
+        },
+        "worldGraphNodeId": 5609
+      },
+      "to": {
+        "mapId": 75498242,
+        "mapPosition": {
+          "x": -19,
+          "y": -5
+        },
+        "worldGraphNodeId": 1667
+      },
+      "steps": [
+        {
+          "$type": "scroll",
+          "direction": "north",
+          "map": {
+            "mapId": 75497730,
+            "mapPosition": {
+              "x": -20,
+              "y": -5
+            },
+            "worldGraphNodeId": 5609
+          }
+        },
+        {
+          "$type": "scroll",
+          "direction": "south",
+          "map": {
+            "mapId": 75497731,
+            "mapPosition": {
+              "x": -20,
+              "y": -6
+            },
+            "worldGraphNodeId": 7076
+          }
+        },
+        {
+          "$type": "scroll",
+          "direction": "east",
+          "map": {
+            "mapId": 75497730,
+            "mapPosition": {
+              "x": -20,
+              "y": -5
+            },
+            "worldGraphNodeId": 7095
+          }
+        }
+      ]
+    },
+    {
+      "from": {
+        "mapId": 75497730,
+        "mapPosition": {
+          "x": -20,
+          "y": -5
+        },
+        "worldGraphNodeId": 7095
+      },
+      "to": {
+        "mapId": 75498242,
+        "mapPosition": {
+          "x": -19,
+          "y": -5
+        },
+        "worldGraphNodeId": 1667
+      },
+      "steps": [
+        {
+          "$type": "scroll",
+          "direction": "east",
+          "map": {
+            "mapId": 75497730,
+            "mapPosition": {
+              "x": -20,
+              "y": -5
+            },
+            "worldGraphNodeId": 7095
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## Data Center
 
-The data center API exposes data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository.
+The [data center API](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center) exposes data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository.
 
 ### Game versions
 
