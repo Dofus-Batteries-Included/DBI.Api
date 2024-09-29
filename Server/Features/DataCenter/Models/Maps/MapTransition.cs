@@ -49,10 +49,6 @@ public class MapActionTransition : MapTransition
 /// </summary>
 public class MapInteractiveTransition : MapTransition
 {
-    /// <summary>
-    ///     The unique ID of the interactive element to interact with.
-    /// </summary>
-    public int InteractiveElementId { get; set; }
 }
 
 /// <summary>
@@ -90,8 +86,7 @@ static class MapTransitionMappingExtensions
                 return new MapInteractiveTransition
                 {
                     From = from.Cook(),
-                    To = to.Cook(),
-                    InteractiveElementId = transition.SkillId
+                    To = to.Cook()
                 };
             case RawWorldGraphEdgeType.NpcAction:
                 return new MapNpcActionTransition
