@@ -10,6 +10,9 @@ APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.P
     - [Register account](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-account) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=identity#/Registration/Registration_Register)
     - [Register clues](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#register-clues) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Clues/Clues_RegisterClues)
 - [Data Center](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
+  - [Game versions](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#game-versions) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
+  - [Raw data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#raw-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+  - [Structured data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#structured-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
 
 ## Treasure Solver
 
