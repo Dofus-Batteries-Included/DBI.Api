@@ -293,27 +293,142 @@ curl -X 'GET' \
 
 [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
 
-Internally, the path finder requires the start and end node in the graph to search for a path between them. 
-The path finder API exposes multiple ways to provide that information:
-- from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.
-- from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.
-- from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.
-- from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates, especially in lower ranges because maps from Astrub and Incarnam will both be considered.
+Internally, the path finder requires the start and end node in the graph to search for a path between them.
+The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
+- `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.\
+  __Example__:
+  - Request
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-nodes' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "search": "by-id",
+    "nodeId": 7911
+  }'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "id": 7911,
+      "mapId": 106693122,
+      "zoneId": 2
+    }
+  ]
+  ```
+- `FindNodeByMap`, from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.\
+  __Example__:
+  - Request
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-nodes' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "search": "by-map",
+    "mapId": 106693122,
+    "cellNumber": 425
+  }'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "id": 10115,
+      "mapId": 106693122,
+      "zoneId": 1
+    }
+  ]
+  ```
+- `FindNodeByMap`, from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.\
+  __Example__:
+  - Request
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-nodes' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "search": "by-map",
+    "mapId": 106693122
+  }'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "id": 7911,
+      "mapId": 106693122,
+      "zoneId": 2
+    },
+    {
+      "id": 10115,
+      "mapId": 106693122,
+      "zoneId": 1
+    }
+  ]
+  ```
+- `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.\
+  __Example__:
+  - Request
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-nodes' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "search": "at-position",
+    "position": {
+      "x": 26,
+      "y": -9
+    }
+  }'
+  ```
+  - Response
+  ```json
+  [
+    {
+      "id": 10112,
+      "mapId": 99615745,
+      "zoneId": 1
+    },
+    {
+      "id": 7911,
+      "mapId": 106693122,
+      "zoneId": 2
+    },
+    {
+      "id": 10115,
+      "mapId": 106693122,
+      "zoneId": 1
+    }
+  ]
+  ```
 
-The endpoints of the path finder allow to find the start or end node using either:
-- the `nodeId`
-- the `mapId`
-- the map coordinates
-The endpoints also take the `cellNumber` as an optional argument. Providing the cell number helps reduce the number of node candidates for a map.
-
-With that information, the path finder finds all the candidates for the start node, all the candidates for the end node, and computes all the paths between all the candidates.
+The [Find paths](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
+It then extract all the candidates for the start and the end and computes all the paths between all the candidates.
 
 __Example__: in this example we provide both the map ids and the cell numbers, there is only one candidate for the start and end node so we get the only possible path between them
 - Request
 ```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/path-finder/path/from/75497730/to/75498242?FromCellNumber=425&ToCellNumber=430' \
-  -H 'accept: application/json'
+curl -X 'POST' \
+  'http://localhost:5274/path-finder/path/find-paths' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "start": {
+    "search": "by-map",
+    "mapId": 75497730,
+    "cellNumber": 425
+  },
+  "end": {
+    "search": "by-map",
+    "mapId": 75498242,
+    "cellNumber": 430
+  }
+}'
 ```
 - Response
 ```json
@@ -322,19 +437,21 @@ curl -X 'GET' \
     {
       "from": {
         "mapId": 75497730,
+        "zoneId": 1,
+        "worldGraphNodeId": 5609,
         "mapPosition": {
           "x": -20,
           "y": -5
-        },
-        "worldGraphNodeId": 5609
+        }
       },
       "to": {
         "mapId": 75498242,
+        "zoneId": 1,
+        "worldGraphNodeId": 1667,
         "mapPosition": {
           "x": -19,
           "y": -5
-        },
-        "worldGraphNodeId": 1667
+        }
       },
       "steps": [
         {
@@ -342,11 +459,12 @@ curl -X 'GET' \
           "direction": "north",
           "map": {
             "mapId": 75497730,
+            "zoneId": 1,
+            "worldGraphNodeId": 5609,
             "mapPosition": {
               "x": -20,
               "y": -5
-            },
-            "worldGraphNodeId": 5609
+            }
           }
         },
         {
@@ -354,11 +472,12 @@ curl -X 'GET' \
           "direction": "south",
           "map": {
             "mapId": 75497731,
+            "zoneId": 1,
+            "worldGraphNodeId": 7076,
             "mapPosition": {
               "x": -20,
               "y": -6
-            },
-            "worldGraphNodeId": 7076
+            }
           }
         },
         {
@@ -366,11 +485,12 @@ curl -X 'GET' \
           "direction": "east",
           "map": {
             "mapId": 75497730,
+            "zoneId": 2,
+            "worldGraphNodeId": 7095,
             "mapPosition": {
               "x": -20,
               "y": -5
-            },
-            "worldGraphNodeId": 7095
+            }
           }
         }
       ]
@@ -379,12 +499,23 @@ curl -X 'GET' \
 }
 ```
 
-__Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes
+__Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
 - Request
 ```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/path-finder/path/from/75497730/to/75498242' \
-  -H 'accept: application/json'
+curl -X 'POST' \
+  'http://localhost:5274/path-finder/path/find-paths' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "start": {
+    "search": "by-map",
+    "mapId": 75497730
+  },
+  "end": {
+    "search": "by-map",
+    "mapId": 75498242
+  }
+}'
 ```
 - Response
 ```json
@@ -393,19 +524,21 @@ curl -X 'GET' \
     {
       "from": {
         "mapId": 75497730,
+        "zoneId": 1,
+        "worldGraphNodeId": 5609,
         "mapPosition": {
           "x": -20,
           "y": -5
-        },
-        "worldGraphNodeId": 5609
+        }
       },
       "to": {
         "mapId": 75498242,
+        "zoneId": 1,
+        "worldGraphNodeId": 1667,
         "mapPosition": {
           "x": -19,
           "y": -5
-        },
-        "worldGraphNodeId": 1667
+        }
       },
       "steps": [
         {
@@ -413,11 +546,12 @@ curl -X 'GET' \
           "direction": "north",
           "map": {
             "mapId": 75497730,
+            "zoneId": 1,
+            "worldGraphNodeId": 5609,
             "mapPosition": {
               "x": -20,
               "y": -5
-            },
-            "worldGraphNodeId": 5609
+            }
           }
         },
         {
@@ -425,11 +559,12 @@ curl -X 'GET' \
           "direction": "south",
           "map": {
             "mapId": 75497731,
+            "zoneId": 1,
+            "worldGraphNodeId": 7076,
             "mapPosition": {
               "x": -20,
               "y": -6
-            },
-            "worldGraphNodeId": 7076
+            }
           }
         },
         {
@@ -437,11 +572,12 @@ curl -X 'GET' \
           "direction": "east",
           "map": {
             "mapId": 75497730,
+            "zoneId": 2,
+            "worldGraphNodeId": 7095,
             "mapPosition": {
               "x": -20,
               "y": -5
-            },
-            "worldGraphNodeId": 7095
+            }
           }
         }
       ]
@@ -449,19 +585,21 @@ curl -X 'GET' \
     {
       "from": {
         "mapId": 75497730,
+        "zoneId": 2,
+        "worldGraphNodeId": 7095,
         "mapPosition": {
           "x": -20,
           "y": -5
-        },
-        "worldGraphNodeId": 7095
+        }
       },
       "to": {
         "mapId": 75498242,
+        "zoneId": 1,
+        "worldGraphNodeId": 1667,
         "mapPosition": {
           "x": -19,
           "y": -5
-        },
-        "worldGraphNodeId": 1667
+        }
       },
       "steps": [
         {
@@ -469,11 +607,12 @@ curl -X 'GET' \
           "direction": "east",
           "map": {
             "mapId": 75497730,
+            "zoneId": 2,
+            "worldGraphNodeId": 7095,
             "mapPosition": {
               "x": -20,
               "y": -5
-            },
-            "worldGraphNodeId": 7095
+            }
           }
         }
       ]
@@ -589,4 +728,4 @@ curl -X 'GET' \
   },
   "cellsCount": 560
 }
-```
+``` 
