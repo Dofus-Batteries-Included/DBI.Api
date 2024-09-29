@@ -371,7 +371,7 @@ The path finder API exposes multiple ways to provide that information, they are 
   ]
   ```
 - `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.\
-  <detail>
+  <details>
     <summary>
       <b>Example:</b>
     </summary>
@@ -411,7 +411,7 @@ The path finder API exposes multiple ways to provide that information, they are 
       }
     ]
     ```
-  </detail>
+  </details>
 
 The [Find paths](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
 It then extract all the candidates for the start and the end and computes all the paths between all the candidates.
