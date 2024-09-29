@@ -50,13 +50,13 @@ public class PathFinderPathsController : ControllerBase
     ///     The endpoint is mostly used to understand how <see cref="FindNodeRequest" />s work. The actual path finding is performed by <see cref="FindPaths" />.
     /// </remarks>
     [HttpPost("find-nodes")]
-    public async Task<IEnumerable<RawWorldGraphNode>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        return FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, request);
+        return FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
 
     /// <summary>
