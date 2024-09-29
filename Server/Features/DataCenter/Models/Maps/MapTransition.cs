@@ -56,10 +56,6 @@ public class MapInteractiveTransition : MapTransition
 /// </summary>
 public class MapNpcActionTransition : MapTransition
 {
-    /// <summary>
-    ///     The unique ID of the NPC to interact with.
-    /// </summary>
-    public int NpcId { get; set; }
 }
 
 static class MapTransitionMappingExtensions
@@ -92,8 +88,7 @@ static class MapTransitionMappingExtensions
                 return new MapNpcActionTransition
                 {
                     From = from.Cook(),
-                    To = to.Cook(),
-                    NpcId = transition.SkillId
+                    To = to.Cook()
                 };
             default:
                 return new MapTransition

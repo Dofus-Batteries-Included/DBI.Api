@@ -47,10 +47,6 @@ public class MapInteractiveTransitionMinimal : MapTransitionMinimal
 /// </summary>
 public class MapNpcActionTransitionMinimal : MapTransitionMinimal
 {
-    /// <summary>
-    ///     The unique ID of the NPC to interact with.
-    /// </summary>
-    public int NpcId { get; set; }
 }
 
 static class MapTransitionMinimalMappingExtensions
@@ -70,10 +66,7 @@ static class MapTransitionMinimalMappingExtensions
             case RawWorldGraphEdgeType.Interactive:
                 return new MapInteractiveTransitionMinimal();
             case RawWorldGraphEdgeType.NpcAction:
-                return new MapNpcActionTransitionMinimal
-                {
-                    NpcId = transition.SkillId
-                };
+                return new MapNpcActionTransitionMinimal();
             default:
                 return new MapTransitionMinimal();
         }
