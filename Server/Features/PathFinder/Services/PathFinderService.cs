@@ -103,5 +103,13 @@ class PathFinderService
         return new PathStep { Node = currentPathNode, Transition = transition?.Cook() };
     }
 
-    bool DirectionEquals(RawWorldGraphEdgeDirection argDirection, Direction direction) => throw new NotImplementedException();
+    static bool DirectionEquals(RawWorldGraphEdgeDirection rawDirection, Direction direction) =>
+        direction switch
+        {
+            Direction.North => rawDirection == RawWorldGraphEdgeDirection.North,
+            Direction.South => rawDirection == RawWorldGraphEdgeDirection.South,
+            Direction.East => rawDirection == RawWorldGraphEdgeDirection.East,
+            Direction.West => rawDirection == RawWorldGraphEdgeDirection.West,
+            _ => false
+        };
 }

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Server.Common.Models;
+using Server.Features.DataCenter.Models.Maps;
 
 namespace Server.Features.TreasureSolver.Controllers.Responses;
 
@@ -15,12 +15,7 @@ public class FindNextMapResponse
     public required bool Found { get; init; }
 
     /// <summary>
-    ///     The unique ID of the next map, if it has been found.
+    ///     The map in which the clue has been found, if any.
     /// </summary>
-    public required long? MapId { get; init; }
-
-    /// <summary>
-    ///     The coordinates of the next map, if it has been found.
-    /// </summary>
-    public required Position? MapPosition { get; init; }
+    public required MapNodeWithPosition? Map { get; init; }
 }

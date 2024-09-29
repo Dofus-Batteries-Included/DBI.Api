@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using Server.Common.Exceptions;
-using Server.Common.Models;
 using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models;
 using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.Maps;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
@@ -56,7 +54,9 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        return FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
+        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+
+        return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
 
     /// <summary>
@@ -74,13 +74,15 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        RawWorldGraphNode[] fromNodes = FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, request.Start).ToArray();
+        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+
+        RawWorldGraphNode[] fromNodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (fromNodes.Length == 0)
         {
             throw new NotFoundException("Could not find start position.");
         }
 
-        RawWorldGraphNode[] toNodes = FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, request.End).ToArray();
+        RawWorldGraphNode[] toNodes = nodeFinder.FindNodes(request.End).ToArray();
         if (toNodes.Length == 0)
         {
             throw new NotFoundException("Could not find end position.");
@@ -98,67 +100,5 @@ public class PathFinderController : ControllerBase
                 .Select(p => p.Path!)
                 .ToArray()
         };
-    }
-
-    IEnumerable<RawWorldGraphNode> FindNodesImpl(
-        RawWorldGraphService rawWorldGraphService,
-        RawMapPositionsService rawMapPositionsService,
-        MapsService mapsService,
-        FindNodeRequest request
-    )
-    {
-        switch (request)
-        {
-            case FindNodeById findNodeById:
-                RawWorldGraphNode? node = rawWorldGraphService.GetNode(findNodeById.NodeId);
-                return node == null ? [] : [node];
-            case FindNodeByMap findNodeByMap:
-                return FindNodesImpl(rawWorldGraphService, mapsService, findNodeByMap.MapId, findNodeByMap.CellNumber);
-            case FindNodeAtPosition findNodeAtPosition:
-                return FindNodesImpl(rawWorldGraphService, rawMapPositionsService, mapsService, findNodeAtPosition.Position, findNodeAtPosition.CellNumber);
-            default:
-                return [];
-        }
-    }
-
-    static IEnumerable<RawWorldGraphNode> FindNodesImpl(RawWorldGraphService rawWorldGraphService, MapsService mapsService, long mapId, int? cellNumber)
-    {
-        if (!cellNumber.HasValue)
-        {
-            return rawWorldGraphService.GetNodesInMap(mapId);
-        }
-
-        MapCell? cell = mapsService.GetCell(mapId, cellNumber.Value);
-        if (cell == null)
-        {
-            return [];
-        }
-
-        return [FindNode(rawWorldGraphService, mapId, cell)];
-    }
-
-    static RawWorldGraphNode[] FindNodesImpl(
-        RawWorldGraphService rawWorldGraphService,
-        RawMapPositionsService rawMapPositionsService,
-        MapsService mapsService,
-        Position mapPosition,
-        int? cellNumber
-    )
-    {
-        RawMapPosition[] maps = rawMapPositionsService.GetMapsAtPosition(mapPosition).ToArray();
-
-        if (!cellNumber.HasValue)
-        {
-            return maps.SelectMany(m => rawWorldGraphService.GetNodesInMap(m.MapId)).ToArray();
-        }
-
-        var cells = maps.Select(m => new { m.MapId, Cell = mapsService.GetCell(m.MapId, cellNumber.Value) }).Where(c => c.Cell != null).ToArray();
-        return cells.Select(x => FindNode(rawWorldGraphService, x.MapId, x.Cell!)).ToArray();
-    }
-
-    static RawWorldGraphNode FindNode(RawWorldGraphService rawWorldGraphService, long mapId, MapCell mapCell)
-    {
-        int zone = mapCell.LinkedZone / 16;
-        return rawWorldGraphService.GetNode(mapId, zone) ?? rawWorldGraphService.GetNodesInMap(mapId).First();
     }
 }
