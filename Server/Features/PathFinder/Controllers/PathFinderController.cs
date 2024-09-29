@@ -21,7 +21,7 @@ namespace Server.Features.PathFinder.Controllers;
 [Route("path-finder/path")]
 [OpenApiTag("Path Finder")]
 [ApiController]
-public class PathFinderPathsController : ControllerBase
+public class PathFinderController : ControllerBase
 {
     readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
@@ -30,7 +30,7 @@ public class PathFinderPathsController : ControllerBase
 
     /// <summary>
     /// </summary>
-    public PathFinderPathsController(
+    public PathFinderController(
         RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
         RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
         WorldServiceFactory worldServiceFactory,
