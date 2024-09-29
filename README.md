@@ -371,133 +371,145 @@ The path finder API exposes multiple ways to provide that information, they are 
   ]
   ```
 - `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.\
-  __Example__:
-  - Request
-  ```
-  curl -X 'POST' \
-    'http://localhost:5274/path-finder/path/find-nodes' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "search": "at-position",
-    "position": {
-      "x": 26,
-      "y": -9
-    }
-  }'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "id": 10112,
-      "mapId": 99615745,
-      "zoneId": 1
-    },
-    {
-      "id": 7911,
-      "mapId": 106693122,
-      "zoneId": 2
-    },
-    {
-      "id": 10115,
-      "mapId": 106693122,
-      "zoneId": 1
-    }
-  ]
-  ```
+  <detail>
+    <summary>
+      <b>Example:</b>
+    </summary>
+  
+    __Request__
+    ```
+    curl -X 'POST' \
+      'http://localhost:5274/path-finder/path/find-nodes' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "search": "at-position",
+      "position": {
+        "x": 26,
+        "y": -9
+      }
+    }'
+    ```
+  
+    __Response__
+    ```json
+    [
+      {
+        "id": 10112,
+        "mapId": 99615745,
+        "zoneId": 1
+      },
+      {
+        "id": 7911,
+        "mapId": 106693122,
+        "zoneId": 2
+      },
+      {
+        "id": 10115,
+        "mapId": 106693122,
+        "zoneId": 1
+      }
+    ]
+    ```
+  </detail>
 
 The [Find paths](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
 It then extract all the candidates for the start and the end and computes all the paths between all the candidates.
 
-__Example__: in this example we provide both the map ids and the cell numbers, there is only one candidate for the start and end node so we get the only possible path between them
-- Request
-```
-curl -X 'POST' \
-  'http://localhost:5274/path-finder/path/find-paths' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "start": {
-    "search": "by-map",
-    "mapId": 75497730,
-    "cellNumber": 425
-  },
-  "end": {
-    "search": "by-map",
-    "mapId": 75498242,
-    "cellNumber": 430
-  }
-}'
-```
-- Response
-```json
-{
-  "paths": [
-    {
-      "from": {
-        "mapId": 75497730,
-        "zoneId": 1,
-        "worldGraphNodeId": 5609,
-        "mapPosition": {
-          "x": -20,
-          "y": -5
-        }
-      },
-      "to": {
-        "mapId": 75498242,
-        "zoneId": 1,
-        "worldGraphNodeId": 1667,
-        "mapPosition": {
-          "x": -19,
-          "y": -5
-        }
-      },
-      "steps": [
-        {
-          "$type": "scroll",
-          "direction": "north",
-          "map": {
-            "mapId": 75497730,
-            "zoneId": 1,
-            "worldGraphNodeId": 5609,
-            "mapPosition": {
-              "x": -20,
-              "y": -5
-            }
-          }
-        },
-        {
-          "$type": "scroll",
-          "direction": "south",
-          "map": {
-            "mapId": 75497731,
-            "zoneId": 1,
-            "worldGraphNodeId": 7076,
-            "mapPosition": {
-              "x": -20,
-              "y": -6
-            }
-          }
-        },
-        {
-          "$type": "scroll",
-          "direction": "east",
-          "map": {
-            "mapId": 75497730,
-            "zoneId": 2,
-            "worldGraphNodeId": 7095,
-            "mapPosition": {
-              "x": -20,
-              "y": -5
-            }
-          }
-        }
-      ]
+<details>
+  <summary>
+  <b>Example</b>: in this example we provide both the map ids and the cell numbers, there is only one candidate for the start and end node so we get the only possible path between them
+  </summary>
+
+  __Request__
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-paths' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "start": {
+      "search": "by-map",
+      "mapId": 75497730,
+      "cellNumber": 425
+    },
+    "end": {
+      "search": "by-map",
+      "mapId": 75498242,
+      "cellNumber": 430
     }
-  ]
-}
-```
+  }'
+  ```
+  
+  __Response__
+  ```json
+  {
+    "paths": [
+      {
+        "from": {
+          "mapId": 75497730,
+          "zoneId": 1,
+          "worldGraphNodeId": 5609,
+          "mapPosition": {
+            "x": -20,
+            "y": -5
+          }
+        },
+        "to": {
+          "mapId": 75498242,
+          "zoneId": 1,
+          "worldGraphNodeId": 1667,
+          "mapPosition": {
+            "x": -19,
+            "y": -5
+          }
+        },
+        "steps": [
+          {
+            "$type": "scroll",
+            "direction": "north",
+            "map": {
+              "mapId": 75497730,
+              "zoneId": 1,
+              "worldGraphNodeId": 5609,
+              "mapPosition": {
+                "x": -20,
+                "y": -5
+              }
+            }
+          },
+          {
+            "$type": "scroll",
+            "direction": "south",
+            "map": {
+              "mapId": 75497731,
+              "zoneId": 1,
+              "worldGraphNodeId": 7076,
+              "mapPosition": {
+                "x": -20,
+                "y": -6
+              }
+            }
+          },
+          {
+            "$type": "scroll",
+            "direction": "east",
+            "map": {
+              "mapId": 75497730,
+              "zoneId": 2,
+              "worldGraphNodeId": 7095,
+              "mapPosition": {
+                "x": -20,
+                "y": -5
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
 
 <details>
   <summary>
@@ -521,6 +533,7 @@ curl -X 'POST' \
     }
   }'
   ```
+
   __Response__
   ```json
   {
