@@ -33,7 +33,7 @@ curl -X 'GET' \
   -H 'accept: application/json'
 ```
 - Response
-```
+```json
 {
   "found": true,
   "mapPosition": {
@@ -104,7 +104,7 @@ curl -X 'GET' \
   -H 'accept: application/json'
 ```
 - Response
-```
+```json
 "ed2defea-5925-45e5-b286-d31d10194e6f"
 ```
 
@@ -142,4 +142,109 @@ curl -X 'POST' \
 
 ## Data Center
 
-Data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository exposed through REST APIs.
+The data center API exposes data from the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository.
+
+### Game versions
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
+
+Most endpoints ask for a version to use when getting the data. 
+It can either be a version of the game for which the extractor has released data (see releases of the [DDC](https://github.com/Dofus-Batteries-Included/DDC) repository) or the special value `latest` that will get the data from the higher version.
+
+The `GET /data-center/versions` endpoints returns the list of available versions, and the latest one.
+
+__Example__
+- Request
+```
+curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/data-center/game-versions' \
+  -H 'accept: application/json'
+```
+- Response
+```json
+{
+  "latest": "2.73.38.36",
+  "versions": [
+    "2.73.22.22",
+    "2.73.31.26",
+    "2.73.32.27",
+    "2.73.34.30",
+    "2.73.35.32",
+    "2.73.36.33",
+    "2.73.37.34",
+    "2.73.38.36"
+  ]
+}
+```
+
+### Raw data
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+
+Raw data from the repository exposed as JSON files.
+
+__Note__: the data for `maps` is huge because it is a JSON containing all the maps of the game and all their cells. 
+It is approx 1.5 GB if uncompressed, and merely 40 MB when compressed. 
+The API server handles Brotli, GZip and Deflate compression, use it!
+
+### Structured data
+
+[Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
+
+All the other endpoints are for structured data. For example the `World - Maps` endpoint read data from `maps`, `map-positions`, `sub-areas`, `areas`, `super-areas`, `world-maps` and `i18n**` raw files to build their response.
+
+For now there are only a few structured data endpoints as an example of how they can be added to the data center APIs project. 
+There are a lot more that could be implemented.\
+Suggestions are very welcome, please open an issue if you'd like a specific piece of data exposed through a structured API. 
+Alternatively, you can open a PR and contribute yourself. Please open an issue or [join the discord](https://discord.com/invite/HzE9RgYPW5) to get help in doing so.
+
+__Example__
+- Request
+```
+curl -X 'GET' \
+  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/75497730' \
+  -H 'accept: application/json'
+```
+- Response
+```json
+{
+  "worldMapId": 1,
+  "worldMapName": {
+    "french": "Monde des Douze",
+    "english": "World of Twelve",
+    "spanish": "Mundo de los Doce",
+    "german": "Die Welt der Zwölf",
+    "portuguese": "Mundo dos Doze"
+  },
+  "superAreaId": 0,
+  "superAreaName": {
+    "french": "Monde des Douze",
+    "english": "World of Twelve",
+    "spanish": "Mundo de los Doce",
+    "german": "Die Welt der Zwölf",
+    "portuguese": "Mundo dos Doze"
+  },
+  "areaId": 28,
+  "areaName": {
+    "french": "Montagne des Koalaks",
+    "english": "Koalak Mountain",
+    "spanish": "Montaña de los koalaks",
+    "german": "Koalak-Gebirge",
+    "portuguese": "Montanha dos Koalaks"
+  },
+  "subAreaId": 231,
+  "subAreaName": {
+    "french": "Lacs enchantés",
+    "english": "Enchanted Lakes",
+    "spanish": "Lagos encantados",
+    "german": "Verzauberte Seen",
+    "portuguese": "Lagos Encantados"
+  },
+  "mapId": 75497730,
+  "position": {
+    "x": -20,
+    "y": -5
+  },
+  "cellsCount": 560
+}
+```
