@@ -35,8 +35,8 @@ class AStarService
         {
             return new Path
             {
-                From = new PathMap { MapId = sourceNode.MapId, MapPosition = sourceMap?.Position, WorldGraphNodeId = sourceNode.Id },
-                To = new PathMap { MapId = targetNode.MapId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
+                From = new PathMap { MapId = sourceNode.MapId, ZoneId = sourceNode.ZoneId, MapPosition = sourceMap?.Position, WorldGraphNodeId = sourceNode.Id },
+                To = new PathMap { MapId = targetNode.MapId, ZoneId = targetNode.ZoneId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
                 Steps = []
             };
         }
@@ -83,8 +83,8 @@ class AStarService
 
             _knownPaths[(currentNode.Id, targetNode.Id)] = new Path
             {
-                From = new PathMap { MapId = currentNode.MapId, MapPosition = currentMap?.Position, WorldGraphNodeId = currentNode.Id },
-                To = new PathMap { MapId = targetNode.MapId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
+                From = new PathMap { MapId = currentNode.MapId, ZoneId = currentNode.ZoneId, MapPosition = currentMap?.Position, WorldGraphNodeId = currentNode.Id },
+                To = new PathMap { MapId = targetNode.MapId, ZoneId = targetNode.ZoneId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
                 Steps = Enumerable.Reverse(result).ToArray()
             };
         }
@@ -93,7 +93,7 @@ class AStarService
     PathStep ComputeStep(RawWorldGraphNode current, RawWorldGraphNode next)
     {
         Map? currentMap = _mapsService.GetMap(current);
-        PathMap currentPathMap = new() { MapId = current.MapId, MapPosition = currentMap?.Position, WorldGraphNodeId = current.Id };
+        PathMap currentPathMap = new() { MapId = current.MapId, ZoneId = current.ZoneId, MapPosition = currentMap?.Position, WorldGraphNodeId = current.Id };
 
         RawWorldGraphEdge[] edges = _rawWorldGraphService.GetEdges(current.Id, next.Id).ToArray();
         RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
