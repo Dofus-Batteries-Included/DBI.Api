@@ -64,11 +64,26 @@ public class WorldGraphService(RawWorldGraphService? rawWorldGraphService)
         switch (transition.Type)
         {
             case RawWorldGraphEdgeType.Scroll:
+            case RawWorldGraphEdgeType.ScrollAction:
                 return new MapScrollTransition
                 {
                     From = Cook(from),
                     To = Cook(to),
                     Direction = Cook(transition.Direction)
+                };
+            case RawWorldGraphEdgeType.Interactive:
+                return new MapInteractiveTransition
+                {
+                    From = Cook(from),
+                    To = Cook(to),
+                    InteractiveElementId = transition.SkillId
+                };
+            case RawWorldGraphEdgeType.NpcAction:
+                return new MapNpcActionTransition
+                {
+                    From = Cook(from),
+                    To = Cook(to),
+                    NpcId = transition.SkillId
                 };
             default:
                 return new MapTransition

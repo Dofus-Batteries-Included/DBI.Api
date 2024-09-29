@@ -58,13 +58,32 @@ class PathFinderService
         RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
 
         RawWorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is RawWorldGraphEdgeType.Scroll or RawWorldGraphEdgeType.ScrollAction);
-
         if (scrollTransition is { Direction: not null })
         {
             return new ScrollStep
             {
                 Map = currentPathMap,
                 Direction = scrollTransition.Direction.Value
+            };
+        }
+
+        RawWorldGraphEdgeTransition? interactiveTransition = transitions.FirstOrDefault(t => t.Type is RawWorldGraphEdgeType.Interactive);
+        if (interactiveTransition is not null)
+        {
+            return new InteractiveStep
+            {
+                Map = currentPathMap,
+                InteractiveId = interactiveTransition.SkillId
+            };
+        }
+
+        RawWorldGraphEdgeTransition? npcActionTransition = transitions.FirstOrDefault(t => t.Type is RawWorldGraphEdgeType.NpcAction);
+        if (npcActionTransition is not null)
+        {
+            return new NpcActionStep
+            {
+                Map = currentPathMap,
+                NpcId = npcActionTransition.SkillId
             };
         }
 
