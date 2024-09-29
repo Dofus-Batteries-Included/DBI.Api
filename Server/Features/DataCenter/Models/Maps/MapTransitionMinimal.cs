@@ -33,6 +33,10 @@ public class MapScrollTransitionMinimal : MapTransitionMinimal
 /// </summary>
 public class MapActionTransitionMinimal : MapTransitionMinimal
 {
+    /// <summary>
+    ///     The direction of the transition between the start and end nodes.
+    /// </summary>
+    public ExtendedDirection? Direction { get; set; }
 }
 
 /// <summary>
@@ -40,6 +44,10 @@ public class MapActionTransitionMinimal : MapTransitionMinimal
 /// </summary>
 public class MapInteractiveTransitionMinimal : MapTransitionMinimal
 {
+    /// <summary>
+    ///     The direction of the transition between the start and end nodes.
+    /// </summary>
+    public ExtendedDirection? Direction { get; set; }
 }
 
 /// <summary>
@@ -59,12 +67,18 @@ static class MapTransitionMinimalMappingExtensions
             case RawWorldGraphEdgeType.ScrollAction:
                 return new MapScrollTransitionMinimal
                 {
-                    Direction = transition.Direction.Cook()
+                    Direction = transition.Direction?.Cook() ?? throw new InvalidOperationException("Could not find direction")
                 };
             case RawWorldGraphEdgeType.MapAction:
-                return new MapActionTransitionMinimal();
+                return new MapActionTransitionMinimal
+                {
+                    Direction = transition.Direction?.CookExtendedDirection()
+                };
             case RawWorldGraphEdgeType.Interactive:
-                return new MapInteractiveTransitionMinimal();
+                return new MapInteractiveTransitionMinimal
+                {
+                    Direction = transition.Direction?.CookExtendedDirection()
+                };
             case RawWorldGraphEdgeType.NpcAction:
                 return new MapNpcActionTransitionMinimal();
             default:

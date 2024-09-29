@@ -1,8 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Common.Models;
-using Server.Features.DataCenter.Raw.Models;
+using Server.Common.Exceptions;
+using Server.Features.DataCenter.Models.Maps;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.Maps;
+using Server.Features.DataCenter.Raw.Services.WorldGraphs;
+using Server.Features.DataCenter.Services;
+using Server.Features.PathFinder.Controllers.Requests;
+using Server.Features.PathFinder.Services;
+using Server.Features.TreasureSolver.Controllers.Requests;
 using Server.Features.TreasureSolver.Controllers.Responses;
 using Server.Features.TreasureSolver.Services;
 
@@ -17,49 +23,69 @@ namespace Server.Features.TreasureSolver.Controllers;
 public class TreasureSolverController : ControllerBase
 {
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
+    readonly WorldServiceFactory _worldServiceFactory;
+    readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
     readonly TreasureSolverService _solver;
 
     /// <summary>
     /// </summary>
-    public TreasureSolverController(RawMapPositionsServiceFactory rawMapPositionServiceFactory, TreasureSolverService solver)
+    public TreasureSolverController(
+        RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
+        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
+        WorldServiceFactory worldServiceFactory,
+        TreasureSolverService solver
+    )
     {
+        _rawWorldGraphServiceFactory = rawWorldGraphServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
+        _worldServiceFactory = worldServiceFactory;
         _solver = solver;
-        _rawMapPositionsServiceFactory = rawMapPositionServiceFactory;
     }
 
     /// <summary>
-    ///     Find next map
+    ///     Find nodes
     /// </summary>
-    [HttpGet("{startMapId:long}/{direction}/{clueId:int}")]
-    public async Task<ActionResult<FindNextMapResponse>> FindNextMap(long startMapId, Direction direction, int clueId)
+    /// <remarks>
+    ///     The endpoint is mostly used to understand how <see cref="FindNodeRequest" />s work. The actual clue search is performed by <see cref="FindNextClue" />.
+    /// </remarks>
+    [HttpPost("find-nodes")]
+    public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
     {
-        RawMapPositionsService rawMapPositionService = await _rawMapPositionsServiceFactory.CreateServiceAsync();
-        RawMapPosition? startMap = rawMapPositionService.GetMap(startMapId);
-        if (startMap is null)
+        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+
+        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+
+        return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
+    }
+
+    /// <summary>
+    ///     Find next clue
+    /// </summary>
+    [HttpPost("find-next-clue")]
+    public async Task<ActionResult<FindNextMapResponse>> FindNextClue(FindNextClueRequest request, CancellationToken cancellationToken)
+    {
+        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+
+        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        RawWorldGraphNode[]? nodes = nodeFinder.FindNodes(request.Start).ToArray();
+        if (nodes == null)
         {
-            return BadRequest("Invalid start map.");
+            throw new NotFoundException("Could not find starting position.");
         }
 
-        RawMapPosition? result = await _solver.FindNextMapAsync(startMap, direction, clueId);
-        return new FindNextMapResponse
+        foreach (RawWorldGraphNode node in nodes)
         {
-            Found = result != null,
-            MapId = result?.MapId,
-            MapPosition = result != null ? new Position(result.PosX, result.PosY) : null
-        };
-    }
+            FindNextNodeContainingClueResult result = await _solver.FindNextNodeContainingClueAsync(node.Id, request.Direction, request.ClueId, cancellationToken);
+            if (result.Found)
+            {
+                return new FindNextMapResponse { Found = true, Map = result.Map, Distance = result.Distance };
+            }
+        }
 
-    /// <summary>
-    ///     Find next position
-    /// </summary>
-    [HttpGet("{posX:int}/{posY:int}/{direction}/{clueId:int}")]
-    public async Task<FindNextPositionResponse> FindNextPosition(int posX, int posY, Direction direction, int clueId)
-    {
-        Position? result = await _solver.FindNextMapAsync(new Position(posX, posY), direction, clueId);
-        return new FindNextPositionResponse
-        {
-            Found = result != null,
-            MapPosition = result
-        };
+        return new FindNextMapResponse { Found = false };
     }
 }
