@@ -68,7 +68,7 @@ public class PathFinderController : ControllerBase
     ///     Consider providing cell numbers to restrict the search to the actual nodes where the character is located.
     /// </remarks>
     [HttpPost("find-paths")]
-    public async Task<FindPathsResponse> FindNodes(FindPathsRequest request, CancellationToken cancellationToken = default)
+    public async Task<FindPathsResponse> FindPaths(FindPathsRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
