@@ -305,7 +305,7 @@ __Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, i
 [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
 
 Internally, the path finder requires the start and end node in the graph to search for a path between them.
-The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
+The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
 
 - `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.
   <details>
@@ -316,7 +316,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
+      'https://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -350,7 +350,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
+      'https://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -385,7 +385,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
+      'https://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -428,7 +428,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     __Request__
     ```
     curl -X 'POST' \
-      'http://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
+      'https://api.dofusbatteriesincluded.fr/path-finder/path/find-nodes' \
       -H 'accept: application/json' \
       -H 'Content-Type: application/json' \
       -d '{
@@ -474,7 +474,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```
   </details>
 
-The [Find paths](http://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
+The [Find paths](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodes) endpoint uses the same schemas to specify the start and end nodes of the search.
 It then extract all the candidates for the start and the end and computes all the paths between all the candidates.
 
 <details>
@@ -485,7 +485,7 @@ It then extract all the candidates for the start and the end and computes all th
   __Request__
   ```
   curl -X 'POST' \
-    'http://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
+    'https://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -586,7 +586,7 @@ It then extract all the candidates for the start and the end and computes all th
   __Request__
   ```
   curl -X 'POST' \
-    'http://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
+    'https://api.dofusbatteriesincluded.fr/path-finder/path/find-paths' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -739,7 +739,7 @@ To solve a step of the treasure hunt, call the [Find next clue](https://api.dofu
   __Request__
   ```
   curl -X 'POST' \
-    'http://api.dofusbatteriesincluded.fr/treasure-solver/find-next-clue' \
+    'https://api.dofusbatteriesincluded.fr/treasure-solver/find-next-clue' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -862,7 +862,7 @@ Clues that are marked as not found are removed from the data sets.
 __Request__
   ```
   curl -X 'POST' \
-    'http://api.dofusbatteriesincluded.fr/treasure-solver/clues' \
+    'https://api.dofusbatteriesincluded.fr/treasure-solver/clues' \
     -H 'accept: */*' \
     -H 'Authorization: ed2defea-5925-45e5-b286-d31d10194e6f' \
     -H 'Content-Type: application/json' \
