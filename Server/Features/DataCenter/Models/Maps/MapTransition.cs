@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Server.Common.Models;
+using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 namespace Server.Features.DataCenter.Models.Maps;
 
@@ -53,4 +54,42 @@ public class MapNpcActionTransition : MapTransition
     ///     The unique ID of the NPC to interact with.
     /// </summary>
     public int NpcId { get; set; }
+}
+
+static class MapTransitionMappingExtensions
+{
+    public static MapTransition Cook(this RawWorldGraphEdgeTransition transition, RawWorldGraphNode from, RawWorldGraphNode to)
+    {
+        switch (transition.Type)
+        {
+            case RawWorldGraphEdgeType.Scroll:
+            case RawWorldGraphEdgeType.ScrollAction:
+                return new MapScrollTransition
+                {
+                    From = from.Cook(),
+                    To = to.Cook(),
+                    Direction = transition.Direction.Cook()
+                };
+            case RawWorldGraphEdgeType.Interactive:
+                return new MapInteractiveTransition
+                {
+                    From = from.Cook(),
+                    To = to.Cook(),
+                    InteractiveElementId = transition.SkillId
+                };
+            case RawWorldGraphEdgeType.NpcAction:
+                return new MapNpcActionTransition
+                {
+                    From = from.Cook(),
+                    To = to.Cook(),
+                    NpcId = transition.SkillId
+                };
+            default:
+                return new MapTransition
+                {
+                    From = from.Cook(),
+                    To = to.Cook()
+                };
+        }
+    }
 }
