@@ -1,4 +1,5 @@
 ﻿using Server.Common.Models;
+using Server.Features.DataCenter.Models;
 
 namespace Server.Features.DataCenter.Raw.Services.I18N;
 
@@ -29,13 +30,37 @@ public class LanguageService
 
 public static class LanguagesServiceExtensions
 {
-    public static LocalizedText Get(this LanguagesService service, int id) =>
-        new()
+    public static LocalizedText? Get(this LanguagesService service, int id)
+    {
+        string? french = service.French?.Get(id);
+        string? english = service.English?.Get(id);
+        string? spanish = service.Spanish?.Get(id);
+        string? german = service.German?.Get(id);
+        string? portuguese = service.Portuguese?.Get(id);
+
+        if (french == null && english == null && spanish == null && german == null && portuguese == null)
         {
-            French = service.French?.Get(id),
-            English = service.English?.Get(id),
-            Spanish = service.Spanish?.Get(id),
-            German = service.German?.Get(id),
-            Portuguese = service.Portuguese?.Get(id)
+            return null;
+        }
+
+        return new LocalizedText
+        {
+            French = french,
+            English = english,
+            Spanish = spanish,
+            German = german,
+            Portuguese = portuguese
+        };
+    }
+
+    public static string? Get(this LanguagesService service, Language language, int id) =>
+        language switch
+        {
+            Language.Fr => service.French?.Get(id),
+            Language.En => service.English?.Get(id),
+            Language.Es => service.Spanish?.Get(id),
+            Language.De => service.German?.Get(id),
+            Language.Pt => service.Portuguese?.Get(id),
+            _ => null
         };
 }

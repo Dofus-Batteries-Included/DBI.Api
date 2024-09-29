@@ -17,6 +17,5 @@ public class Clue
     /// <summary>
     ///     The name of the clue, in all the supported languages.
     /// </summary>
-    [Required]
-    public LocalizedText Name { get; init; } = new();
+    public LocalizedText? Name { get; init; } = new();
 }
