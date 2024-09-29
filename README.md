@@ -185,7 +185,7 @@ It means that we need to know for each map the available zones and how they conn
 
 Thankfully, the creators of the game have included what they call a `worldgraph` in the game files. It is extracted by the [DDC](https://github.com/Dofus-Batteries-Included/DDC) project and saved to a file called `world-graph`.\
 The graph is defined as follows:
-- Nodes are zones of a map. Most maps have only one zone but maps that have multiple dissociated areas have multiple zones.\
+- Nodes are zones of a map. Most maps have only one zone but maps that have multiple dissociated areas have multiple zones.
   <details>
     <summary>
       <b>Example</b>: the data center API exposes an endpoint to get all the nodes of a given map, <a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap">try it!</a>
@@ -215,7 +215,7 @@ The graph is defined as follows:
     ```
   </details>
 
-- Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.\
+- Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.
   <details>
     <summary>
       <b>Example</b>: the data center API exposes an endpoint to get all the edges from a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap">try it!</a>) or to a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap">try it!</a>)
@@ -337,7 +337,7 @@ __Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, i
 Internally, the path finder requires the start and end node in the graph to search for a path between them.
 The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
 
-- `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.\
+- `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.
   <details>
     <summary>
       <b>Example</b>
@@ -367,7 +367,7 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```
   </details>
 
-- `FindNodeByMap`, from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.\
+- `FindNodeByMap`, from the `mapId` and `cellNumber`: the second-best option because it always leads to a unique node. The path finder can extract the nodes in the map and the `zoneId` of the cell, using both these information it can find a unique node.
   <details>
     <summary>
       <b>Example</b>
@@ -398,7 +398,7 @@ The path finder API exposes multiple ways to provide that information, they are 
   ```
   </details>
 
-- `FindNodeByMap`, from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.\
+- `FindNodeByMap`, from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.
   <details>
     <summary>
       <b>Example</b>
@@ -433,7 +433,7 @@ The path finder API exposes multiple ways to provide that information, they are 
   ```
   </details>
 
-- `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.\
+- `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.
   <details>
     <summary>
       <b>Example</b>
