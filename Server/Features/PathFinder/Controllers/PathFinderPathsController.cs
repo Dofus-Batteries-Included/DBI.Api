@@ -50,7 +50,7 @@ public class PathFinderPathsController : ControllerBase
     ///     A node is a subset of cells in a map that are connected, if a map has multiple nodes the endpoint will return all the paths it can find between all the pairs of nodes. <br />
     ///     Consider providing cell numbers to restrict the search to the actual nodes where the character is located.
     /// </remarks>
-    [HttpGet("from/{fromMapId:long}/to/{toMapId:long}")]
+    [HttpGet("from/map/{fromMapId:long}/to/map/{toMapId:long}")]
     public async Task<FindPathsResponse> FindPathsFromIdToId(long fromMapId, long toMapId, [FromQuery] FindPathsRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
@@ -83,7 +83,7 @@ public class PathFinderPathsController : ControllerBase
     ///     Find paths between a map identified by its position and a map identified by its id
     /// </summary>
     /// <inheritdoc cref="FindPathsFromIdToId" />
-    [HttpGet("from/position/{fromMapX:int}/{fromMapY:int}/to/{toMapId:long}")]
+    [HttpGet("from/position/{fromMapX:int}/{fromMapY:int}/to/map/{toMapId:long}")]
     public async Task<FindPathsResponse> FindPathsFromPositionToId(
         int fromMapX,
         int fromMapY,
@@ -123,7 +123,7 @@ public class PathFinderPathsController : ControllerBase
     ///     Find paths between a map identified by its id and a map identified by its position
     /// </summary>
     /// <inheritdoc cref="FindPathsFromIdToId" />
-    [HttpGet("from/position/{fromMapId:long}/to/position/{toMapX:int}/{toMapY:int}")]
+    [HttpGet("from/map/{fromMapId:long}/to/position/{toMapX:int}/{toMapY:int}")]
     public async Task<FindPathsResponse> FindPathsFromIdToPosition(
         long fromMapId,
         int toMapX,
