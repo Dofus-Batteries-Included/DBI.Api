@@ -164,69 +164,82 @@ It means that we need to know for each map the available zones and how they conn
 Thankfully, the creators of the game have included what they call a `worldgraph` in the game files. It is extracted by the [DDC](https://github.com/Dofus-Batteries-Included/DDC) project and saved to a file called `world-graph`.\
 The graph is defined as follows:
 - Nodes are zones of a map. Most maps have only one zone but maps that have multiple dissociated areas have multiple zones.\
-  __Example__: (the data center API exposes an endpoint to get all the nodes of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap))
-  - Request
-  ```
-  curl -X 'GET' \
-    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/nodes' \
-    -H 'accept: application/json'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "id": 7911,
-      "mapId": 106693122,
-      "zoneId": 2
-    },
-    {
-      "id": 10115,
-      "mapId": 106693122,
-      "zoneId": 1
-    }
-  ]
-  ```
+  <details>
+    <summary>
+      <b>Example</b>: (the data center API exposes an endpoint to get all the nodes of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetNodesInMap))
+    </summary>
+  
+    __Request__
+    ```
+    curl -X 'GET' \
+      'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/nodes' \
+      -H 'accept: application/json'
+    ```
+    
+    __Response__
+    ```json
+    [
+      {
+        "id": 7911,
+        "mapId": 106693122,
+        "zoneId": 2
+      },
+      {
+        "id": 10115,
+        "mapId": 106693122,
+        "zoneId": 1
+      }
+    ]
+    ```
+  </details>
+
 - Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.\
-  __Example__: (the data center API exposes an endpoint to get all the edges from a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap)) or to a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap)))
-  - Request
-  ```
-  curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/99615238/transitions/outgoing' \
-  -H 'accept: application/json'
-  ```
-  - Response
-  ```json
-  [
-    {
-      "$type": "scroll",
-      "direction": "west",
-      "from": {
-        "id": 5239,
-        "mapId": 99615238,
-        "zoneId": 1
+  <details>
+    <summary>
+      <b>Example</b>: (the data center API exposes an endpoint to get all the edges from a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap)) or to a given map ([try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap)))
+    </summary>
+  
+    __Request__
+    ```
+    curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/99615238/transitions/outgoing' \
+    -H 'accept: application/json'
+    ```
+    
+    __Response__
+    ```json
+    [
+      {
+        "$type": "scroll",
+        "direction": "west",
+        "from": {
+          "id": 5239,
+          "mapId": 99615238,
+          "zoneId": 1
+        },
+        "to": {
+          "id": 5240,
+          "mapId": 99614726,
+          "zoneId": 1
+        }
       },
-      "to": {
-        "id": 5240,
-        "mapId": 99614726,
-        "zoneId": 1
+      {
+        "$type": "scroll",
+        "direction": "south",
+        "from": {
+          "id": 5239,
+          "mapId": 99615238,
+          "zoneId": 1
+        },
+        "to": {
+          "id": 6586,
+          "mapId": 99615239,
+          "zoneId": 1
+        }
       }
-    },
-    {
-      "$type": "scroll",
-      "direction": "south",
-      "from": {
-        "id": 5239,
-        "mapId": 99615238,
-        "zoneId": 1
-      },
-      "to": {
-        "id": 6586,
-        "mapId": 99615239,
-        "zoneId": 1
-      }
-    }
-  ]
+    ]
   ```
+  </details>
   
 The only missing piece is how to find the nodes of the graph that correspond to the start and end map of a path search.
 The data is located in the cells of the maps, that are also extracted by the [DDC](https://github.com/Dofus-Batteries-Included/DDC) project and saved to a file called `maps`. \
@@ -234,60 +247,66 @@ Each cell has a `linkedZone` field that is a 2-bytes value, the first byte is th
 
 __Note__: the fact that `zoneId` is the first byte of `linkedZone` is a guess, it seems to be the case but I have no guarantees.
 
-__Example__: (the data center API exposes an endpoint to get all the cells of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetMapCells))
-- Request
-```
-curl -X 'GET' \
-  'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/cells' \
-  -H 'accept: application/json'
-```
-- Response
-```json
-[
-  {
-    "mapId": 106693122,
-    "cellNumber": 0,
-    "floor": 0,
-    "moveZone": 0,
-    "linkedZone": 0,
-    "speed": 0,
-    "los": true,
-    "visible": false,
-    "nonWalkableDuringFight": false,
-    "nonWalkableDuringRp": false,
-    "havenbagCell": false
-  },
-  ...,
-  {
-    "mapId": 106693122,
-    "cellNumber": 155,
-    "floor": 0,
-    "moveZone": 0,
-    "linkedZone": 32,
-    "speed": 0,
-    "los": true,
-    "visible": false,
-    "nonWalkableDuringFight": true,
-    "nonWalkableDuringRp": false,
-    "havenbagCell": false
-  },
-  ...,
-  {
-    "mapId": 106693122,
-    "cellNumber": 264,
-    "floor": 0,
-    "moveZone": 0,
-    "linkedZone": 17,
-    "speed": 0,
-    "los": true,
-    "visible": false,
-    "nonWalkableDuringFight": false,
-    "nonWalkableDuringRp": false,
-    "havenbagCell": false
-  },
-  ...
-]
-```
+<details>
+    <summary>
+      <b>Example</b>: (the data center API exposes an endpoint to get all the cells of a given map, [try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetMapCells))
+    </summary>
+
+  __Request__
+  ```
+  curl -X 'GET' \
+    'https://api.dofusbatteriesincluded.fr/data-center/versions/latest/world/maps/106693122/cells' \
+    -H 'accept: application/json'
+  ```
+
+  __Response__
+  ```json
+  [
+    {
+      "mapId": 106693122,
+      "cellNumber": 0,
+      "floor": 0,
+      "moveZone": 0,
+      "linkedZone": 0,
+      "speed": 0,
+      "los": true,
+      "visible": false,
+      "nonWalkableDuringFight": false,
+      "nonWalkableDuringRp": false,
+      "havenbagCell": false
+    },
+    ...,
+    {
+      "mapId": 106693122,
+      "cellNumber": 155,
+      "floor": 0,
+      "moveZone": 0,
+      "linkedZone": 32,
+      "speed": 0,
+      "los": true,
+      "visible": false,
+      "nonWalkableDuringFight": true,
+      "nonWalkableDuringRp": false,
+      "havenbagCell": false
+    },
+    ...,
+    {
+      "mapId": 106693122,
+      "cellNumber": 264,
+      "floor": 0,
+      "moveZone": 0,
+      "linkedZone": 17,
+      "speed": 0,
+      "los": true,
+      "visible": false,
+      "nonWalkableDuringFight": false,
+      "nonWalkableDuringRp": false,
+      "havenbagCell": false
+    },
+    ...
+  ]
+  ```
+</details>
 
 ### How to search for a path
 
@@ -295,6 +314,7 @@ curl -X 'GET' \
 
 Internally, the path finder requires the start and end node in the graph to search for a path between them.
 The path finder API exposes multiple ways to provide that information, they are the different schemas accepted by the [Find nodes](http://localhost:5274/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder/PathFinderPaths_FindNodesAll) endpoint :
+
 - `FindNodeById`, from the `nodeId`: the easiest for the path finder, it is the unique identifier of a node. This shifts the burden of finding the right node to the caller of the API.\
   <details>
     <summary>
