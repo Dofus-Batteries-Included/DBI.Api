@@ -11,6 +11,7 @@ using Server.Features.DataCenter.Services;
 using Server.Features.PathFinder.Controllers.Requests;
 using Server.Features.PathFinder.Controllers.Responses;
 using Server.Features.PathFinder.Services;
+using Path = Server.Features.PathFinder.Models.Path;
 
 namespace Server.Features.PathFinder.Controllers;
 
@@ -40,6 +41,42 @@ public class PathFinderPathsController : ControllerBase
         _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _worldServiceFactory = worldServiceFactory;
         _loggerFactory = loggerFactory;
+    }
+
+    /// <summary>
+    ///     Find paths between maps identified by their node IDs
+    /// </summary>
+    /// <remarks>
+    ///     The endpoint is the only one that returns at most one path. The node IDs can only refer to one unique node so there is no way this endpoint can return more than one path.
+    ///     It can however return no paths if no path can be found between the two nodes.
+    /// </remarks>
+    [HttpGet("from/node/{fromNodeId:long}/to/node/{toNodeId:long}")]
+    public async Task<FindPathResponse> FindPathsFromNodeToNode(long fromNodeId, long toNodeId, CancellationToken cancellationToken = default)
+    {
+        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+
+        RawWorldGraphNode? fromNode = rawWorldGraphService.GetNode(fromNodeId);
+        if (fromNode == null)
+        {
+            throw new NotFoundException("Could not find start position.");
+        }
+
+        RawWorldGraphNode? toNode = rawWorldGraphService.GetNode(toNodeId);
+        if (toNode == null)
+        {
+            throw new NotFoundException("Could not find end position.");
+        }
+
+        AStarService aStarService = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStarService>());
+
+        Path? path = aStarService.GetShortestPath(fromNode, toNode);
+
+        return new FindPathResponse
+        {
+            PathFound = path != null,
+            Path = path
+        };
     }
 
     /// <summary>
