@@ -359,7 +359,11 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```json
     [
       {
-        "id": 7911,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 7911,
         "mapId": 106693122,
         "zoneId": 2
       }
@@ -390,12 +394,16 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```json
     [
       {
-        "id": 10115,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
     ]
-  ```
+    ```
   </details>
 
 - `FindNodeByMap`, from the `mapId` alone: there might be multiple nodes in a map, but usually there is only one.
@@ -420,17 +428,25 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```json
     [
       {
-        "id": 7911,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 7911,
         "mapId": 106693122,
         "zoneId": 2
       },
       {
-        "id": 10115,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
     ]
-  ```
+    ```
   </details>
 
 - `FindNodeAtPosition` from the map coordinates: the path finder can extract all the maps at those coordinates, and all the nodes in those maps. There are high changes that multiple nodes match the coordinates.
@@ -458,17 +474,29 @@ The path finder API exposes multiple ways to provide that information, they are 
     ```json
     [
       {
-        "id": 10112,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 10112,
         "mapId": 99615745,
         "zoneId": 1
       },
       {
-        "id": 7911,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 7911,
         "mapId": 106693122,
         "zoneId": 2
       },
       {
-        "id": 10115,
+        "mapPosition": {
+          "x": 26,
+          "y": -9
+        },
+        "nodeId": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
@@ -510,61 +538,67 @@ It then extract all the candidates for the start and the end and computes all th
     "paths": [
       {
         "from": {
-          "mapId": 75497730,
-          "zoneId": 1,
-          "worldGraphNodeId": 5609,
           "mapPosition": {
             "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 5609,
+          "mapId": 75497730,
+          "zoneId": 1
         },
         "to": {
-          "mapId": 75498242,
-          "zoneId": 1,
-          "worldGraphNodeId": 1667,
           "mapPosition": {
-            "x": -19,
+            "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 1667,
+          "mapId": 75498242,
+          "zoneId": 1
         },
         "steps": [
           {
-            "$type": "scroll",
-            "direction": "north",
-            "map": {
-              "mapId": 75497730,
-              "zoneId": 1,
-              "worldGraphNodeId": 5609,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -5
-              }
+              },
+              "nodeId": 5609,
+              "mapId": 75497730,
+              "zoneId": 1
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "north"
             }
           },
           {
-            "$type": "scroll",
-            "direction": "south",
-            "map": {
-              "mapId": 75497731,
-              "zoneId": 1,
-              "worldGraphNodeId": 7076,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -6
-              }
+              },
+              "nodeId": 7076,
+              "mapId": 75497731,
+              "zoneId": 1
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "south"
             }
           },
           {
-            "$type": "scroll",
-            "direction": "east",
-            "map": {
-              "mapId": 75497730,
-              "zoneId": 2,
-              "worldGraphNodeId": 7095,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -5
-              }
+              },
+              "nodeId": 7095,
+              "mapId": 75497730,
+              "zoneId": 2
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "east"
             }
           }
         ]
@@ -603,96 +637,104 @@ It then extract all the candidates for the start and the end and computes all th
     "paths": [
       {
         "from": {
-          "mapId": 75497730,
-          "zoneId": 1,
-          "worldGraphNodeId": 5609,
           "mapPosition": {
             "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 5609,
+          "mapId": 75497730,
+          "zoneId": 1
         },
         "to": {
-          "mapId": 75498242,
-          "zoneId": 1,
-          "worldGraphNodeId": 1667,
           "mapPosition": {
-            "x": -19,
+            "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 1667,
+          "mapId": 75498242,
+          "zoneId": 1
         },
         "steps": [
           {
-            "$type": "scroll",
-            "direction": "north",
-            "map": {
-              "mapId": 75497730,
-              "zoneId": 1,
-              "worldGraphNodeId": 5609,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -5
-              }
+              },
+              "nodeId": 5609,
+              "mapId": 75497730,
+              "zoneId": 1
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "north"
             }
           },
           {
-            "$type": "scroll",
-            "direction": "south",
-            "map": {
-              "mapId": 75497731,
-              "zoneId": 1,
-              "worldGraphNodeId": 7076,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -6
-              }
+              },
+              "nodeId": 7076,
+              "mapId": 75497731,
+              "zoneId": 1
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "south"
             }
           },
           {
-            "$type": "scroll",
-            "direction": "east",
-            "map": {
-              "mapId": 75497730,
-              "zoneId": 2,
-              "worldGraphNodeId": 7095,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -5
-              }
+              },
+              "nodeId": 7095,
+              "mapId": 75497730,
+              "zoneId": 2
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "east"
             }
           }
         ]
       },
       {
         "from": {
-          "mapId": 75497730,
-          "zoneId": 2,
-          "worldGraphNodeId": 7095,
           "mapPosition": {
             "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 7095,
+          "mapId": 75497730,
+          "zoneId": 2
         },
         "to": {
-          "mapId": 75498242,
-          "zoneId": 1,
-          "worldGraphNodeId": 1667,
           "mapPosition": {
-            "x": -19,
+            "x": -20,
             "y": -5
-          }
+          },
+          "nodeId": 1667,
+          "mapId": 75498242,
+          "zoneId": 1
         },
         "steps": [
           {
-            "$type": "scroll",
-            "direction": "east",
-            "map": {
-              "mapId": 75497730,
-              "zoneId": 2,
-              "worldGraphNodeId": 7095,
+            "node": {
               "mapPosition": {
                 "x": -20,
                 "y": -5
-              }
+              },
+              "nodeId": 7095,
+              "mapId": 75497730,
+              "zoneId": 2
+            },
+            "transition": {
+              "type": "scroll",
+              "direction": "east"
             }
           }
         ]
