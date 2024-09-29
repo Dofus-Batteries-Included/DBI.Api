@@ -499,127 +499,132 @@ curl -X 'POST' \
 }
 ```
 
-__Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
-- Request
-```
-curl -X 'POST' \
-  'http://localhost:5274/path-finder/path/find-paths' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "start": {
-    "search": "by-map",
-    "mapId": 75497730
-  },
-  "end": {
-    "search": "by-map",
-    "mapId": 75498242
-  }
-}'
-```
-- Response
-```json
-{
-  "paths": [
-    {
-      "from": {
-        "mapId": 75497730,
-        "zoneId": 1,
-        "worldGraphNodeId": 5609,
-        "mapPosition": {
-          "x": -20,
-          "y": -5
-        }
-      },
-      "to": {
-        "mapId": 75498242,
-        "zoneId": 1,
-        "worldGraphNodeId": 1667,
-        "mapPosition": {
-          "x": -19,
-          "y": -5
-        }
-      },
-      "steps": [
-        {
-          "$type": "scroll",
-          "direction": "north",
-          "map": {
-            "mapId": 75497730,
-            "zoneId": 1,
-            "worldGraphNodeId": 5609,
-            "mapPosition": {
-              "x": -20,
-              "y": -5
-            }
-          }
-        },
-        {
-          "$type": "scroll",
-          "direction": "south",
-          "map": {
-            "mapId": 75497731,
-            "zoneId": 1,
-            "worldGraphNodeId": 7076,
-            "mapPosition": {
-              "x": -20,
-              "y": -6
-            }
-          }
-        },
-        {
-          "$type": "scroll",
-          "direction": "east",
-          "map": {
-            "mapId": 75497730,
-            "zoneId": 2,
-            "worldGraphNodeId": 7095,
-            "mapPosition": {
-              "x": -20,
-              "y": -5
-            }
-          }
-        }
-      ]
+<details>
+  <summary>
+  __Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
+  </summary>
+
+  - Request
+  ```
+  curl -X 'POST' \
+    'http://localhost:5274/path-finder/path/find-paths' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "start": {
+      "search": "by-map",
+      "mapId": 75497730
     },
-    {
-      "from": {
-        "mapId": 75497730,
-        "zoneId": 2,
-        "worldGraphNodeId": 7095,
-        "mapPosition": {
-          "x": -20,
-          "y": -5
-        }
-      },
-      "to": {
-        "mapId": 75498242,
-        "zoneId": 1,
-        "worldGraphNodeId": 1667,
-        "mapPosition": {
-          "x": -19,
-          "y": -5
-        }
-      },
-      "steps": [
-        {
-          "$type": "scroll",
-          "direction": "east",
-          "map": {
-            "mapId": 75497730,
-            "zoneId": 2,
-            "worldGraphNodeId": 7095,
-            "mapPosition": {
-              "x": -20,
-              "y": -5
+    "end": {
+      "search": "by-map",
+      "mapId": 75498242
+    }
+  }'
+  ```
+  - Response
+  ```json
+  {
+    "paths": [
+      {
+        "from": {
+          "mapId": 75497730,
+          "zoneId": 1,
+          "worldGraphNodeId": 5609,
+          "mapPosition": {
+            "x": -20,
+            "y": -5
+          }
+        },
+        "to": {
+          "mapId": 75498242,
+          "zoneId": 1,
+          "worldGraphNodeId": 1667,
+          "mapPosition": {
+            "x": -19,
+            "y": -5
+          }
+        },
+        "steps": [
+          {
+            "$type": "scroll",
+            "direction": "north",
+            "map": {
+              "mapId": 75497730,
+              "zoneId": 1,
+              "worldGraphNodeId": 5609,
+              "mapPosition": {
+                "x": -20,
+                "y": -5
+              }
+            }
+          },
+          {
+            "$type": "scroll",
+            "direction": "south",
+            "map": {
+              "mapId": 75497731,
+              "zoneId": 1,
+              "worldGraphNodeId": 7076,
+              "mapPosition": {
+                "x": -20,
+                "y": -6
+              }
+            }
+          },
+          {
+            "$type": "scroll",
+            "direction": "east",
+            "map": {
+              "mapId": 75497730,
+              "zoneId": 2,
+              "worldGraphNodeId": 7095,
+              "mapPosition": {
+                "x": -20,
+                "y": -5
+              }
             }
           }
-        }
-      ]
-    }
-  ]
-}
-```
+        ]
+      },
+      {
+        "from": {
+          "mapId": 75497730,
+          "zoneId": 2,
+          "worldGraphNodeId": 7095,
+          "mapPosition": {
+            "x": -20,
+            "y": -5
+          }
+        },
+        "to": {
+          "mapId": 75498242,
+          "zoneId": 1,
+          "worldGraphNodeId": 1667,
+          "mapPosition": {
+            "x": -19,
+            "y": -5
+          }
+        },
+        "steps": [
+          {
+            "$type": "scroll",
+            "direction": "east",
+            "map": {
+              "mapId": 75497730,
+              "zoneId": 2,
+              "worldGraphNodeId": 7095,
+              "mapPosition": {
+                "x": -20,
+                "y": -5
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
 
 ## Data Center
 
