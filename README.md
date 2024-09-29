@@ -501,7 +501,7 @@ curl -X 'POST' \
 
 <details>
   <summary>
-  __Example__: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
+  <b>Example</b>: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
   </summary>
 
   - Request
