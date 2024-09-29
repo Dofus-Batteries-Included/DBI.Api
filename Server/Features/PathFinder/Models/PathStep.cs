@@ -15,5 +15,5 @@ public class PathStep
     /// <summary>
     ///     The transition to take at this step to reach the next node.
     /// </summary>
-    public required MapTransition? Transition { get; init; }
+    public required MapTransitionMinimal? Transition { get; init; }
 }

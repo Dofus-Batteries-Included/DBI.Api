@@ -8,28 +8,19 @@ namespace Server.Features.DataCenter.Models.Maps;
 ///     A transition between two nodes
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(MapTransition), "unknown")]
-[JsonDerivedType(typeof(MapScrollTransition), "scroll")]
-[JsonDerivedType(typeof(MapActionTransition), "map-action")]
-[JsonDerivedType(typeof(MapInteractiveTransition), "interactive")]
-[JsonDerivedType(typeof(MapNpcActionTransition), "npc")]
-public class MapTransition
+[JsonDerivedType(typeof(MapTransitionMinimal), "unknown")]
+[JsonDerivedType(typeof(MapScrollTransitionMinimal), "scroll")]
+[JsonDerivedType(typeof(MapActionTransitionMinimal), "map-action")]
+[JsonDerivedType(typeof(MapInteractiveTransitionMinimal), "interactive")]
+[JsonDerivedType(typeof(MapNpcActionTransitionMinimal), "npc")]
+public class MapTransitionMinimal
 {
-    /// <summary>
-    ///     The start node.
-    /// </summary>
-    public required MapNode From { get; set; }
-
-    /// <summary>
-    ///     The end node.
-    /// </summary>
-    public required MapNode To { get; set; }
 }
 
 /// <summary>
 ///     A transition where the character needs to scroll in order to reach the next map.
 /// </summary>
-public class MapScrollTransition : MapTransition
+public class MapScrollTransitionMinimal : MapTransitionMinimal
 {
     /// <summary>
     ///     The direction of the scroll between the start and end nodes.
@@ -40,14 +31,14 @@ public class MapScrollTransition : MapTransition
 /// <summary>
 ///     A transition where the character needs to perform an action to reach the next map.
 /// </summary>
-public class MapActionTransition : MapTransition
+public class MapActionTransitionMinimal : MapTransitionMinimal
 {
 }
 
 /// <summary>
 ///     A transition where the character needs to interact with an interactive element in order to reach the next map.
 /// </summary>
-public class MapInteractiveTransition : MapTransition
+public class MapInteractiveTransitionMinimal : MapTransitionMinimal
 {
     /// <summary>
     ///     The unique ID of the interactive element to interact with.
@@ -58,7 +49,7 @@ public class MapInteractiveTransition : MapTransition
 /// <summary>
 ///     A transition where the character needs to interact with an NPC in order to reach the next map.
 /// </summary>
-public class MapNpcActionTransition : MapTransition
+public class MapNpcActionTransitionMinimal : MapTransitionMinimal
 {
     /// <summary>
     ///     The unique ID of the NPC to interact with.
@@ -66,46 +57,32 @@ public class MapNpcActionTransition : MapTransition
     public int NpcId { get; set; }
 }
 
-static class MapTransitionMappingExtensions
+static class MapTransitionMinimalMappingExtensions
 {
-    public static MapTransition Cook(this RawWorldGraphEdgeTransition transition, RawWorldGraphNode from, RawWorldGraphNode to)
+    public static MapTransitionMinimal Cook(this RawWorldGraphEdgeTransition transition)
     {
         switch (transition.Type)
         {
             case RawWorldGraphEdgeType.Scroll:
             case RawWorldGraphEdgeType.ScrollAction:
-                return new MapScrollTransition
+                return new MapScrollTransitionMinimal
                 {
-                    From = from.Cook(),
-                    To = to.Cook(),
                     Direction = transition.Direction.Cook()
                 };
             case RawWorldGraphEdgeType.MapAction:
-                return new MapActionTransition
-                {
-                    From = from.Cook(),
-                    To = to.Cook()
-                };
+                return new MapActionTransitionMinimal();
             case RawWorldGraphEdgeType.Interactive:
-                return new MapInteractiveTransition
+                return new MapInteractiveTransitionMinimal
                 {
-                    From = from.Cook(),
-                    To = to.Cook(),
                     InteractiveElementId = transition.SkillId
                 };
             case RawWorldGraphEdgeType.NpcAction:
-                return new MapNpcActionTransition
+                return new MapNpcActionTransitionMinimal
                 {
-                    From = from.Cook(),
-                    To = to.Cook(),
                     NpcId = transition.SkillId
                 };
             default:
-                return new MapTransition
-                {
-                    From = from.Cook(),
-                    To = to.Cook()
-                };
+                return new MapTransitionMinimal();
         }
     }
 }

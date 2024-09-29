@@ -58,6 +58,6 @@ class PathFinderService
         RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
         RawWorldGraphEdgeTransition? transition = transitions.FirstOrDefault();
 
-        return new PathStep { Node = currentPathNode, Transition = transition?.Cook(current, next) };
+        return new PathStep { Node = currentPathNode, Transition = transition?.Cook() };
     }
 }
