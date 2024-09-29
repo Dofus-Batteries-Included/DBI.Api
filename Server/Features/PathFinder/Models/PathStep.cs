@@ -1,27 +1,19 @@
-using System.Text.Json.Serialization;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+using Server.Features.DataCenter.Models.Maps;
 
 namespace Server.Features.PathFinder.Models;
 
 /// <summary>
 ///     A step of a path.
 /// </summary>
-[JsonDerivedType(typeof(ScrollStep), "scroll")]
 public class PathStep
 {
     /// <summary>
-    ///     The map that is being traversed at this step.
+    ///     The node that is being traversed at this step.
     /// </summary>
-    public required PathMap Map { get; init; }
-}
+    public required MapNodeWithPosition Node { get; init; }
 
-/// <summary>
-///     A step where the character needs to scroll in order to reach the next map.
-/// </summary>
-public class ScrollStep : PathStep
-{
     /// <summary>
-    ///     The direction of the scroll to reach the next map.
+    ///     The transition to take at this step to reach the next node.
     /// </summary>
-    public required RawWorldGraphEdgeDirection Direction { get; init; }
+    public required MapTransitionMinimal? Transition { get; init; }
 }

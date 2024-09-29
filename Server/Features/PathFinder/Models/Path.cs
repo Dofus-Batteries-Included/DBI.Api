@@ -1,4 +1,6 @@
-﻿namespace Server.Features.PathFinder.Models;
+﻿using Server.Features.DataCenter.Models.Maps;
+
+namespace Server.Features.PathFinder.Models;
 
 /// <summary>
 ///     A path between two maps.
@@ -13,12 +15,12 @@ public class Path
     /// <summary>
     ///     The start map.
     /// </summary>
-    public required PathMap From { get; init; }
+    public required MapNodeWithPosition From { get; init; }
 
     /// <summary>
     ///     The end map.
     /// </summary>
-    public required PathMap To { get; init; }
+    public required MapNodeWithPosition To { get; init; }
 
     /// <summary>
     ///     The steps from <see cref="From" /> that a character must take to reach <see cref="To" />.

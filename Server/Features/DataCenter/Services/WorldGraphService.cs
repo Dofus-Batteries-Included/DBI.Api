@@ -1,5 +1,4 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
+﻿using Server.Features.DataCenter.Models.Maps;
 using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
@@ -13,7 +12,7 @@ public class WorldGraphService(RawWorldGraphService? rawWorldGraphService)
     /// <summary>
     ///     Get all the nodes in the given map.
     /// </summary>
-    public IEnumerable<MapNode>? GetNodesInMap(long mapId) => rawWorldGraphService?.GetNodesInMap(mapId).Select(Cook);
+    public IEnumerable<MapNode>? GetNodesInMap(long mapId) => rawWorldGraphService?.GetNodesInMap(mapId).Select(node => node.Cook());
 
     /// <summary>
     ///     Get all the transitions going out of the given map.
@@ -28,7 +27,7 @@ public class WorldGraphService(RawWorldGraphService? rawWorldGraphService)
                             RawWorldGraphNode? fromNode = rawWorldGraphService.GetNode(e.From);
                             RawWorldGraphNode? toNode = rawWorldGraphService.GetNode(e.To);
 
-                            return fromNode != null && toNode != null && e.Transitions != null ? e.Transitions.Select(t => Cook(fromNode, toNode, t)) : [];
+                            return fromNode != null && toNode != null && e.Transitions != null ? e.Transitions.Select(t => t.Cook(fromNode, toNode)) : [];
                         }
                     )
             );
@@ -46,62 +45,8 @@ public class WorldGraphService(RawWorldGraphService? rawWorldGraphService)
                             RawWorldGraphNode? fromNode = rawWorldGraphService.GetNode(e.From);
                             RawWorldGraphNode? toNode = rawWorldGraphService.GetNode(e.To);
 
-                            return fromNode != null && toNode != null && e.Transitions != null ? e.Transitions.Select(t => Cook(fromNode, toNode, t)) : [];
+                            return fromNode != null && toNode != null && e.Transitions != null ? e.Transitions.Select(t => t.Cook(fromNode, toNode)) : [];
                         }
                     )
             );
-
-    static MapNode Cook(RawWorldGraphNode node) =>
-        new()
-        {
-            Id = node.Id,
-            MapId = node.MapId,
-            ZoneId = node.ZoneId
-        };
-
-    static MapTransition Cook(RawWorldGraphNode from, RawWorldGraphNode to, RawWorldGraphEdgeTransition transition)
-    {
-        switch (transition.Type)
-        {
-            case RawWorldGraphEdgeType.Scroll:
-                return new MapScrollTransition
-                {
-                    From = Cook(from),
-                    To = Cook(to),
-                    Direction = Cook(transition.Direction)
-                };
-            default:
-                return new MapTransition
-                {
-                    From = Cook(from),
-                    To = Cook(to)
-                };
-        }
-    }
-
-    static Direction Cook(RawWorldGraphEdgeDirection? direction)
-    {
-        switch (direction)
-        {
-            case RawWorldGraphEdgeDirection.North:
-                return Direction.North;
-            case RawWorldGraphEdgeDirection.East:
-                return Direction.East;
-            case RawWorldGraphEdgeDirection.South:
-                return Direction.South;
-            case RawWorldGraphEdgeDirection.West:
-                return Direction.West;
-            case null:
-            case RawWorldGraphEdgeDirection.Random:
-            case RawWorldGraphEdgeDirection.Same:
-            case RawWorldGraphEdgeDirection.Opposite:
-            case RawWorldGraphEdgeDirection.Invalid:
-            case RawWorldGraphEdgeDirection.SouthEast:
-            case RawWorldGraphEdgeDirection.SouthWest:
-            case RawWorldGraphEdgeDirection.NorthWest:
-            case RawWorldGraphEdgeDirection.NorthEast:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-        }
-    }
 }

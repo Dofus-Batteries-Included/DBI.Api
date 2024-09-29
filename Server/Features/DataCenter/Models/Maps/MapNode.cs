@@ -1,4 +1,6 @@
-﻿namespace Server.Features.DataCenter.Models.Maps;
+﻿using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+
+namespace Server.Features.DataCenter.Models.Maps;
 
 /// <summary>
 ///     A node in a map.
@@ -8,7 +10,7 @@ public class MapNode
     /// <summary>
     ///     The unique ID of the node in the world graph.
     /// </summary>
-    public long Id { get; set; }
+    public long NodeId { get; set; }
 
     /// <summary>
     ///     The unique ID of the containing map.
@@ -20,4 +22,15 @@ public class MapNode
     ///     Multiple nodes in the same map are identified by their zone ID.
     /// </summary>
     public int ZoneId { get; set; }
+}
+
+static class MapNodeMappingExtensions
+{
+    public static MapNode Cook(this RawWorldGraphNode node) =>
+        new()
+        {
+            NodeId = node.Id,
+            MapId = node.MapId,
+            ZoneId = node.ZoneId
+        };
 }

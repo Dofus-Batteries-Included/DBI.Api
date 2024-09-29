@@ -43,8 +43,8 @@ class PathFinderService
 
         return new Path
         {
-            From = new PathMap { MapId = sourceNode.MapId, ZoneId = sourceNode.ZoneId, MapPosition = sourceMap?.Position, WorldGraphNodeId = sourceNode.Id },
-            To = new PathMap { MapId = targetNode.MapId, ZoneId = targetNode.ZoneId, MapPosition = targetMap?.Position, WorldGraphNodeId = targetNode.Id },
+            From = sourceNode.Cook(sourceMap?.Position),
+            To = targetNode.Cook(sourceMap?.Position),
             Steps = steps
         };
     }
@@ -52,22 +52,12 @@ class PathFinderService
     PathStep ComputeStep(RawWorldGraphNode current, RawWorldGraphNode next)
     {
         Map? currentMap = _mapsService.GetMap(current);
-        PathMap currentPathMap = new() { MapId = current.MapId, ZoneId = current.ZoneId, MapPosition = currentMap?.Position, WorldGraphNodeId = current.Id };
+        MapNodeWithPosition currentPathNode = current.Cook(currentMap?.Position);
 
         RawWorldGraphEdge[] edges = _rawWorldGraphService.GetEdges(current.Id, next.Id).ToArray();
         RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
+        RawWorldGraphEdgeTransition? transition = transitions.FirstOrDefault();
 
-        RawWorldGraphEdgeTransition? scrollTransition = transitions.FirstOrDefault(t => t.Type is RawWorldGraphEdgeType.Scroll or RawWorldGraphEdgeType.ScrollAction);
-
-        if (scrollTransition is { Direction: not null })
-        {
-            return new ScrollStep
-            {
-                Map = currentPathMap,
-                Direction = scrollTransition.Direction.Value
-            };
-        }
-
-        return new PathStep { Map = currentPathMap };
+        return new PathStep { Node = currentPathNode, Transition = transition?.Cook() };
     }
 }
