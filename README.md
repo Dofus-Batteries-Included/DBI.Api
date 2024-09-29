@@ -504,7 +504,7 @@ curl -X 'POST' \
   <b>Example</b>: in this example we provide the map ids without specifying the cell numbers, two paths are possible between the nodes: a path from the first node's zone 1 to the second node, and a path from the first node's zone 2 to the second node.
   </summary>
 
-  - Request
+  __Request__
   ```
   curl -X 'POST' \
     'http://localhost:5274/path-finder/path/find-paths' \
@@ -521,7 +521,7 @@ curl -X 'POST' \
     }
   }'
   ```
-  - Response
+  __Response__
   ```json
   {
     "paths": [
