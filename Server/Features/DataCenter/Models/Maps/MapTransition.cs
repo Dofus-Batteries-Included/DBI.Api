@@ -42,6 +42,10 @@ public class MapScrollTransition : MapTransition
 /// </summary>
 public class MapActionTransition : MapTransition
 {
+    /// <summary>
+    ///     The direction of the transition between the start and end nodes.
+    /// </summary>
+    public ExtendedDirection? Direction { get; set; }
 }
 
 /// <summary>
@@ -49,6 +53,10 @@ public class MapActionTransition : MapTransition
 /// </summary>
 public class MapInteractiveTransition : MapTransition
 {
+    /// <summary>
+    ///     The direction of the transition between the start and end nodes.
+    /// </summary>
+    public ExtendedDirection? Direction { get; set; }
 }
 
 /// <summary>
@@ -70,19 +78,21 @@ static class MapTransitionMappingExtensions
                 {
                     From = from.Cook(),
                     To = to.Cook(),
-                    Direction = transition.Direction.Cook()
+                    Direction = transition.Direction?.Cook() ?? throw new InvalidOperationException("Invalid direction")
                 };
             case RawWorldGraphEdgeType.MapAction:
                 return new MapActionTransition
                 {
                     From = from.Cook(),
-                    To = to.Cook()
+                    To = to.Cook(),
+                    Direction = transition.Direction?.CookExtendedDirection()
                 };
             case RawWorldGraphEdgeType.Interactive:
                 return new MapInteractiveTransition
                 {
                     From = from.Cook(),
-                    To = to.Cook()
+                    To = to.Cook(),
+                    Direction = transition.Direction?.CookExtendedDirection()
                 };
             case RawWorldGraphEdgeType.NpcAction:
                 return new MapNpcActionTransition

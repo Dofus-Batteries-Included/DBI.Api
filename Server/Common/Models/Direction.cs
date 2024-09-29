@@ -30,7 +30,7 @@ public enum Direction
 
 static class DirectionMappingExtensions
 {
-    public static Direction Cook(this RawWorldGraphEdgeDirection? direction)
+    public static Direction Cook(this RawWorldGraphEdgeDirection direction)
     {
         switch (direction)
         {
@@ -42,7 +42,6 @@ static class DirectionMappingExtensions
                 return Direction.South;
             case RawWorldGraphEdgeDirection.West:
                 return Direction.West;
-            case null:
             case RawWorldGraphEdgeDirection.Random:
             case RawWorldGraphEdgeDirection.Same:
             case RawWorldGraphEdgeDirection.Opposite:

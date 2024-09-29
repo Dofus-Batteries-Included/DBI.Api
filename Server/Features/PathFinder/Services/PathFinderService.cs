@@ -1,4 +1,5 @@
-﻿using Server.Features.DataCenter.Models.Maps;
+﻿using Server.Common.Models;
+using Server.Features.DataCenter.Models.Maps;
 using Server.Features.DataCenter.Raw.Models.WorldGraphs;
 using Server.Features.DataCenter.Raw.Services.WorldGraphs;
 using Server.Features.DataCenter.Services;
@@ -30,7 +31,6 @@ class PathFinderService
         }
 
         Map? sourceMap = _mapsService.GetMap(sourceNode);
-        Map? targetMap = _mapsService.GetMap(targetNode);
 
         List<PathStep> steps = new(rawPath.Count);
         for (int i = 0; i < rawPath.Count - 1; i++)
@@ -49,6 +49,48 @@ class PathFinderService
         };
     }
 
+    public IEnumerable<MapNodeWithPosition> EnumerateNodesInDirection(RawWorldGraphNode sourceNode, Direction direction)
+    {
+        RawWorldGraphNode current = sourceNode;
+        while (true)
+        {
+            IEnumerable<RawWorldGraphEdge> edges = _rawWorldGraphService.GetEdgesFrom(current.Id);
+            var transitionInDirection = edges.Select(
+                    e => new { Edge = e, Transitions = e.Transitions?.Where(t => t.Direction is not null && DirectionEquals(t.Direction.Value, direction)).ToArray() ?? [] }
+                )
+                .Where(x => x.Transitions.Length > 0)
+                .ToArray();
+
+            if (transitionInDirection.Length == 0)
+            {
+                yield break;
+            }
+
+            // Sometimes, there are mutliple transitions in the same direction, e.g. map 196345861 zone 2 has both a scroll and a map-action transition north 
+            // In that case, we choose scroll actions first, then scroll actions, then map actions, then interactives, then whatever transition is available
+
+            var edgeAndTransition = transitionInDirection.FirstOrDefault(x => x.Transitions.Any(t => t.Type == RawWorldGraphEdgeType.Scroll))
+                                    ?? transitionInDirection.FirstOrDefault(x => x.Transitions.Any(t => t.Type == RawWorldGraphEdgeType.ScrollAction))
+                                    ?? transitionInDirection.FirstOrDefault(x => x.Transitions.Any(t => t.Type == RawWorldGraphEdgeType.MapAction))
+                                    ?? transitionInDirection.FirstOrDefault(x => x.Transitions.Any(t => t.Type == RawWorldGraphEdgeType.Interactive))
+                                    ?? transitionInDirection.First();
+
+
+            long nextNodeId = edgeAndTransition.Edge.To;
+            RawWorldGraphNode? nextNode = _rawWorldGraphService.GetNode(nextNodeId);
+
+            if (nextNode == null)
+            {
+                yield break;
+            }
+
+            current = nextNode;
+            Map? currentMap = _mapsService.GetMap(current);
+
+            yield return current.Cook(currentMap?.Position);
+        }
+    }
+
     PathStep ComputeStep(RawWorldGraphNode current, RawWorldGraphNode next)
     {
         Map? currentMap = _mapsService.GetMap(current);
@@ -60,4 +102,14 @@ class PathFinderService
 
         return new PathStep { Node = currentPathNode, Transition = transition?.Cook() };
     }
+
+    static bool DirectionEquals(RawWorldGraphEdgeDirection rawDirection, Direction direction) =>
+        direction switch
+        {
+            Direction.North => rawDirection == RawWorldGraphEdgeDirection.North,
+            Direction.South => rawDirection == RawWorldGraphEdgeDirection.South,
+            Direction.East => rawDirection == RawWorldGraphEdgeDirection.East,
+            Direction.West => rawDirection == RawWorldGraphEdgeDirection.West,
+            _ => false
+        };
 }
