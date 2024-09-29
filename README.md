@@ -218,7 +218,7 @@ The graph is defined as follows:
 - Edges are connections between two maps. Edges have transitions: they are all the ways a player can move from the first map to the second.\
   <details>
     <summary>
-      <b>Example</b>: the data center API exposes an endpoint to get all the edges from a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap">try it!</a>) or to a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap">try it!</a>
+      <b>Example</b>: the data center API exposes an endpoint to get all the edges from a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsFromMap">try it!</a>) or to a given map (<a href="https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/World%20-%20Maps/Maps_GetTransitionsToMap">try it!</a>)
     </summary>
   
     __Request__
