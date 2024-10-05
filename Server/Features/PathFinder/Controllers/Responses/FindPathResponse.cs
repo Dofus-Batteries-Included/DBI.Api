@@ -1,4 +1,4 @@
-﻿using Path = DBI.Server.Features.PathFinder.Models.Path;
+﻿using Path = DBI.PathFinder.Models.Path;
 
 namespace DBI.Server.Features.PathFinder.Controllers.Responses;
 

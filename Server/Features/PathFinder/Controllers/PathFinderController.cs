@@ -3,11 +3,11 @@ using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
+using DBI.PathFinder;
+using DBI.PathFinder.Builders;
+using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
-using DBI.Server.Features.PathFinder.Controllers.Requests;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
-using DBI.Server.Features.PathFinder.Services;
-using DBI.Server.Features.PathFinder.Services.PathFinding;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
@@ -54,7 +54,7 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -74,7 +74,7 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
 
         RawWorldGraphNode[] fromNodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (fromNodes.Length == 0)
@@ -88,14 +88,11 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStar>());
-        PathFinderService pathFinderService = new(pathFindingStrategy, rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).UseLogger(_loggerFactory.CreateLogger("PathFinder")).Build();
 
         return new FindPathsResponse
         {
-            Paths = fromNodes.SelectMany(
-                    fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinderService.GetShortestPath(fromNode, toNode) })
-                )
+            Paths = fromNodes.SelectMany(fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinder.GetShortestPath(fromNode, toNode) }))
                 .Where(p => p.Path != null)
                 .Select(p => p.Path!)
                 .ToArray()

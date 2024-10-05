@@ -2,8 +2,7 @@
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
-using DBI.Server.Features.PathFinder.Services;
-using DBI.Server.Features.PathFinder.Services.PathFinding;
+using DBI.PathFinder.Builders;
 using DBI.Server.Features.TreasureSolver.Models;
 using DBI.Server.Features.TreasureSolver.Services.Clues;
 
@@ -44,11 +43,10 @@ public class TreasureSolverService(
             return new FindNextNodeContainingClueResult(false, null, null);
         }
 
-        AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, loggerFactory.CreateLogger<AStar>());
-        PathFinderService pathFinderService = new(pathFindingStrategy, rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).UseLogger(loggerFactory.CreateLogger("PathFinder")).Build();
 
         int distance = 1;
-        foreach (MapNodeWithPosition node in pathFinderService.EnumerateNodesInDirection(startNode, direction))
+        foreach (MapNodeWithPosition node in pathFinder.EnumerateNodesInDirection(startNode, direction))
         {
             IReadOnlyCollection<Clue> clues = await findCluesService.FindCluesInMapAsync(node.MapId);
             if (clues.Any(c => c.ClueId == clueId))

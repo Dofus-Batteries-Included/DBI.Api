@@ -4,11 +4,11 @@ using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
-using DBI.Server.Features.PathFinder.Controllers.Requests;
+using DBI.PathFinder.Models;
 
-namespace DBI.Server.Features.PathFinder.Services;
+namespace DBI.PathFinder;
 
-class NodeFinderService(RawWorldGraphService rawWorldGraphService, RawMapPositionsService rawMapPositionsService, MapsService mapsService)
+public class NodeFinder(RawWorldGraphService rawWorldGraphService, RawMapPositionsService rawMapPositionsService, MapsService mapsService)
 {
     public IEnumerable<RawWorldGraphNode> FindNodes(FindNodeRequest request)
     {

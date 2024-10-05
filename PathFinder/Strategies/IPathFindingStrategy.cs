@@ -1,8 +1,8 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
 
-namespace DBI.Server.Features.PathFinder.Services.PathFinding;
+namespace DBI.PathFinder.Strategies;
 
-interface IPathFindingStrategy
+public interface IPathFindingStrategy
 {
     IReadOnlyList<RawWorldGraphNode>? ComputePath(RawWorldGraphNode from, RawWorldGraphNode to);
 }
