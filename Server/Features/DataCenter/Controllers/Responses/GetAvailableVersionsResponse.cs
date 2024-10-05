@@ -1,4 +1,4 @@
-﻿namespace DBI.Server.Features.DataCenter.Controllers.Versions.Responses;
+﻿namespace DBI.Server.Features.DataCenter.Controllers.Responses;
 
 /// <summary>
 /// </summary>

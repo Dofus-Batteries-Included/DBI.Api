@@ -5,7 +5,7 @@ using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
-namespace DBI.Server.Features.DataCenter.Controllers.I18N;
+namespace DBI.Server.Features.DataCenter.Controllers;
 
 /// <summary>
 ///     Internationalization endpoints

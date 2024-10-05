@@ -4,7 +4,7 @@ using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
-namespace DBI.Server.Features.DataCenter.Controllers.World;
+namespace DBI.Server.Features.DataCenter.Controllers;
 
 /// <summary>
 ///     Super Areas endpoints
