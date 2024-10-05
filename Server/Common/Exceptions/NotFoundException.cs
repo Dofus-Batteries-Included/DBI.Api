@@ -1,6 +1,6 @@
 ﻿namespace DBI.Server.Common.Exceptions;
 
-class NotFoundException : Exception
+class NotFoundException : ServerException
 {
     public NotFoundException(string message) : base(message) { }
 }
