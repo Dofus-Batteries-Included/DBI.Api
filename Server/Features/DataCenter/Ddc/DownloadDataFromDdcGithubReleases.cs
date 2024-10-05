@@ -3,20 +3,18 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using DBI.Server.Common.Workers;
-using DBI.Server.Features.DataCenter.Ddc;
-using RawDataFromDdcGithubReleasesSavedToDisk = DBI.Server.Features.DataCenter.Ddc.RawDataFromDdcGithubReleasesSavedToDisk;
 
-namespace DBI.Server.Features.DataCenter.Workers;
+namespace DBI.Server.Features.DataCenter.Ddc;
 
-partial class DownloadDataFromGithubReleases : PeriodicService
+partial class DownloadDataFromDdcGithubReleases : PeriodicService
 {
     readonly IHttpClientFactory _httpClientFactory;
     readonly HashSet<string> _processedReleases = [];
     readonly RawDataFromDdcGithubReleasesSavedToDisk _repository;
 
-    public DownloadDataFromGithubReleases(IHttpClientFactory httpClientFactory, RawDataFromDdcGithubReleasesSavedToDisk repository, ILoggerFactory loggerFactory) : base(
+    public DownloadDataFromDdcGithubReleases(IHttpClientFactory httpClientFactory, RawDataFromDdcGithubReleasesSavedToDisk repository, ILoggerFactory loggerFactory) : base(
         TimeSpan.FromHours(1),
-        loggerFactory.CreateLogger<DownloadDataFromGithubReleases>()
+        loggerFactory.CreateLogger<DownloadDataFromDdcGithubReleases>()
     )
     {
         _httpClientFactory = httpClientFactory;

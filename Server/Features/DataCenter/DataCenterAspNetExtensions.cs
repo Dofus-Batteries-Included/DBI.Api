@@ -6,9 +6,9 @@ using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.Server.Common.OpenApi;
 using DBI.Server.Features.DataCenter.Ddc;
-using DBI.Server.Features.DataCenter.Workers;
 using DBI.Server.Infrastructure;
 using Microsoft.Extensions.Options;
+using DownloadDataFromDdcGithubReleases = DBI.Server.Features.DataCenter.Ddc.DownloadDataFromDdcGithubReleases;
 
 namespace DBI.Server.Features.DataCenter;
 
@@ -36,7 +36,7 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawWorldGraphServiceFactory>();
         services.AddSingleton<WorldServiceFactory>();
 
-        services.AddHostedService<DownloadDataFromGithubReleases>();
+        services.AddHostedService<DownloadDataFromDdcGithubReleases>();
 
         services.AddOpenApiDocument(
             settings =>
