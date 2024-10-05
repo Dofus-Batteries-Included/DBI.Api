@@ -1,3 +1,5 @@
+[![Discord](https://img.shields.io/discord/1279846081550618696?label=discord)](https://discord.gg/d2fapbcjvv)
+
 # Dofus Batteries Included (DBI) - API
 
 APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.Plugins).
