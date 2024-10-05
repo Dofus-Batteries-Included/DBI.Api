@@ -1,8 +1,7 @@
 ﻿using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Models.WorldGraphs;
-using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
-using DBI.DataCenter.Structured.Services;
+using DBI.PathFinder.DataProviders;
 using Microsoft.Extensions.Logging;
 
 namespace DBI.PathFinder.Strategies;
@@ -11,21 +10,19 @@ public class AStar : IPathFindingStrategy
 {
     const int MaxIterations = 100000;
 
-    readonly RawWorldGraphService _rawWorldGraphService;
-    readonly MapsService _mapsService;
+    readonly IWorldDataProvider _worldDataProvider;
     readonly ILogger<AStar> _logger;
     readonly Dictionary<(long, long), IReadOnlyList<RawWorldGraphNode>?> _knownPaths = new();
 
-    public AStar(RawWorldGraphService rawWorldGraphService, MapsService mapsService, ILogger<AStar> logger)
+    public AStar(IWorldDataProvider worldDataProvider, ILogger<AStar> logger)
     {
-        _rawWorldGraphService = rawWorldGraphService;
-        _mapsService = mapsService;
+        _worldDataProvider = worldDataProvider;
         _logger = logger;
     }
 
     public IReadOnlyList<RawWorldGraphNode>? ComputePath(RawWorldGraphNode sourceNode, RawWorldGraphNode targetNode)
     {
-        if (!_knownPaths.TryGetValue((sourceNode.Id, targetNode.Id), out IReadOnlyList<RawWorldGraphNode>? path))
+        if (!_knownPaths.ContainsKey((sourceNode.Id, targetNode.Id)))
         {
             Dictionary<RawWorldGraphNode, RawWorldGraphNode> cameFrom = new();
 
@@ -77,7 +74,7 @@ public class AStar : IPathFindingStrategy
 
             foreach (long neighborId in GetNeighbors(currentNode))
             {
-                RawWorldGraphNode? neighborNode = _rawWorldGraphService.GetNode(neighborId);
+                RawWorldGraphNode? neighborNode = _worldDataProvider.GetNode(neighborId);
                 if (neighborNode == null)
                 {
                     continue;
@@ -108,19 +105,19 @@ public class AStar : IPathFindingStrategy
 
     IEnumerable<long> GetNeighbors(RawWorldGraphNode nodeId)
     {
-        IEnumerable<RawWorldGraphEdge> edges = _rawWorldGraphService.GetEdgesFrom(nodeId.Id);
+        IEnumerable<RawWorldGraphEdge> edges = _worldDataProvider.GetEdgesFromNode(nodeId.Id);
         return edges.Select(e => e.To);
     }
 
     int ComputeDistance(RawWorldGraphNode from, RawWorldGraphNode to)
     {
-        Map? fromMap = _mapsService.GetMap(from.MapId);
+        Map? fromMap = _worldDataProvider.GetMap(from.MapId);
         if (fromMap is null)
         {
             return 0;
         }
 
-        Map? toMap = _mapsService.GetMap(to.MapId);
+        Map? toMap = _worldDataProvider.GetMap(to.MapId);
         if (toMap == null)
         {
             return 0;

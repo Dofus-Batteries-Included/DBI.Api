@@ -5,8 +5,9 @@ namespace DBI.PathFinder.DataProviders;
 
 public interface IWorldDataProvider
 {
-    RawWorldGraphNode? GetNode(long nextNodeId);
-    Map? GetMapOfNode(RawWorldGraphNode sourceNode);
-    IEnumerable<RawWorldGraphEdge> GetEdgesFromNode(long currentId);
-    IEnumerable<RawWorldGraphEdge> GetEdgesBetweenNodes(long currentId, long nextId);
+    RawWorldGraphNode? GetNode(long nodeId);
+    Map? GetMap(long mapId);
+    Map? GetMapOfNode(RawWorldGraphNode node);
+    IEnumerable<RawWorldGraphEdge> GetEdgesFromNode(long nodeId);
+    IEnumerable<RawWorldGraphEdge> GetEdgesBetweenNodes(long fromNodeId, long toNodeId);
 }

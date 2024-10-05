@@ -16,8 +16,9 @@ class WorldDataFromRawServices : IWorldDataProvider
         _mapsService = mapsService;
     }
 
-    public Map? GetMapOfNode(RawWorldGraphNode sourceNode) => _mapsService.GetMap(sourceNode);
-    public RawWorldGraphNode? GetNode(long nextNodeId) => _rawWorldGraphService.GetNode(nextNodeId);
-    public IEnumerable<RawWorldGraphEdge> GetEdgesFromNode(long currentId) => _rawWorldGraphService.GetEdgesFrom(currentId);
-    public IEnumerable<RawWorldGraphEdge> GetEdgesBetweenNodes(long currentId, long nextId) => _rawWorldGraphService.GetEdges(currentId, nextId);
+    public RawWorldGraphNode? GetNode(long nodeId) => _rawWorldGraphService.GetNode(nodeId);
+    public Map? GetMap(long mapId) => _mapsService.GetMap(mapId);
+    public Map? GetMapOfNode(RawWorldGraphNode node) => _mapsService.GetMap(node);
+    public IEnumerable<RawWorldGraphEdge> GetEdgesFromNode(long nodeId) => _rawWorldGraphService.GetEdgesFrom(nodeId);
+    public IEnumerable<RawWorldGraphEdge> GetEdgesBetweenNodes(long fromNodeId, long toNodeId) => _rawWorldGraphService.GetEdges(fromNodeId, toNodeId);
 }

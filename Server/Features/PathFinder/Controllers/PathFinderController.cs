@@ -4,6 +4,7 @@ using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
+using DBI.PathFinder.Builders;
 using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
@@ -87,7 +88,7 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        DBI.PathFinder.PathFinder pathFinder = DBI.PathFinder.PathFinder.Create(rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
 
         return new FindPathsResponse
         {
