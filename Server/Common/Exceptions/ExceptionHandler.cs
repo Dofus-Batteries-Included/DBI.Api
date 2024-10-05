@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using DBI.DataCenter.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,8 +51,6 @@ class ExceptionHandler : IExceptionHandler
         {
             case ServerException serverExn:
                 return HandleServerException(serverExn);
-            case DataCenterException dataCenterExn:
-                return HandleDataCenterException(dataCenterExn);
             default:
                 return (HttpStatusCode.InternalServerError, DefaultTitle, exn.Message);
         }
@@ -70,18 +67,6 @@ class ExceptionHandler : IExceptionHandler
 
         return (statusCode, DefaultTitle, exn.Message);
     }
-
-    static (HttpStatusCode statusCode, string title, string detail) HandleDataCenterException(DataCenterException exn)
-    {
-        HttpStatusCode statusCode = exn switch
-        {
-            DataNotFoundException => HttpStatusCode.NotFound,
-            _ => HttpStatusCode.InternalServerError
-        };
-
-        return (statusCode, DefaultTitle, exn.Message);
-    }
-
     static string GetStatusCodeType(HttpStatusCode statusCode) =>
         statusCode switch
         {
