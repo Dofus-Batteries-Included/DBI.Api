@@ -4,6 +4,7 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
 using DBI.PathFinder.Builders;
+using DBI.PathFinder.DataProviders;
 using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.TreasureSolver.Controllers.Requests;
@@ -53,10 +54,11 @@ public class TreasureSolverController : ControllerBase
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-
-        NodeFinder nodeFinder = await NodeFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
             .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
             .BuildAsync(cancellationToken);
+
+        NodeFinder nodeFinder = new(worldData);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -69,10 +71,11 @@ public class TreasureSolverController : ControllerBase
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-
-        NodeFinder nodeFinder = await NodeFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
             .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
             .BuildAsync(cancellationToken);
+
+        NodeFinder nodeFinder = new(worldData);
 
         RawWorldGraphNode[]? nodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (nodes == null)

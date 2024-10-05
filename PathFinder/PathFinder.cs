@@ -3,6 +3,8 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.PathFinder.DataProviders;
 using DBI.PathFinder.Models;
 using DBI.PathFinder.Strategies;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Path = DBI.PathFinder.Models.Path;
 
 namespace DBI.PathFinder;
@@ -12,9 +14,9 @@ public class PathFinder
     readonly IPathFindingStrategy _pathFindingStrategy;
     readonly IWorldDataProvider _worldDataProvider;
 
-    internal PathFinder(IPathFindingStrategy pathFindingStrategy, IWorldDataProvider worldDataProvider)
+    public PathFinder(IWorldDataProvider worldDataProvider, ILogger? logger = null)
     {
-        _pathFindingStrategy = pathFindingStrategy;
+        _pathFindingStrategy = new AStar(worldDataProvider, logger ?? NullLogger.Instance);
         _worldDataProvider = worldDataProvider;
     }
 

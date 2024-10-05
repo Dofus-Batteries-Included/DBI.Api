@@ -6,25 +6,25 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.PathFinder.Builders;
 
-public class NodeFinderBuilder
+public class WorldDataBuilder
 {
     BuildMode _mode;
     RawWorldGraphService? _rawWorldGraphService;
     MapsService? _mapsService;
-    WorldDataProviderFromDdcGithubRepositoryOptions? _options;
+    WorldDataFromDdcGithubRepositoryOptions? _options;
     ILogger? _logger;
 
-    NodeFinderBuilder()
+    WorldDataBuilder()
     {
     }
 
-    public NodeFinderBuilder UseLogger(ILogger logger)
+    public WorldDataBuilder UseLogger(ILogger logger)
     {
         _logger = logger;
         return this;
     }
 
-    public async Task<NodeFinder> BuildAsync(CancellationToken cancellationToken = default)
+    public async Task<IWorldDataProvider> BuildAsync(CancellationToken cancellationToken = default)
     {
         IWorldDataProvider provider = _mode switch
         {
@@ -32,7 +32,7 @@ public class NodeFinderBuilder
                 _rawWorldGraphService ?? throw new NullReferenceException("Raw world graph service cannot be null."),
                 _mapsService ?? throw new NullReferenceException("Maps service cannot be null.")
             ),
-            BuildMode.FromDdcGithubRepository => await WorldDataProviderFromDdcGithubRepositoryOptions.BuildProvider(
+            BuildMode.FromDdcGithubRepository => await WorldDataFromDdcGithubRepositoryOptions.BuildProvider(
                 _options ?? throw new NullReferenceException("Options cannot be null."),
                 _logger ?? NullLogger.Instance,
                 cancellationToken
@@ -40,10 +40,10 @@ public class NodeFinderBuilder
             _ => throw new ArgumentOutOfRangeException(nameof(_mode), _mode, null)
         };
 
-        return new NodeFinder(provider);
+        return provider;
     }
 
-    public static NodeFinderBuilder FromRawServices(RawWorldGraphService rawWorldGraphService, MapsService mapsService) =>
+    public static WorldDataBuilder FromRawServices(RawWorldGraphService rawWorldGraphService, MapsService mapsService) =>
         new()
         {
             _mode = BuildMode.FromRawServices,
@@ -51,12 +51,12 @@ public class NodeFinderBuilder
             _mapsService = mapsService
         };
 
-    public static NodeFinderBuilder FromDdcGithubRepository(Action<WorldDataProviderFromDdcGithubRepositoryOptions>? configure = null)
+    public static WorldDataBuilder FromDdcGithubRepository(Action<WorldDataFromDdcGithubRepositoryOptions>? configure = null)
     {
-        WorldDataProviderFromDdcGithubRepositoryOptions options = new();
+        WorldDataFromDdcGithubRepositoryOptions options = new();
         configure?.Invoke(options);
 
-        return new NodeFinderBuilder
+        return new WorldDataBuilder
         {
             _mode = BuildMode.FromDdcGithubRepository,
             _options = options

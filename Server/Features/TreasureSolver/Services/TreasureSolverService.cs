@@ -3,6 +3,7 @@ using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder.Builders;
+using DBI.PathFinder.DataProviders;
 using DBI.Server.Features.TreasureSolver.Models;
 using DBI.Server.Features.TreasureSolver.Services.Clues;
 
@@ -43,9 +44,11 @@ public class TreasureSolverService(
             return new FindNextNodeContainingClueResult(false, null, null);
         }
 
-        DBI.PathFinder.PathFinder pathFinder = await PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
             .UseLogger(loggerFactory.CreateLogger("PathFinder"))
             .BuildAsync(cancellationToken);
+
+        DBI.PathFinder.PathFinder pathFinder = new(worldData, loggerFactory.CreateLogger("PathFinder"));
 
         int distance = 1;
         foreach (MapNodeWithPosition node in pathFinder.EnumerateNodesInDirection(startNode, direction))

@@ -5,21 +5,14 @@ using DBI.PathFinder.Models;
 
 namespace DBI.PathFinder;
 
-public class NodeFinder
+public class NodeFinder(IWorldDataProvider worldDataProvider)
 {
-    readonly IWorldDataProvider _worldDataProvider;
-
-    internal NodeFinder(IWorldDataProvider worldDataProvider)
-    {
-        _worldDataProvider = worldDataProvider;
-    }
-
     public IEnumerable<RawWorldGraphNode> FindNodes(FindNodeRequest request)
     {
         switch (request)
         {
             case FindNodeById findNodeById:
-                RawWorldGraphNode? node = _worldDataProvider.GetNode(findNodeById.NodeId);
+                RawWorldGraphNode? node = worldDataProvider.GetNode(findNodeById.NodeId);
                 return node == null ? [] : [node];
             case FindNodeByMap findNodeByMap:
                 return FindNodesImpl(findNodeByMap.MapId, findNodeByMap.CellNumber);
@@ -34,29 +27,29 @@ public class NodeFinder
     {
         if (!cellNumber.HasValue)
         {
-            return _worldDataProvider.GetNodesInMap(mapId);
+            return worldDataProvider.GetNodesInMap(mapId);
         }
 
-        MapCell? cell = _worldDataProvider.GetCell(mapId, cellNumber.Value);
+        MapCell? cell = worldDataProvider.GetCell(mapId, cellNumber.Value);
         if (cell == null)
         {
             return [];
         }
 
-        return [FindNode(_worldDataProvider, mapId, cell)];
+        return [FindNode(worldDataProvider, mapId, cell)];
     }
 
     RawWorldGraphNode[] FindNodesImpl(Position mapPosition, int? cellNumber)
     {
-        Map[] maps = _worldDataProvider.GetMapsAtPosition(mapPosition).ToArray();
+        Map[] maps = worldDataProvider.GetMapsAtPosition(mapPosition).ToArray();
 
         if (!cellNumber.HasValue)
         {
-            return maps.SelectMany(m => _worldDataProvider.GetNodesInMap(m.MapId)).ToArray();
+            return maps.SelectMany(m => worldDataProvider.GetNodesInMap(m.MapId)).ToArray();
         }
 
-        var cells = maps.Select(m => new { m.MapId, Cell = _worldDataProvider.GetCell(m.MapId, cellNumber.Value) }).Where(c => c.Cell != null).ToArray();
-        return cells.Select(x => FindNode(_worldDataProvider, x.MapId, x.Cell!)).ToArray();
+        var cells = maps.Select(m => new { m.MapId, Cell = worldDataProvider.GetCell(m.MapId, cellNumber.Value) }).Where(c => c.Cell != null).ToArray();
+        return cells.Select(x => FindNode(worldDataProvider, x.MapId, x.Cell!)).ToArray();
     }
 
     static RawWorldGraphNode FindNode(IWorldDataProvider worldDataProvider, long mapId, MapCell mapCell) =>

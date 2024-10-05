@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DBI.PathFinder.Builders;
 
-public class WorldDataProviderFromDdcGithubRepositoryOptions
+public class WorldDataFromDdcGithubRepositoryOptions
 {
     static readonly JsonSerializerOptions KebabCaseSerializerOptions = new()
     {
@@ -33,11 +33,7 @@ public class WorldDataProviderFromDdcGithubRepositoryOptions
     /// </summary>
     public string GithubRepository { get; set; } = "Dofus-Batteries-Included/DDC";
 
-    internal static async Task<IWorldDataProvider> BuildProvider(
-        WorldDataProviderFromDdcGithubRepositoryOptions options,
-        ILogger logger,
-        CancellationToken cancellationToken = default
-    )
+    internal static async Task<IWorldDataProvider> BuildProvider(WorldDataFromDdcGithubRepositoryOptions options, ILogger logger, CancellationToken cancellationToken = default)
     {
         DdcClient ddcClient = new(logger)
         {
