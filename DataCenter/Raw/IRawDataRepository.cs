@@ -1,6 +1,6 @@
 ﻿using DBI.DataCenter.Raw.Models;
 
-namespace DBI.DataCenter.Repositories;
+namespace DBI.DataCenter.Raw;
 
 /// <summary>
 ///     Raw data files repository.

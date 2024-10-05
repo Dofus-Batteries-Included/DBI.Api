@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using DBI.DataCenter.Exceptions;
 using DBI.DataCenter.Raw.Models;
-using DBI.DataCenter.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -32,7 +31,7 @@ public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepositor
         (IRawDataFile? file, string? errorMessage) = TryGetRawDataFileImpl(version, type);
         if (file == null)
         {
-            throw new DataCenterException(errorMessage);
+            throw new DataNotFoundException(errorMessage);
         }
 
         return Task.FromResult(file);

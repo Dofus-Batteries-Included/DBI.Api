@@ -1,5 +1,5 @@
-﻿using DBI.DataCenter.Raw.Models;
-using DBI.DataCenter.Repositories;
+﻿using DBI.DataCenter.Raw;
+using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Structured.Models;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;

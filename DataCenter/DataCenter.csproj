@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Raw\" />
       <Folder Include="Structured\" />
     </ItemGroup>
 
