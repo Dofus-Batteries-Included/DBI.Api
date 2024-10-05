@@ -7,7 +7,7 @@ public class GetAvailableVersionsResponse
     /// <summary>
     ///     The latest available version
     /// </summary>
-    public required string Latest { get; init; }
+    public required string? Latest { get; init; }
 
     /// <summary>
     ///     The available versions

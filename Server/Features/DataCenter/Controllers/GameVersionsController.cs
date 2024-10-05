@@ -28,7 +28,7 @@ public class GameVersionsController : ControllerBase
     [HttpGet]
     public async Task<GetAvailableVersionsResponse> GetAvailableVersions()
     {
-        string latestVersion = await _repository.GetLatestVersionAsync();
+        string? latestVersion = await _repository.GetLatestVersionAsync();
         IReadOnlyCollection<string> versions = await _repository.GetAvailableVersionsAsync();
         return new GetAvailableVersionsResponse
         {
