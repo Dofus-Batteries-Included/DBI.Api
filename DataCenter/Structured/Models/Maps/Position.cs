@@ -1,6 +1,7 @@
 ﻿using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Services.Maps;
-using DBI.DataCenter.Structured.Models.Maps;
+
+namespace DBI.DataCenter.Structured.Models.Maps;
 
 /// <summary>
 ///     2D position.
