@@ -1,4 +1,4 @@
-﻿namespace DBI.DataCenter.Ddc;
+﻿namespace DBI.DataCenter.Raw.Ddc;
 
 /// <summary>
 ///     Release of the DDC project.

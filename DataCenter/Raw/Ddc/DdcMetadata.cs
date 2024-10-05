@@ -1,4 +1,4 @@
-﻿namespace DBI.DataCenter.Ddc;
+﻿namespace DBI.DataCenter.Raw.Ddc;
 
 /// <summary>
 ///     Metadata in a DDC release.

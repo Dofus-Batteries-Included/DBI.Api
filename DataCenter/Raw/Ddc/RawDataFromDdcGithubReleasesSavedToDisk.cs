@@ -7,7 +7,7 @@ using DBI.DataCenter.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace DBI.DataCenter.Ddc;
+namespace DBI.DataCenter.Raw.Ddc;
 
 public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 {
