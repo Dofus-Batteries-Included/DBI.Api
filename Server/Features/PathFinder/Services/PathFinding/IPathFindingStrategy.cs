@@ -1,4 +1,4 @@
-﻿using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
 
 namespace DBI.Server.Features.PathFinder.Services.PathFinding;
 

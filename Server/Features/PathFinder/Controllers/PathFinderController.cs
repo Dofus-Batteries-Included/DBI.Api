@@ -1,9 +1,9 @@
-﻿using DBI.Server.Common.Exceptions;
-using DBI.Server.Features.DataCenter.Models.Maps;
-using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using DBI.Server.Features.DataCenter.Raw.Services.Maps;
-using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using DBI.Server.Features.DataCenter.Services;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Requests;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
 using DBI.Server.Features.PathFinder.Services;

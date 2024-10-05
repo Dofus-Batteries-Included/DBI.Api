@@ -1,8 +1,7 @@
-﻿using DBI.Server.Common.Models;
-using DBI.Server.Features.DataCenter.Models.Maps;
-using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using DBI.Server.Features.DataCenter.Services;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
 using DBI.Server.Features.PathFinder.Services;
 using DBI.Server.Features.PathFinder.Services.PathFinding;
 using DBI.Server.Features.TreasureSolver.Models;

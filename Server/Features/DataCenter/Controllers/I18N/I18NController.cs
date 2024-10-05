@@ -1,7 +1,7 @@
-﻿using DBI.Server.Common.Exceptions;
-using DBI.Server.Common.Models;
-using DBI.Server.Features.DataCenter.Models;
-using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+﻿using DBI.DataCenter.Raw.Services.I18N;
+using DBI.DataCenter.Structured.Models;
+using DBI.DataCenter.Structured.Models.I18N;
+using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 

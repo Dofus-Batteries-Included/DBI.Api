@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using DBI.Server.Common.Models;
+using DBI.DataCenter.Structured.Models.Maps;
 
 namespace DBI.Server.Features.PathFinder.Controllers.Requests;
 

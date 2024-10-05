@@ -1,7 +1,7 @@
-﻿using DBI.Server.Features.DataCenter.Raw.Models;
-using DBI.Server.Features.DataCenter.Raw.Services.I18N;
-using DBI.Server.Features.DataCenter.Raw.Services.Maps;
-using DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
+﻿using DBI.DataCenter.Raw.Models;
+using DBI.DataCenter.Raw.Services.I18N;
+using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.PointOfInterests;
 using DBI.Server.Features.TreasureSolver.Models;
 using DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
 

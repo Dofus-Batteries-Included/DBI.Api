@@ -1,12 +1,12 @@
-﻿using DBI.Server.Common.OpenApi;
-using DBI.Server.Features.DataCenter.Raw.Services.I18N;
-using DBI.Server.Features.DataCenter.Raw.Services.Maps;
-using DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
-using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using DBI.Server.Features.DataCenter.Repositories;
-using DBI.Server.Features.DataCenter.Services;
+﻿using DBI.DataCenter.Ddc;
+using DBI.DataCenter.Raw.Services.I18N;
+using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.PointOfInterests;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Repositories;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Common.OpenApi;
 using DBI.Server.Features.DataCenter.Workers;
-using DBI.Server.Infrastructure.Repository;
 using Microsoft.Extensions.Options;
 
 namespace DBI.Server.Features.DataCenter;
@@ -15,13 +15,13 @@ static class DataCenterAspNetExtensions
 {
     public static void ConfigureDataCenter(this IServiceCollection services)
     {
-        services.AddSingleton<RawDataFromGithubReleasesSavedToDisk>(
-            s => new RawDataFromGithubReleasesSavedToDisk(
-                s.GetRequiredService<IOptions<RepositoryOptions>>(),
-                s.GetRequiredService<ILogger<RawDataFromGithubReleasesSavedToDisk>>()
+        services.AddSingleton<RawDataFromDdcGithubReleasesSavedToDisk>(
+            s => new RawDataFromDdcGithubReleasesSavedToDisk(
+                s.GetRequiredService<IOptions<RepositoryOptions>>().Value,
+                s.GetRequiredService<ILogger<RawDataFromDdcGithubReleasesSavedToDisk>>()
             )
         );
-        services.AddSingleton<IRawDataRepository, RawDataFromGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromGithubReleasesSavedToDisk>());
+        services.AddSingleton<IRawDataRepository, RawDataFromDdcGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromDdcGithubReleasesSavedToDisk>());
         services.AddSingleton<LanguagesServiceFactory>();
         services.AddSingleton<RawWorldMapsServiceFactory>();
         services.AddSingleton<RawSuperAreasServiceFactory>();

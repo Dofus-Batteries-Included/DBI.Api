@@ -1,4 +1,4 @@
-﻿using DBI.Server.Features.DataCenter.Models.Maps;
+﻿using DBI.DataCenter.Structured.Models.Maps;
 
 namespace DBI.Server.Features.PathFinder.Models;
 

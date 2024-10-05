@@ -1,6 +1,6 @@
-﻿using DBI.Server.Common.Exceptions;
-using DBI.Server.Features.DataCenter.Models.Maps;
-using DBI.Server.Features.DataCenter.Services;
+﻿using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 

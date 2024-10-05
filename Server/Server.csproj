@@ -39,7 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Features\DataCenter\Raw\Services\"/>
+      <ProjectReference Include="..\DataCenter\DataCenter.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

@@ -1,5 +1,5 @@
-﻿using DBI.Server.Features.DataCenter.Controllers.Versions.Responses;
-using DBI.Server.Features.DataCenter.Repositories;
+﻿using DBI.DataCenter.Repositories;
+using DBI.Server.Features.DataCenter.Controllers.Versions.Responses;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>DBI.DataCenter</AssemblyName>
+        <RootNamespace>DBI.DataCenter</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Raw\" />
+      <Folder Include="Structured\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    </ItemGroup>
+
+</Project>

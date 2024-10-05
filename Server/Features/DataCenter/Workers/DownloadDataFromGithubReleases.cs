@@ -2,20 +2,20 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using DBI.DataCenter.Ddc;
 using DBI.Server.Common.Workers;
-using DBI.Server.Features.DataCenter.Repositories;
 
 namespace DBI.Server.Features.DataCenter.Workers;
 
 partial class DownloadDataFromGithubReleases : PeriodicService
 {
     readonly IHttpClientFactory _httpClientFactory;
-    readonly RawDataFromGithubReleasesSavedToDisk _rawDataFromGithubReleasesSavedToDisk;
+    readonly RawDataFromDdcGithubReleasesSavedToDisk _rawDataFromGithubReleasesSavedToDisk;
     readonly HashSet<string> _processedReleases = [];
 
     public DownloadDataFromGithubReleases(
         IHttpClientFactory httpClientFactory,
-        RawDataFromGithubReleasesSavedToDisk rawDataFromGithubReleasesSavedToDisk,
+        RawDataFromDdcGithubReleasesSavedToDisk rawDataFromGithubReleasesSavedToDisk,
         ILogger<PeriodicService> logger
     ) : base(TimeSpan.FromHours(1), logger)
     {
@@ -27,7 +27,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
     {
         Logger.LogInformation("Start refreshing data from DDC Releases.");
 
-        await foreach (Release release in GetReleasesAsync(stoppingToken))
+        await foreach (DdcRelease release in GetReleasesAsync(stoppingToken))
         {
             if (_processedReleases.Contains(release.Name))
             {
@@ -45,15 +45,16 @@ partial class DownloadDataFromGithubReleases : PeriodicService
             await using Stream _ = dataFile;
             using ZipArchive zip = new(dataFile, ZipArchiveMode.Read);
 
-            Metadata? metadata = await ReadMetadataAsync(zip, stoppingToken);
+            DdcMetadata? metadata = await ReadMetadataAsync(zip, stoppingToken);
             if (metadata == null)
             {
                 Logger.LogWarning($"Could not get metadata in data from release {release.Name}.");
                 continue;
             }
 
-            RawDataFromGithubReleasesSavedToDisk.DdcMetadata? ddcMetadata = await _rawDataFromGithubReleasesSavedToDisk.GetSavedMetadataAsync(metadata.GameVersion, stoppingToken);
-            bool ignoreRelease = ddcMetadata != null && string.Compare(release.Name, ddcMetadata.ReleaseName, StringComparison.InvariantCultureIgnoreCase) <= 0;
+            RawDataFromDdcGithubReleasesSavedToDisk.Metadata? metadataSavedToDisk =
+                await _rawDataFromGithubReleasesSavedToDisk.GetSavedMetadataAsync(metadata.GameVersion, stoppingToken);
+            bool ignoreRelease = metadataSavedToDisk != null && string.Compare(release.Name, metadataSavedToDisk.ReleaseName, StringComparison.InvariantCultureIgnoreCase) <= 0;
 
             if (ignoreRelease)
             {
@@ -61,7 +62,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
                     "Release {ReleaseName} containing data for version {Version} will be ignored because the current data has been extracted from more recent release {MetadataReleaseName}.",
                     release.Name,
                     metadata.GameVersion,
-                    ddcMetadata!.ReleaseName
+                    metadataSavedToDisk!.ReleaseName
                 );
             }
             else
@@ -73,7 +74,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
         }
     }
 
-    async IAsyncEnumerable<Release> GetReleasesAsync([EnumeratorCancellation] CancellationToken stoppingToken)
+    async IAsyncEnumerable<DdcRelease> GetReleasesAsync([EnumeratorCancellation] CancellationToken stoppingToken)
     {
         using HttpClient httpClient = _httpClientFactory.CreateClient();
         httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
@@ -88,7 +89,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
             HttpResponseMessage httpResponse = await httpClient.GetAsync(uri, stoppingToken);
             httpResponse.EnsureSuccessStatusCode();
 
-            Release[]? responses = await httpResponse.Content.ReadFromJsonAsync<Release[]>(
+            DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
                 new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
                 stoppingToken
             );
@@ -98,7 +99,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
                 break;
             }
 
-            foreach (Release response in responses)
+            foreach (DdcRelease response in responses)
             {
                 yield return response;
             }
@@ -119,9 +120,9 @@ partial class DownloadDataFromGithubReleases : PeriodicService
         }
     }
 
-    async Task<Stream?> DownloadReleaseDataAsync(Release release, CancellationToken stoppingToken)
+    async Task<Stream?> DownloadReleaseDataAsync(DdcRelease release, CancellationToken stoppingToken)
     {
-        Asset? dataAsset = release.Assets.FirstOrDefault(a => a.Name == "data.zip");
+        DdcAsset? dataAsset = release.Assets.FirstOrDefault(a => a.Name == "data.zip");
         if (dataAsset == null)
         {
             return null;
@@ -133,7 +134,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
         return await response.Content.ReadAsStreamAsync(stoppingToken);
     }
 
-    static async Task<Metadata?> ReadMetadataAsync(ZipArchive zip, CancellationToken stoppingToken)
+    static async Task<DdcMetadata?> ReadMetadataAsync(ZipArchive zip, CancellationToken stoppingToken)
     {
         ZipArchiveEntry? metadataEntry = zip.GetEntry("metadata.json");
         if (metadataEntry == null)
@@ -142,25 +143,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
         }
 
         await using Stream metadataStream = metadataEntry.Open();
-        return await JsonSerializer.DeserializeAsync<Metadata>(metadataStream, cancellationToken: stoppingToken);
-    }
-
-    public class Release
-    {
-        public required string HtmlUrl { get; init; }
-        public required string Name { get; init; }
-        public required IReadOnlyCollection<Asset> Assets { get; init; }
-    }
-
-    public class Asset
-    {
-        public required string Name { get; init; }
-        public required string BrowserDownloadUrl { get; init; }
-    }
-
-    class Metadata
-    {
-        public required string GameVersion { get; init; }
+        return await JsonSerializer.DeserializeAsync<DdcMetadata>(metadataStream, cancellationToken: stoppingToken);
     }
 
     [GeneratedRegex("<(?<uri>[^>]*)>; rel=\"next\"")]

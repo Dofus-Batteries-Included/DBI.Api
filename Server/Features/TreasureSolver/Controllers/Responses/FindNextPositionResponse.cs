@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using DBI.Server.Common.Models;
+using DBI.DataCenter.Structured.Models.Maps;
 
 namespace DBI.Server.Features.TreasureSolver.Controllers.Responses;
 
