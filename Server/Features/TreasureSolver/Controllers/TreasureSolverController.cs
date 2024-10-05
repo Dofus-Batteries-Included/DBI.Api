@@ -3,8 +3,8 @@ using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
+using DBI.PathFinder;
 using DBI.PathFinder.Models;
-using DBI.PathFinder.Services;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.TreasureSolver.Controllers.Requests;
 using DBI.Server.Features.TreasureSolver.Controllers.Responses;
@@ -55,7 +55,7 @@ public class TreasureSolverController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -70,7 +70,7 @@ public class TreasureSolverController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
         RawWorldGraphNode[]? nodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (nodes == null)
         {

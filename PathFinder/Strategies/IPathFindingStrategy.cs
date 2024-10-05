@@ -1,6 +1,6 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
 
-namespace DBI.PathFinder.Services.PathFinding;
+namespace DBI.PathFinder.Strategies;
 
 public interface IPathFindingStrategy
 {

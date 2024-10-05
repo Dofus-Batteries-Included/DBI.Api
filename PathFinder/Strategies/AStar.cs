@@ -5,7 +5,7 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using Microsoft.Extensions.Logging;
 
-namespace DBI.PathFinder.Services.PathFinding;
+namespace DBI.PathFinder.Strategies;
 
 public class AStar : IPathFindingStrategy
 {

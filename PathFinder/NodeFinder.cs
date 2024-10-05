@@ -6,9 +6,9 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder.Models;
 
-namespace DBI.PathFinder.Services;
+namespace DBI.PathFinder;
 
-public class NodeFinderService(RawWorldGraphService rawWorldGraphService, RawMapPositionsService rawMapPositionsService, MapsService mapsService)
+public class NodeFinder(RawWorldGraphService rawWorldGraphService, RawMapPositionsService rawMapPositionsService, MapsService mapsService)
 {
     public IEnumerable<RawWorldGraphNode> FindNodes(FindNodeRequest request)
     {

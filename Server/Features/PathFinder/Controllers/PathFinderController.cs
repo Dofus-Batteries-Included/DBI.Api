@@ -3,9 +3,9 @@ using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
+using DBI.PathFinder;
 using DBI.PathFinder.Models;
-using DBI.PathFinder.Services;
-using DBI.PathFinder.Services.PathFinding;
+using DBI.PathFinder.Strategies;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +54,7 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -74,7 +74,7 @@ public class PathFinderController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinderService nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
 
         RawWorldGraphNode[] fromNodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (fromNodes.Length == 0)
@@ -89,12 +89,12 @@ public class PathFinderController : ControllerBase
         }
 
         AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStar>());
-        PathFinderService pathFinderService = new(pathFindingStrategy, rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = new(pathFindingStrategy, rawWorldGraphService, mapsService);
 
         return new FindPathsResponse
         {
             Paths = fromNodes.SelectMany(
-                    fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinderService.GetShortestPath(fromNode, toNode) })
+                    fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinder.GetShortestPath(fromNode, toNode) })
                 )
                 .Where(p => p.Path != null)
                 .Select(p => p.Path!)
