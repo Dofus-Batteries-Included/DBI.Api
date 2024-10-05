@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <AssemblyName>DBI.PathFinder</AssemblyName>
         <RootNamespace>DBI.PathFinder</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,7 +15,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="MinVer" Version="6.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
 
 </Project>
