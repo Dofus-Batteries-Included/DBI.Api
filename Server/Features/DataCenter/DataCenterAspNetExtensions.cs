@@ -1,12 +1,13 @@
 ﻿using DBI.DataCenter.Raw;
-using DBI.DataCenter.Raw.Ddc;
 using DBI.DataCenter.Raw.Services.I18N;
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.PointOfInterests;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.Server.Common.OpenApi;
+using DBI.Server.Features.DataCenter.Ddc;
 using DBI.Server.Features.DataCenter.Workers;
+using DBI.Server.Infrastructure;
 using Microsoft.Extensions.Options;
 
 namespace DBI.Server.Features.DataCenter;
@@ -21,7 +22,9 @@ static class DataCenterAspNetExtensions
                 s.GetRequiredService<ILogger<RawDataFromDdcGithubReleasesSavedToDisk>>()
             )
         );
-        services.AddSingleton<IRawDataRepository, RawDataFromDdcGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromDdcGithubReleasesSavedToDisk>());
+
+        services.AddSingleton<IRawDataRepository>(s => s.GetRequiredService<RawDataFromDdcGithubReleasesSavedToDisk>());
+
         services.AddSingleton<LanguagesServiceFactory>();
         services.AddSingleton<RawWorldMapsServiceFactory>();
         services.AddSingleton<RawSuperAreasServiceFactory>();
@@ -31,7 +34,6 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawMapPositionsServiceFactory>();
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
         services.AddSingleton<RawWorldGraphServiceFactory>();
-
         services.AddSingleton<WorldServiceFactory>();
 
         services.AddHostedService<DownloadDataFromGithubReleases>();

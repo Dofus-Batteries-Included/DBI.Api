@@ -1,14 +1,15 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using DBI.DataCenter.Exceptions;
+using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
-using Microsoft.Extensions.Logging;
+using DBI.Server.Common.Exceptions;
+using DBI.Server.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace DBI.DataCenter.Raw.Ddc;
+namespace DBI.Server.Features.DataCenter.Ddc;
 
-public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
+partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 {
     readonly RepositoryOptions _repositoryOptions;
     readonly ILogger<RawDataFromDdcGithubReleasesSavedToDisk> _logger;
@@ -31,7 +32,7 @@ public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepositor
         (IRawDataFile? file, string? errorMessage) = TryGetRawDataFileImpl(version, type);
         if (file == null)
         {
-            throw new DataNotFoundException(errorMessage);
+            throw new NotFoundException(errorMessage);
         }
 
         return Task.FromResult(file);
@@ -108,13 +109,13 @@ public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepositor
         string? actualVersion = GetActualVersion(version);
         if (actualVersion == null)
         {
-            return (null, ErrorMessages.VersionNotFound(version));
+            return (null, $"Could not find data for version {version}.");
         }
 
         string versionPath = Path.Join(_repositoryOptions.DataCenterRawDataPath, actualVersion);
         if (!Directory.Exists(versionPath))
         {
-            return (null, ErrorMessages.VersionNotFound(actualVersion));
+            return (null, $"Could not find data for version {actualVersion}.");
         }
 
         string filename = GetFilename(type);
@@ -132,7 +133,7 @@ public partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepositor
             return (new File(path, actualVersion), null);
         }
 
-        return (null, ErrorMessages.RawDataNotFound(type, actualVersion));
+        return (null, $"Could not find data for {type} in version {version}.");
     }
 
     string? GetActualVersion(string version) =>

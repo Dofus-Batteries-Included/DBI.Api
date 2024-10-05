@@ -1,4 +1,4 @@
-﻿namespace DBI.DataCenter.Raw.Ddc;
+﻿namespace DBI.Server.Features.DataCenter.Ddc;
 
 /// <summary>
 ///     Asset in a DDC release.

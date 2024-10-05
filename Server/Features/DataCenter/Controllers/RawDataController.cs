@@ -4,7 +4,7 @@ using DBI.DataCenter.Structured.Models;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
-namespace DBI.Server.Features.DataCenter.Raw.Controllers;
+namespace DBI.Server.Features.DataCenter.Controllers;
 
 /// <summary>
 ///     Retrieve raw data in JSON files.

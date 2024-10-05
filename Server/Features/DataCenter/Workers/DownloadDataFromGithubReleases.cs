@@ -2,25 +2,25 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using DBI.DataCenter.Raw.Ddc;
 using DBI.Server.Common.Workers;
+using DBI.Server.Features.DataCenter.Ddc;
+using RawDataFromDdcGithubReleasesSavedToDisk = DBI.Server.Features.DataCenter.Ddc.RawDataFromDdcGithubReleasesSavedToDisk;
 
 namespace DBI.Server.Features.DataCenter.Workers;
 
 partial class DownloadDataFromGithubReleases : PeriodicService
 {
     readonly IHttpClientFactory _httpClientFactory;
-    readonly RawDataFromDdcGithubReleasesSavedToDisk _rawDataFromGithubReleasesSavedToDisk;
     readonly HashSet<string> _processedReleases = [];
+    readonly RawDataFromDdcGithubReleasesSavedToDisk _repository;
 
-    public DownloadDataFromGithubReleases(
-        IHttpClientFactory httpClientFactory,
-        RawDataFromDdcGithubReleasesSavedToDisk rawDataFromGithubReleasesSavedToDisk,
-        ILogger<PeriodicService> logger
-    ) : base(TimeSpan.FromHours(1), logger)
+    public DownloadDataFromGithubReleases(IHttpClientFactory httpClientFactory, RawDataFromDdcGithubReleasesSavedToDisk repository, ILoggerFactory loggerFactory) : base(
+        TimeSpan.FromHours(1),
+        loggerFactory.CreateLogger<DownloadDataFromGithubReleases>()
+    )
     {
         _httpClientFactory = httpClientFactory;
-        _rawDataFromGithubReleasesSavedToDisk = rawDataFromGithubReleasesSavedToDisk;
+        _repository = repository;
     }
 
     protected override async Task OnTickAsync(CancellationToken stoppingToken)
@@ -52,8 +52,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
                 continue;
             }
 
-            RawDataFromDdcGithubReleasesSavedToDisk.Metadata? metadataSavedToDisk =
-                await _rawDataFromGithubReleasesSavedToDisk.GetSavedMetadataAsync(metadata.GameVersion, stoppingToken);
+            RawDataFromDdcGithubReleasesSavedToDisk.Metadata? metadataSavedToDisk = await _repository.GetSavedMetadataAsync(metadata.GameVersion, stoppingToken);
             bool ignoreRelease = metadataSavedToDisk != null && string.Compare(release.Name, metadataSavedToDisk.ReleaseName, StringComparison.InvariantCultureIgnoreCase) <= 0;
 
             if (ignoreRelease)
@@ -67,7 +66,7 @@ partial class DownloadDataFromGithubReleases : PeriodicService
             }
             else
             {
-                await _rawDataFromGithubReleasesSavedToDisk.SaveRawDataFilesAsync(release, metadata.GameVersion, zip, stoppingToken);
+                await _repository.SaveRawDataFilesAsync(release, metadata.GameVersion, zip, stoppingToken);
             }
 
             _processedReleases.Add(release.Name);

@@ -1,4 +1,4 @@
-﻿namespace DBI.DataCenter.Raw;
+﻿namespace DBI.Server.Infrastructure;
 
 /// <summary>
 ///     Repository options.

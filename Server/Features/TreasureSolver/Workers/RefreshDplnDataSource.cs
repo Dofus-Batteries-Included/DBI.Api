@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Services.I18N;
 using DBI.DataCenter.Raw.Services.Maps;
@@ -8,6 +7,7 @@ using DBI.Server.Common.Extensions;
 using DBI.Server.Common.Workers;
 using DBI.Server.Features.TreasureSolver.Models;
 using DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
+using DBI.Server.Infrastructure;
 using DBI.Server.Infrastructure.Database;
 using Microsoft.Extensions.Options;
 using PuppeteerSharp;
@@ -18,9 +18,6 @@ class RefreshDplnDataSource : PeriodicService
 {
     readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true };
     readonly IServiceScopeFactory _scopeFactory;
-    readonly LanguagesServiceFactory _languagesServiceFactory;
-    readonly RawPointOfInterestsServiceFactory _rawPointOfInterestsServiceFactory;
-    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly StaticCluesDataSourcesService _staticCluesDataSourcesService;
     readonly ILogger<RefreshDplnDataSource> _logger;
     int? _lastHintsHashCode;
@@ -30,31 +27,24 @@ class RefreshDplnDataSource : PeriodicService
 
     public RefreshDplnDataSource(
         IServiceScopeFactory scopeFactory,
-        IRawDataRepository rawDataRepository,
-        LanguagesServiceFactory languagesServiceFactory,
-        RawPointOfInterestsServiceFactory rawPointOfInterestsServiceFactory,
-        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
         StaticCluesDataSourcesService staticCluesDataSourcesService,
         IOptions<RepositoryOptions> repositoryOptions,
         ILogger<RefreshDplnDataSource> logger
     ) : base(TimeSpan.FromHours(1), logger)
     {
         _scopeFactory = scopeFactory;
-        _languagesServiceFactory = languagesServiceFactory;
-        _rawPointOfInterestsServiceFactory = rawPointOfInterestsServiceFactory;
-        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _staticCluesDataSourcesService = staticCluesDataSourcesService;
         _logger = logger;
         _cacheDirectory = Path.Join(repositoryOptions.Value.BasePath, "Clues", "Sources");
         _cacheFilePath = Path.Join(_cacheDirectory, "dpln.json");
 
-        rawDataRepository.LatestVersionChanged += (_, _) =>
-        {
-            _logger.LogInformation("Latest version has changed, DPLN data source will be refreshed ASAP");
-            _lastHintsHashCode = null;
-            _lastMapCluesHashCode = null;
-            TriggerAsap();
-        };
+        // rawDataRepository.LatestVersionChanged += (_, _) =>
+        // {
+        //     _logger.LogInformation("Latest version has changed, DPLN data source will be refreshed ASAP");
+        //     _lastHintsHashCode = null;
+        //     _lastMapCluesHashCode = null;
+        //     TriggerAsap();
+        // };
     }
 
     protected override async Task OnStartAsync(CancellationToken stoppingToken)
@@ -126,12 +116,16 @@ class RefreshDplnDataSource : PeriodicService
 
     async Task<Dictionary<long, IReadOnlyCollection<ClueRecord>>> TransformDataAsync(Hint[] hints, MapClues[] mapClues, DateTime date, CancellationToken stoppingToken)
     {
-        LanguagesService languagesService = await _languagesServiceFactory.CreateLanguagesServiceAsync(cancellationToken: stoppingToken);
-        RawPointOfInterestsService cluesService = await _rawPointOfInterestsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
-
         using IServiceScope scope = _scopeFactory.CreateScope();
         await using ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        LanguagesServiceFactory languagesServiceFactory = scope.ServiceProvider.GetRequiredService<LanguagesServiceFactory>();
+        RawPointOfInterestsServiceFactory rawPointOfInterestsServiceFactory = scope.ServiceProvider.GetRequiredService<RawPointOfInterestsServiceFactory>();
+        RawMapPositionsServiceFactory rawMapPositionsServiceFactory = scope.ServiceProvider.GetRequiredService<RawMapPositionsServiceFactory>();
+
+        LanguagesService languagesService = await languagesServiceFactory.CreateLanguagesServiceAsync(cancellationToken: stoppingToken);
+        RawPointOfInterestsService cluesService = await rawPointOfInterestsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
+        RawMapPositionsService rawMapPositionsService = await rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: stoppingToken);
 
         RawPointOfInterest[] allPois = cluesService.GetPointOfInterests().ToArray();
         if (stoppingToken.IsCancellationRequested)
