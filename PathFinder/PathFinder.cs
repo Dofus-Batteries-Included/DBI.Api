@@ -4,6 +4,7 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder.Models;
 using DBI.PathFinder.Strategies;
+using Microsoft.Extensions.Logging.Abstractions;
 using Path = DBI.PathFinder.Models.Path;
 
 namespace DBI.PathFinder;
@@ -14,7 +15,7 @@ public class PathFinder
     readonly RawWorldGraphService _rawWorldGraphService;
     readonly MapsService _mapsService;
 
-    public PathFinder(IPathFindingStrategy pathFindingStrategy, RawWorldGraphService rawWorldGraphService, MapsService mapsService)
+    PathFinder(IPathFindingStrategy pathFindingStrategy, RawWorldGraphService rawWorldGraphService, MapsService mapsService)
     {
         _pathFindingStrategy = pathFindingStrategy;
         _rawWorldGraphService = rawWorldGraphService;
@@ -111,4 +112,7 @@ public class PathFinder
             Direction.West => rawDirection == RawWorldGraphEdgeDirection.West,
             _ => false
         };
+
+    public static PathFinder Create(RawWorldGraphService rawWorldGraphService, MapsService mapsService) =>
+        new(new AStar(rawWorldGraphService, mapsService, NullLogger<AStar>.Instance), rawWorldGraphService, mapsService);
 }

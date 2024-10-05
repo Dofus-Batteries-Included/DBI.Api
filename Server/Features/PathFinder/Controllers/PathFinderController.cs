@@ -5,7 +5,6 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
 using DBI.PathFinder.Models;
-using DBI.PathFinder.Strategies;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -88,14 +87,11 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, _loggerFactory.CreateLogger<AStar>());
-        DBI.PathFinder.PathFinder pathFinder = new(pathFindingStrategy, rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = DBI.PathFinder.PathFinder.Create(rawWorldGraphService, mapsService);
 
         return new FindPathsResponse
         {
-            Paths = fromNodes.SelectMany(
-                    fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinder.GetShortestPath(fromNode, toNode) })
-                )
+            Paths = fromNodes.SelectMany(fromNode => toNodes.Select(toNode => new { FromNode = fromNode, ToNode = toNode, Path = pathFinder.GetShortestPath(fromNode, toNode) }))
                 .Where(p => p.Path != null)
                 .Select(p => p.Path!)
                 .ToArray()

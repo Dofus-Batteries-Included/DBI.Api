@@ -2,7 +2,6 @@
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
-using DBI.PathFinder;
 using DBI.PathFinder.Strategies;
 using DBI.Server.Features.TreasureSolver.Models;
 using DBI.Server.Features.TreasureSolver.Services.Clues;
@@ -45,7 +44,7 @@ public class TreasureSolverService(
         }
 
         AStar pathFindingStrategy = new(rawWorldGraphService, mapsService, loggerFactory.CreateLogger<AStar>());
-        DBI.PathFinder.PathFinder pathFinder = new(pathFindingStrategy, rawWorldGraphService, mapsService);
+        DBI.PathFinder.PathFinder pathFinder = DBI.PathFinder.PathFinder.Create(rawWorldGraphService, mapsService);
 
         int distance = 1;
         foreach (MapNodeWithPosition node in pathFinder.EnumerateNodesInDirection(startNode, direction))
