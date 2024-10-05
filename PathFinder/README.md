@@ -189,11 +189,7 @@ The node finder is used to find the start and end node. There are multiple ways 
     ```json
     [
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 7911,
+        "id": 7911,
         "mapId": 106693122,
         "zoneId": 2
       }
@@ -216,11 +212,7 @@ The node finder is used to find the start and end node. There are multiple ways 
     ```json
     [
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 10115,
+        "id": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
@@ -243,20 +235,12 @@ The node finder is used to find the start and end node. There are multiple ways 
     ```json
     [
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 7911,
+        "id": 7911,
         "mapId": 106693122,
         "zoneId": 2
       },
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 10115,
+        "id": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
@@ -279,29 +263,17 @@ The node finder is used to find the start and end node. There are multiple ways 
     ```json
     [
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 10112,
+        "id": 10112,
         "mapId": 99615745,
         "zoneId": 1
       },
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 7911,
+        "id": 7911,
         "mapId": 106693122,
         "zoneId": 2
       },
       {
-        "mapPosition": {
-          "x": 26,
-          "y": -9
-        },
-        "nodeId": 10115,
+        "id": 10115,
         "mapId": 106693122,
         "zoneId": 1
       }
