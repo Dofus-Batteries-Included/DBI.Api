@@ -57,6 +57,9 @@ public class MapsService(
 
     public IEnumerable<Map> GetMapsInSubArea(int subAreaId) => GetMapsImpl().Where(x => x.RawMapPosition.SubAreaId == subAreaId).Select(x => Cook(x.RawMapPosition, x.RawMap));
 
+    public IEnumerable<Map> GetMapsAtPosition(Position position) =>
+        GetMapsImpl().Where(x => x.RawMapPosition.PosX == position.X && x.RawMapPosition.PosY == position.Y).Select(x => Cook(x.RawMapPosition, x.RawMap));
+
     public Map? GetMap(long mapId)
     {
         RawMap? rawMap = rawMapsService?.GetMap(mapId);

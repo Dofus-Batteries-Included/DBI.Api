@@ -1,5 +1,4 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
-using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
@@ -22,21 +21,14 @@ namespace DBI.Server.Features.PathFinder.Controllers;
 public class PathFinderController : ControllerBase
 {
     readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
-    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly WorldServiceFactory _worldServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
     /// <summary>
     /// </summary>
-    public PathFinderController(
-        RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
-        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
-        WorldServiceFactory worldServiceFactory,
-        ILoggerFactory loggerFactory
-    )
+    public PathFinderController(RawWorldGraphServiceFactory rawWorldGraphServiceFactory, WorldServiceFactory worldServiceFactory, ILoggerFactory loggerFactory)
     {
         _rawWorldGraphServiceFactory = rawWorldGraphServiceFactory;
-        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _worldServiceFactory = worldServiceFactory;
         _loggerFactory = loggerFactory;
     }
@@ -51,10 +43,11 @@ public class PathFinderController : ControllerBase
     public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = await NodeFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
+            .BuildAsync(cancellationToken);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -71,10 +64,11 @@ public class PathFinderController : ControllerBase
     public async Task<FindPathsResponse> FindPaths(FindPathsRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
-        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = await NodeFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
+            .BuildAsync(cancellationToken);
 
         RawWorldGraphNode[] fromNodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (fromNodes.Length == 0)
