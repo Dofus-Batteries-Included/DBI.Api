@@ -18,6 +18,12 @@ public partial class DdcClient
         _logger = logger;
     }
 
+    /// <summary>
+    ///     The full name of the github repository to read data from.
+    ///     Defaults to <c>Dofus-Batteries-Included/DDC</c>
+    /// </summary>
+    public string GithubRepository { get; set; } = "Dofus-Batteries-Included/DDC";
+
     public async IAsyncEnumerable<DdcRelease> GetReleasesAsync([EnumeratorCancellation] CancellationToken stoppingToken)
     {
         using HttpClient httpClient = _httpClientFactory.CreateClient();
@@ -25,12 +31,14 @@ public partial class DdcClient
         httpClient.DefaultRequestHeaders.Add("User-Agent", "DDC-Api");
         httpClient.DefaultRequestHeaders.Add("X-Github-Api-Version", "2022-11-28");
 
-        string uri = "https://api.github.com/repos/Dofus-Batteries-Included/DDC/releases";
+        _logger.LogInformation("Start getting releases from github repository {Repository}", GithubRepository);
+
+        Uri nextReleaseUri = new($"https://api.github.com/repos/{GithubRepository}/releases");
         while (true)
         {
-            _logger.LogInformation("Will download releases from: {Uri}", uri);
+            _logger.LogInformation("Will download releases from: {Uri}", nextReleaseUri);
 
-            HttpResponseMessage httpResponse = await httpClient.GetAsync(uri, stoppingToken);
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(nextReleaseUri, stoppingToken);
             httpResponse.EnsureSuccessStatusCode();
 
             DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
@@ -42,6 +50,8 @@ public partial class DdcClient
                 _logger.LogError("Could not parse response from Github Releases.");
                 break;
             }
+
+            _logger.LogInformation("Found releases: {Releases}.", string.Join(", ", responses.Select(r => r.Name)));
 
             foreach (DdcRelease response in responses)
             {
@@ -60,8 +70,11 @@ public partial class DdcClient
                 break;
             }
 
-            uri = match.Groups["uri"].Value;
+            nextReleaseUri = new Uri(match.Groups["uri"].Value);
+            _logger.LogInformation("Found link to more releases at {Uri}.", nextReleaseUri);
         }
+
+        _logger.LogInformation("Done getting releases from github repository {Repository}.", GithubRepository);
     }
 
     public async Task<DdcReleaseContent?> DownloadReleaseContentAsync(DdcRelease release, CancellationToken stoppingToken)
@@ -83,18 +96,6 @@ public partial class DdcClient
 
         ZipArchive zip = new(memoryStream, ZipArchiveMode.Read, false);
         return new DdcReleaseContent(zip);
-    }
-
-    public async Task<DdcMetadata?> ReadMetadataAsync(ZipArchive zip, CancellationToken stoppingToken)
-    {
-        ZipArchiveEntry? metadataEntry = zip.GetEntry("metadata.json");
-        if (metadataEntry == null)
-        {
-            return null;
-        }
-
-        await using Stream metadataStream = metadataEntry.Open();
-        return await JsonSerializer.DeserializeAsync<DdcMetadata>(metadataStream, cancellationToken: stoppingToken);
     }
 
     [GeneratedRegex("<(?<uri>[^>]*)>; rel=\"next\"")]
