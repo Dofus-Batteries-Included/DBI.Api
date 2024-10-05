@@ -11,10 +11,10 @@ public class AStar : IPathFindingStrategy
     const int MaxIterations = 100000;
 
     readonly IWorldDataProvider _worldDataProvider;
-    readonly ILogger<AStar> _logger;
+    readonly ILogger _logger;
     readonly Dictionary<(long, long), IReadOnlyList<RawWorldGraphNode>?> _knownPaths = new();
 
-    public AStar(IWorldDataProvider worldDataProvider, ILogger<AStar> logger)
+    public AStar(IWorldDataProvider worldDataProvider, ILogger logger)
     {
         _worldDataProvider = worldDataProvider;
         _logger = logger;
