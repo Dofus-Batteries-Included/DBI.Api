@@ -168,7 +168,7 @@ and the `PathFinder`.
 ```csharp
 IWorldDataProvider worldData = WorldDataBuilder.FromDdcGithubRepository().BuildAsync();
 NodeFinder nodeFinder = new NodeFinder(worldData);
-PathFinder nodeFinder = new PathFinder(worldData);
+PathFinder pathFinder = new PathFinder(worldData);
 ```
 
 The path finder requires the start and end node in the graph to search for a path between them.
@@ -290,9 +290,9 @@ Using the results, we can then use the path finder to find a path between two no
 
   __Code__
   ```csharp
-  RawWorldGraphNode from = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75497730, CellNumber = 425 }).Single();
-  RawWorldGraphNode to = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75498242, CellNumber = 430 }).Single();
-  Path? GetShortestPath = pathFinder.GetShortestPath(from, to);
+  RawWorldGraphNode fromNode = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75497730, CellNumber = 425 }).Single();
+  RawWorldGraphNode toNode = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75498242, CellNumber = 430 }).Single();
+  Path? path = pathFinder.GetShortestPath(fromNode, toNode);
   ```
 
   __Result__
