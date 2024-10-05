@@ -1,10 +1,10 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
-using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
 using DBI.PathFinder.Builders;
+using DBI.PathFinder.DataProviders;
 using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
@@ -22,21 +22,14 @@ namespace DBI.Server.Features.PathFinder.Controllers;
 public class PathFinderController : ControllerBase
 {
     readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
-    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly WorldServiceFactory _worldServiceFactory;
     readonly ILoggerFactory _loggerFactory;
 
     /// <summary>
     /// </summary>
-    public PathFinderController(
-        RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
-        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
-        WorldServiceFactory worldServiceFactory,
-        ILoggerFactory loggerFactory
-    )
+    public PathFinderController(RawWorldGraphServiceFactory rawWorldGraphServiceFactory, WorldServiceFactory worldServiceFactory, ILoggerFactory loggerFactory)
     {
         _rawWorldGraphServiceFactory = rawWorldGraphServiceFactory;
-        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _worldServiceFactory = worldServiceFactory;
         _loggerFactory = loggerFactory;
     }
@@ -51,10 +44,12 @@ public class PathFinderController : ControllerBase
     public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
+            .BuildAsync(cancellationToken);
 
-        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(worldData);
 
         return nodeFinder.FindNodes(request).Select(n => n.Cook(mapsService.GetMap(n.MapId)?.Position));
     }
@@ -71,10 +66,12 @@ public class PathFinderController : ControllerBase
     public async Task<FindPathsResponse> FindPaths(FindPathsRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
+            .BuildAsync(cancellationToken);
 
-        NodeFinder nodeFinder = new(rawWorldGraphService, rawMapPositionsService, mapsService);
+        NodeFinder nodeFinder = new(worldData);
 
         RawWorldGraphNode[] fromNodes = nodeFinder.FindNodes(request.Start).ToArray();
         if (fromNodes.Length == 0)
@@ -88,7 +85,7 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).UseLogger(_loggerFactory.CreateLogger("PathFinder")).Build();
+        DBI.PathFinder.PathFinder pathFinder = new(worldData, _loggerFactory.CreateLogger("PathFinder"));
 
         return new FindPathsResponse
         {

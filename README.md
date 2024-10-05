@@ -6,12 +6,12 @@ APIs used by the [DBI Plugins](https://github.com/Dofus-Batteries-Included/DBI.P
 
 __Summary__
 - [Data Center](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
-  - [Game versions](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#game-versions) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
-  - [Raw data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme?tab=readme-ov-file#raw-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
-  - [Structured data](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#structured-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
-- [Path Finder](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#path-finder)
-  - [The tricky part about paths](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#the-tricky-part-about-paths)
-  - [How to search for a path](https://github.com/Dofus-Batteries-Included/DBI.Api/tree/doc/UpdateReadme#how-to-search-for-a-path) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
+  - [Game versions](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#game-versions) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Game%20versions/GameVersions_GetAvailableVersions)
+  - [Raw data](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#raw-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center#/Raw%20data)
+  - [Structured data](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#structured-data) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=data-center)
+- [Path Finder](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#path-finder)
+  - [The tricky part about paths](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#the-tricky-part-about-paths)
+  - [How to search for a path](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-search-for-a-path) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=path-finder#/Path%20Finder)
 - [Treasure Solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#treasure-solver)
   - [How to use the treasure solver](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#how-to-use-the-treasure-solver)
     - [Find next clue](https://github.com/Dofus-Batteries-Included/DBI.Api?tab=readme-ov-file#find-next-clue) - [Try it!](https://api.dofusbatteriesincluded.fr/swagger/index.html?urls.primaryName=treasure-solver#/Treasure%20Solver/TreasureSolver_FindNextPosition)
