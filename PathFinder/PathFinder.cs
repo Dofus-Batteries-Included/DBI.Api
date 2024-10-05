@@ -2,6 +2,7 @@
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
+using DBI.PathFinder.DataProviders;
 using DBI.PathFinder.Models;
 using DBI.PathFinder.Strategies;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,14 +13,12 @@ namespace DBI.PathFinder;
 public class PathFinder
 {
     readonly IPathFindingStrategy _pathFindingStrategy;
-    readonly RawWorldGraphService _rawWorldGraphService;
-    readonly MapsService _mapsService;
+    readonly IWorldDataProvider _worldDataProvider;
 
-    PathFinder(IPathFindingStrategy pathFindingStrategy, RawWorldGraphService rawWorldGraphService, MapsService mapsService)
+    PathFinder(IPathFindingStrategy pathFindingStrategy, IWorldDataProvider worldDataProvider)
     {
         _pathFindingStrategy = pathFindingStrategy;
-        _rawWorldGraphService = rawWorldGraphService;
-        _mapsService = mapsService;
+        _worldDataProvider = worldDataProvider;
     }
 
     public Path? GetShortestPath(RawWorldGraphNode sourceNode, RawWorldGraphNode targetNode)
@@ -30,7 +29,7 @@ public class PathFinder
             return null;
         }
 
-        Map? sourceMap = _mapsService.GetMap(sourceNode);
+        Map? sourceMap = _worldDataProvider.GetMapOfNode(sourceNode);
 
         List<PathStep> steps = new(rawPath.Count);
         for (int i = 0; i < rawPath.Count - 1; i++)
@@ -54,7 +53,7 @@ public class PathFinder
         RawWorldGraphNode current = sourceNode;
         while (true)
         {
-            IEnumerable<RawWorldGraphEdge> edges = _rawWorldGraphService.GetEdgesFrom(current.Id);
+            IEnumerable<RawWorldGraphEdge> edges = _worldDataProvider.GetEdgesFromNode(current.Id);
             var transitionInDirection = edges.Select(
                     e => new { Edge = e, Transitions = e.Transitions?.Where(t => t.Direction is not null && DirectionEquals(t.Direction.Value, direction)).ToArray() ?? [] }
                 )
@@ -77,7 +76,7 @@ public class PathFinder
 
 
             long nextNodeId = edgeAndTransition.Edge.To;
-            RawWorldGraphNode? nextNode = _rawWorldGraphService.GetNode(nextNodeId);
+            RawWorldGraphNode? nextNode = _worldDataProvider.GetNode(nextNodeId);
 
             if (nextNode == null)
             {
@@ -85,7 +84,7 @@ public class PathFinder
             }
 
             current = nextNode;
-            Map? currentMap = _mapsService.GetMap(current);
+            Map? currentMap = _worldDataProvider.GetMapOfNode(current);
 
             yield return current.Cook(currentMap?.Position);
         }
@@ -93,10 +92,10 @@ public class PathFinder
 
     PathStep ComputeStep(RawWorldGraphNode current, RawWorldGraphNode next)
     {
-        Map? currentMap = _mapsService.GetMap(current);
+        Map? currentMap = _worldDataProvider.GetMapOfNode(current);
         MapNodeWithPosition currentPathNode = current.Cook(currentMap?.Position);
 
-        RawWorldGraphEdge[] edges = _rawWorldGraphService.GetEdges(current.Id, next.Id).ToArray();
+        RawWorldGraphEdge[] edges = _worldDataProvider.GetEdgesBetweenNodes(current.Id, next.Id).ToArray();
         RawWorldGraphEdgeTransition[] transitions = edges.SelectMany(e => e.Transitions ?? []).ToArray();
         RawWorldGraphEdgeTransition? transition = transitions.FirstOrDefault();
 
@@ -114,5 +113,5 @@ public class PathFinder
         };
 
     public static PathFinder Create(RawWorldGraphService rawWorldGraphService, MapsService mapsService) =>
-        new(new AStar(rawWorldGraphService, mapsService, NullLogger<AStar>.Instance), rawWorldGraphService, mapsService);
+        new(new AStar(rawWorldGraphService, mapsService, NullLogger<AStar>.Instance), new WorldDataFromRawServices(rawWorldGraphService, mapsService));
 }
