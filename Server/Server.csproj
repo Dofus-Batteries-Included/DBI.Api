@@ -9,8 +9,6 @@
         <UserSecretsId>a3407a5a-f324-4722-9cc3-a6d0300f02e9</UserSecretsId>
         <AssemblyName>DBI.Server</AssemblyName>
         <RootNamespace>DBI.Server</RootNamespace>
-        <AssemblyName>DBI.Server</AssemblyName>
-        <RootNamespace>DBI.Server</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
