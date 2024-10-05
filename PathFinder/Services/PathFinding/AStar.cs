@@ -3,10 +3,11 @@ using DBI.DataCenter.Raw.Models.WorldGraphs;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
+using Microsoft.Extensions.Logging;
 
-namespace DBI.Server.Features.PathFinder.Services.PathFinding;
+namespace DBI.PathFinder.Services.PathFinding;
 
-class AStar : IPathFindingStrategy
+public class AStar : IPathFindingStrategy
 {
     const int MaxIterations = 100000;
 

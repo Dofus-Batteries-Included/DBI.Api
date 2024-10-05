@@ -1,6 +1,6 @@
 using DBI.DataCenter.Structured.Models.Maps;
 
-namespace DBI.Server.Features.PathFinder.Models;
+namespace DBI.PathFinder.Models;
 
 /// <summary>
 ///     A step of a path.

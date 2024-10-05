@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DBI.DataCenter.Structured.Models.Maps;
-using DBI.Server.Features.PathFinder.Controllers.Requests;
+using DBI.PathFinder.Models;
 
 namespace DBI.Server.Features.TreasureSolver.Controllers.Requests;
 

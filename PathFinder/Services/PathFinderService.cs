@@ -2,13 +2,13 @@
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
-using DBI.Server.Features.PathFinder.Models;
-using DBI.Server.Features.PathFinder.Services.PathFinding;
-using Path = DBI.Server.Features.PathFinder.Models.Path;
+using DBI.PathFinder.Models;
+using DBI.PathFinder.Services.PathFinding;
+using Path = DBI.PathFinder.Models.Path;
 
-namespace DBI.Server.Features.PathFinder.Services;
+namespace DBI.PathFinder.Services;
 
-class PathFinderService
+public class PathFinderService
 {
     readonly IPathFindingStrategy _pathFindingStrategy;
     readonly RawWorldGraphService _rawWorldGraphService;

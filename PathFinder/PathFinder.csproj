@@ -8,4 +8,8 @@
         <RootNamespace>DBI.PathFinder</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DataCenter\DataCenter.csproj" />
+    </ItemGroup>
+
 </Project>
