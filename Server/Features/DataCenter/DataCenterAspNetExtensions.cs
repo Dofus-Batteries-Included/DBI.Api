@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Options;
-using Server.Common.OpenApi;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.PointOfInterests;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Repositories;
-using Server.Features.DataCenter.Services;
-using Server.Features.DataCenter.Workers;
-using Server.Infrastructure.Repository;
+﻿using DBI.Server.Common.OpenApi;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
+using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
+using DBI.Server.Features.DataCenter.Repositories;
+using DBI.Server.Features.DataCenter.Services;
+using DBI.Server.Features.DataCenter.Workers;
+using DBI.Server.Infrastructure.Repository;
+using Microsoft.Extensions.Options;
 
-namespace Server.Features.DataCenter;
+namespace DBI.Server.Features.DataCenter;
 
 static class DataCenterAspNetExtensions
 {

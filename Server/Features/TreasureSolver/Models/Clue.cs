@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Server.Common.Models;
+using DBI.Server.Common.Models;
 
-namespace Server.Features.TreasureSolver.Models;
+namespace DBI.Server.Features.TreasureSolver.Models;
 
 /// <summary>
 ///     A clue.

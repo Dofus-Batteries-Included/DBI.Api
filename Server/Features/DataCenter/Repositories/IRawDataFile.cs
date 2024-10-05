@@ -1,4 +1,4 @@
-namespace Server.Features.DataCenter.Repositories;
+namespace DBI.Server.Features.DataCenter.Repositories;
 
 /// <summary>
 ///     Raw data file

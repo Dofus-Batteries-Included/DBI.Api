@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Raw.Models;
+﻿using DBI.Server.Features.DataCenter.Raw.Models;
 
-namespace Server.Features.DataCenter.Raw.Services.PointOfInterests;
+namespace DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 

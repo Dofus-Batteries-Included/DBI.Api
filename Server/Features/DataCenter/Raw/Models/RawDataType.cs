@@ -1,4 +1,4 @@
-namespace Server.Features.DataCenter.Raw.Models;
+namespace DBI.Server.Features.DataCenter.Raw.Models;
 
 /// <summary>
 ///     Available data types

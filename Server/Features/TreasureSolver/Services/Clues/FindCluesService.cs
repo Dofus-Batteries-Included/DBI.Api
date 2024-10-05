@@ -1,11 +1,11 @@
-﻿using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.PointOfInterests;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Services.Clues.DataSources;
+﻿using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
+using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
 
-namespace Server.Features.TreasureSolver.Services.Clues;
+namespace DBI.Server.Features.TreasureSolver.Services.Clues;
 
 /// <summary>
 ///     Find clues.

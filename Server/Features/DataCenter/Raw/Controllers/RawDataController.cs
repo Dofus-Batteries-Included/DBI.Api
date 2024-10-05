@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DBI.Server.Features.DataCenter.Models;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Features.DataCenter.Models;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Raw.Controllers;
+namespace DBI.Server.Features.DataCenter.Raw.Controllers;
 
 /// <summary>
 ///     Retrieve raw data in JSON files.

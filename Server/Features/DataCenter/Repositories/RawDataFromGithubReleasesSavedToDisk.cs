@@ -1,13 +1,13 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using DBI.Server.Common.Exceptions;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Workers;
+using DBI.Server.Infrastructure.Repository;
 using Microsoft.Extensions.Options;
-using Server.Common.Exceptions;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Workers;
-using Server.Infrastructure.Repository;
 
-namespace Server.Features.DataCenter.Repositories;
+namespace DBI.Server.Features.DataCenter.Repositories;
 
 partial class RawDataFromGithubReleasesSavedToDisk : IRawDataRepository
 {

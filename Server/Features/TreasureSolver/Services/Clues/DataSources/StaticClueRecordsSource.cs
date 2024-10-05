@@ -1,6 +1,6 @@
-﻿using Server.Features.TreasureSolver.Models;
+﻿using DBI.Server.Features.TreasureSolver.Models;
 
-namespace Server.Features.TreasureSolver.Services.Clues.DataSources;
+namespace DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
 
 class StaticClueRecordsSource : IClueRecordsSource
 {

@@ -1,9 +1,9 @@
-﻿using NSwag;
+﻿using DBI.Server.Common.OpenApi;
+using DBI.Server.Infrastructure.Authentication;
+using NSwag;
 using NSwag.Generation.Processors.Security;
-using Server.Common.OpenApi;
-using Server.Infrastructure.Authentication;
 
-namespace Server.Features.PathFinder;
+namespace DBI.Server.Features.PathFinder;
 
 static class PathFinderAspNetExtensions
 {

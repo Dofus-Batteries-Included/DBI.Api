@@ -1,4 +1,4 @@
-﻿namespace Server.Infrastructure.Repository;
+﻿namespace DBI.Server.Infrastructure.Repository;
 
 /// <summary>
 ///     Repository options.

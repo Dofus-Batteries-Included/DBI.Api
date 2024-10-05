@@ -1,4 +1,4 @@
-﻿namespace Server.Common.Models;
+﻿namespace DBI.Server.Common.Models;
 
 /// <summary>
 ///     A piece of text in all supported languages.

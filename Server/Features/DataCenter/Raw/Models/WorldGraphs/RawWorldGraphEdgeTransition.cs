@@ -1,4 +1,4 @@
-﻿namespace Server.Features.DataCenter.Raw.Models.WorldGraphs;
+﻿namespace DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 

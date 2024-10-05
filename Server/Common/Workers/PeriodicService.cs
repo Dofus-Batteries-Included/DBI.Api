@@ -1,4 +1,4 @@
-﻿namespace Server.Common.Workers;
+﻿namespace DBI.Server.Common.Workers;
 
 abstract class PeriodicService : BackgroundService
 {

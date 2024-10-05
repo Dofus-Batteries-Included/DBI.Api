@@ -1,13 +1,13 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Services;
-using Server.Features.PathFinder.Controllers.Requests;
+﻿using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
+using DBI.Server.Features.DataCenter.Services;
+using DBI.Server.Features.PathFinder.Controllers.Requests;
 
-namespace Server.Features.PathFinder.Services;
+namespace DBI.Server.Features.PathFinder.Services;
 
 class NodeFinderService(RawWorldGraphService rawWorldGraphService, RawMapPositionsService rawMapPositionsService, MapsService mapsService)
 {

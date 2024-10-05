@@ -1,7 +1,7 @@
-using Server.Common.Models;
-using Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Raw.Models;
 
-namespace Server.Features.DataCenter.Raw.Services.Maps;
+namespace DBI.Server.Features.DataCenter.Raw.Services.Maps;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 

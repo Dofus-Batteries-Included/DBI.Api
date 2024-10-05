@@ -1,6 +1,6 @@
-using Server.Common.Models;
+using DBI.Server.Common.Models;
 
-namespace Server.Features.DataCenter.Models.Maps;
+namespace DBI.Server.Features.DataCenter.Models.Maps;
 
 /// <summary>
 ///     An area in the game.

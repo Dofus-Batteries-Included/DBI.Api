@@ -1,6 +1,6 @@
-using Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Models.Maps;
 
-namespace Server.Features.PathFinder.Models;
+namespace DBI.Server.Features.PathFinder.Models;
 
 /// <summary>
 ///     A step of a path.

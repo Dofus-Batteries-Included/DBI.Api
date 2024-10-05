@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Server.Features.Identity.Models.Entities;
+using DBI.Server.Features.Identity.Models.Entities;
 
-namespace Server.Features.TreasureSolver.Models.Entities;
+namespace DBI.Server.Features.TreasureSolver.Models.Entities;
 
 /// <summary>
 ///     A clue record in the database.

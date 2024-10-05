@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DBI.Server.Common.Exceptions;
+using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Common.Exceptions;
-using Server.Common.Models;
-using Server.Features.DataCenter.Models;
-using Server.Features.DataCenter.Raw.Services.I18N;
 
-namespace Server.Features.DataCenter.Controllers.I18N;
+namespace DBI.Server.Features.DataCenter.Controllers.I18N;
 
 /// <summary>
 ///     Internationalization endpoints

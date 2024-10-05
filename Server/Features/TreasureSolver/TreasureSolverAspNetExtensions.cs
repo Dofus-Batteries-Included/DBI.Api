@@ -1,13 +1,13 @@
-﻿using NSwag;
+﻿using DBI.Server.Common.OpenApi;
+using DBI.Server.Features.TreasureSolver.Services;
+using DBI.Server.Features.TreasureSolver.Services.Clues;
+using DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
+using DBI.Server.Features.TreasureSolver.Workers;
+using DBI.Server.Infrastructure.Authentication;
+using NSwag;
 using NSwag.Generation.Processors.Security;
-using Server.Common.OpenApi;
-using Server.Features.TreasureSolver.Services;
-using Server.Features.TreasureSolver.Services.Clues;
-using Server.Features.TreasureSolver.Services.Clues.DataSources;
-using Server.Features.TreasureSolver.Workers;
-using Server.Infrastructure.Authentication;
 
-namespace Server.Features.TreasureSolver;
+namespace DBI.Server.Features.TreasureSolver;
 
 static class TreasureSolverAspNetExtensions
 {

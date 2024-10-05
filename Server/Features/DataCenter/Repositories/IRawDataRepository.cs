@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Raw.Models;
+﻿using DBI.Server.Features.DataCenter.Raw.Models;
 
-namespace Server.Features.DataCenter.Repositories;
+namespace DBI.Server.Features.DataCenter.Repositories;
 
 /// <summary>
 ///     Raw data files repository.

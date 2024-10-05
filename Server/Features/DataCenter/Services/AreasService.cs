@@ -1,9 +1,9 @@
-﻿using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
+﻿using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
 
-namespace Server.Features.DataCenter.Services;
+namespace DBI.Server.Features.DataCenter.Services;
 
 /// <summary>
 ///     Get areas

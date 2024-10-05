@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
+using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using Server.Features.Identity.Models.Entities;
-using Server.Infrastructure.Database;
 
-namespace Server.Infrastructure.Authentication;
+namespace DBI.Server.Infrastructure.Authentication;
 
 class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
 {

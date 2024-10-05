@@ -1,10 +1,15 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
+﻿using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using RawArea = DBI.Server.Features.DataCenter.Raw.Models.RawArea;
+using RawCell = DBI.Server.Features.DataCenter.Raw.Models.RawCell;
+using RawSubArea = DBI.Server.Features.DataCenter.Raw.Models.RawSubArea;
+using RawSuperArea = DBI.Server.Features.DataCenter.Raw.Models.RawSuperArea;
+using RawWorldMap = DBI.Server.Features.DataCenter.Raw.Models.RawWorldMap;
 
-namespace Server.Features.DataCenter.Services;
+namespace DBI.Server.Features.DataCenter.Services;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -54,25 +59,25 @@ public class MapsService(
 
     public Map? GetMap(long mapId)
     {
-        RawMap? rawMap = rawMapsService?.GetMap(mapId);
-        RawMapPosition? rawMapPosition = rawMapPositionsService?.GetMap(mapId);
+        Raw.Models.RawMap? rawMap = rawMapsService?.GetMap(mapId);
+        Raw.Models.RawMapPosition? rawMapPosition = rawMapPositionsService?.GetMap(mapId);
         return rawMap == null || rawMapPosition == null ? null : Cook(rawMapPosition, rawMap);
     }
 
     public IEnumerable<MapCell>? GetCells(long mapId)
     {
-        RawMap? rawMap = rawMapsService?.GetMap(mapId);
+        Raw.Models.RawMap? rawMap = rawMapsService?.GetMap(mapId);
         return rawMap?.Cells.Values.Select(c => Cook(mapId, c));
     }
 
     public MapCell? GetCell(long mapId, int cellNumber)
     {
-        RawMap? rawMap = rawMapsService?.GetMap(mapId);
+        Raw.Models.RawMap? rawMap = rawMapsService?.GetMap(mapId);
         RawCell? cell = rawMap?.Cells.GetValueOrDefault(cellNumber);
         return cell == null ? null : Cook(mapId, cell);
     }
 
-    Map Cook(RawMapPosition rawMapPosition, RawMap rawMap)
+    Map Cook(Raw.Models.RawMapPosition rawMapPosition, Raw.Models.RawMap rawMap)
     {
         RawSubArea? subArea = rawSubAreasService?.GetSubArea(rawMapPosition.SubAreaId);
         RawArea? area = subArea is null ? null : rawAreasService?.GetArea(subArea.AreaId);
@@ -112,7 +117,7 @@ public class MapsService(
             HavenbagCell = cell.HavenbagCell
         };
 
-    IEnumerable<(RawMapPosition RawMapPosition, RawMap RawMap)> GetMapsImpl()
+    IEnumerable<(Raw.Models.RawMapPosition RawMapPosition, Raw.Models.RawMap RawMap)> GetMapsImpl()
     {
         if (rawMapsService == null || rawMapPositionsService == null)
         {

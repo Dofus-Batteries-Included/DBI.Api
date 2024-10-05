@@ -1,4 +1,4 @@
-namespace Server.Features.DataCenter.Models.Maps;
+namespace DBI.Server.Features.DataCenter.Models.Maps;
 
 /// <summary>
 ///     A cell in a map.

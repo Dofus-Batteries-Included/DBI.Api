@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
-using Server.Common.Models;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
-namespace Server.Features.DataCenter.Models.Maps;
+namespace DBI.Server.Features.DataCenter.Models.Maps;
 
 /// <summary>
 ///     A transition between two nodes

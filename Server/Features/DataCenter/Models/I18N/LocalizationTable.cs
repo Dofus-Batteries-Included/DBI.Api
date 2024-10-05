@@ -1,4 +1,4 @@
-﻿namespace Server.Features.DataCenter.Models.I18N;
+﻿namespace DBI.Server.Features.DataCenter.Models.I18N;
 
 class LocalizationTable
 {

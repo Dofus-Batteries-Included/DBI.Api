@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DBI.Server.Features.DataCenter.Controllers.Versions.Responses;
+using DBI.Server.Features.DataCenter.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Features.DataCenter.Controllers.Versions.Responses;
-using Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Controllers.Versions;
+namespace DBI.Server.Features.DataCenter.Controllers.Versions;
 
 /// <summary>
 ///     Retrieve the available game versions.

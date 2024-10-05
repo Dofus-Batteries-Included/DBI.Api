@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Server.Common.Workers;
-using Server.Features.DataCenter.Repositories;
+using DBI.Server.Common.Workers;
+using DBI.Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Workers;
+namespace DBI.Server.Features.DataCenter.Workers;
 
 partial class DownloadDataFromGithubReleases : PeriodicService
 {

@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+﻿using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
-namespace Server.Features.PathFinder.Services.PathFinding;
+namespace DBI.Server.Features.PathFinder.Services.PathFinding;
 
 interface IPathFindingStrategy
 {

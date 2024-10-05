@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Server.Features.Identity.Models.Entities;
-using Server.Features.TreasureSolver.Controllers.Requests;
-using Server.Features.TreasureSolver.Models.Entities;
-using Server.Infrastructure.Database;
+﻿using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Features.TreasureSolver.Controllers.Requests;
+using DBI.Server.Features.TreasureSolver.Models.Entities;
+using DBI.Server.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
-namespace Server.Features.TreasureSolver.Services.Clues;
+namespace DBI.Server.Features.TreasureSolver.Services.Clues;
 
 /// <summary>
 ///     Register clues.

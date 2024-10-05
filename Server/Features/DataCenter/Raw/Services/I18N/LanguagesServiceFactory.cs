@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using Server.Features.DataCenter.Models.I18N;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Services.Internal;
-using Server.Features.DataCenter.Repositories;
+using DBI.Server.Features.DataCenter.Models.I18N;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.Internal;
+using DBI.Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Raw.Services.I18N;
+namespace DBI.Server.Features.DataCenter.Raw.Services.I18N;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 

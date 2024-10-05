@@ -1,8 +1,8 @@
-﻿using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
+﻿using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
-namespace Server.Features.DataCenter.Services;
+namespace DBI.Server.Features.DataCenter.Services;
 
 /// <summary>
 ///     Create instances of services for world data.

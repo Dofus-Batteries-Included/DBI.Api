@@ -1,4 +1,4 @@
-﻿namespace Server.Common.Exceptions;
+﻿namespace DBI.Server.Common.Exceptions;
 
 class BadRequestException : Exception
 {

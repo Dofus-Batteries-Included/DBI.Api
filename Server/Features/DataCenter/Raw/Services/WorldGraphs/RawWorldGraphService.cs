@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+﻿using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
-namespace Server.Features.DataCenter.Raw.Services.WorldGraphs;
+namespace DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 

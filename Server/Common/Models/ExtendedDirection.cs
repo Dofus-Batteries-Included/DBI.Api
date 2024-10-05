@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Raw.Models.WorldGraphs;
+﻿using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
 
-namespace Server.Common.Models;
+namespace DBI.Server.Common.Models;
 
 /// <summary>
 ///     2D direction.

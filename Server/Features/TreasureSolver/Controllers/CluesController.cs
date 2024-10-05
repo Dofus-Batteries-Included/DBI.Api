@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Features.TreasureSolver.Controllers.Requests;
+using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Services.Clues;
+using DBI.Server.Infrastructure.Authentication;
+using DBI.Server.Infrastructure.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Features.Identity.Models.Entities;
-using Server.Features.TreasureSolver.Controllers.Requests;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Services.Clues;
-using Server.Infrastructure.Authentication;
-using Server.Infrastructure.Database;
 
-namespace Server.Features.TreasureSolver.Controllers;
+namespace DBI.Server.Features.TreasureSolver.Controllers;
 
 /// <summary>
 ///     Clues endpoints

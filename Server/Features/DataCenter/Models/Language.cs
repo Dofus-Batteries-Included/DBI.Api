@@ -1,4 +1,4 @@
-namespace Server.Features.DataCenter.Models;
+namespace DBI.Server.Features.DataCenter.Models;
 
 /// <summary>
 ///     Language enumeration

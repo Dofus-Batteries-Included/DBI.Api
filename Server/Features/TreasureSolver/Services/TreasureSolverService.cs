@@ -1,14 +1,14 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Services;
-using Server.Features.PathFinder.Services;
-using Server.Features.PathFinder.Services.PathFinding;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Services.Clues;
+﻿using DBI.Server.Common.Models;
+using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
+using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
+using DBI.Server.Features.DataCenter.Services;
+using DBI.Server.Features.PathFinder.Services;
+using DBI.Server.Features.PathFinder.Services.PathFinding;
+using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Services.Clues;
 
-namespace Server.Features.TreasureSolver.Services;
+namespace DBI.Server.Features.TreasureSolver.Services;
 
 /// <summary>
 ///     Solve treasure hunts.

@@ -1,4 +1,4 @@
-﻿namespace Server.Features.TreasureSolver.Models;
+﻿namespace DBI.Server.Features.TreasureSolver.Models;
 
 /// <summary>
 ///     A record that a clue has been found (or not found) in a specific map.

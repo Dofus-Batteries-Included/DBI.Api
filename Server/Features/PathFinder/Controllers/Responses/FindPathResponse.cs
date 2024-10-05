@@ -1,6 +1,6 @@
-﻿using Path = Server.Features.PathFinder.Models.Path;
+﻿using Path = DBI.Server.Features.PathFinder.Models.Path;
 
-namespace Server.Features.PathFinder.Controllers.Responses;
+namespace DBI.Server.Features.PathFinder.Controllers.Responses;
 
 /// <summary>
 ///     Path that have been found (or not found).

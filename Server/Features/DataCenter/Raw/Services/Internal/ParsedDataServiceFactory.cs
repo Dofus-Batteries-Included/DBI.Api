@@ -1,7 +1,7 @@
-﻿using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Repositories;
+﻿using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Repositories;
 
-namespace Server.Features.DataCenter.Raw.Services.Internal;
+namespace DBI.Server.Features.DataCenter.Raw.Services.Internal;
 
 /// <summary>
 ///     Base class for all factories of services that expose raw data.

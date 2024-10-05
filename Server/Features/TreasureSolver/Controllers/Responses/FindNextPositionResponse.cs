@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using Server.Common.Models;
+using DBI.Server.Common.Models;
 
-namespace Server.Features.TreasureSolver.Controllers.Responses;
+namespace DBI.Server.Features.TreasureSolver.Controllers.Responses;
 
 /// <summary>
 ///     The map containing the next clue.

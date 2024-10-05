@@ -1,8 +1,8 @@
-﻿using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
+﻿using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Raw.Models.WorldGraphs;
+using DBI.Server.Features.DataCenter.Raw.Services.WorldGraphs;
 
-namespace Server.Features.DataCenter.Services;
+namespace DBI.Server.Features.DataCenter.Services;
 
 /// <summary>
 ///     Get world graph data

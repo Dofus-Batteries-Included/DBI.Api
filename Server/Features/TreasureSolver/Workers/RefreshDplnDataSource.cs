@@ -1,19 +1,19 @@
 ﻿using System.Text.Json;
+using DBI.Server.Common.Extensions;
+using DBI.Server.Common.Workers;
+using DBI.Server.Features.DataCenter.Raw.Models;
+using DBI.Server.Features.DataCenter.Raw.Services.I18N;
+using DBI.Server.Features.DataCenter.Raw.Services.Maps;
+using DBI.Server.Features.DataCenter.Raw.Services.PointOfInterests;
+using DBI.Server.Features.DataCenter.Repositories;
+using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
+using DBI.Server.Infrastructure.Database;
+using DBI.Server.Infrastructure.Repository;
 using Microsoft.Extensions.Options;
 using PuppeteerSharp;
-using Server.Common.Extensions;
-using Server.Common.Workers;
-using Server.Features.DataCenter.Raw.Models;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.PointOfInterests;
-using Server.Features.DataCenter.Repositories;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Services.Clues.DataSources;
-using Server.Infrastructure.Database;
-using Server.Infrastructure.Repository;
 
-namespace Server.Features.TreasureSolver.Workers;
+namespace DBI.Server.Features.TreasureSolver.Workers;
 
 class RefreshDplnDataSource : PeriodicService
 {

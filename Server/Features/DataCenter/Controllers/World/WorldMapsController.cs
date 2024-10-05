@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DBI.Server.Common.Exceptions;
+using DBI.Server.Features.DataCenter.Models.Maps;
+using DBI.Server.Features.DataCenter.Services;
+using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Common.Exceptions;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Services;
 
-namespace Server.Features.DataCenter.Controllers.World;
+namespace DBI.Server.Features.DataCenter.Controllers.World;
 
 /// <summary>
 ///     World Maps endpoints
