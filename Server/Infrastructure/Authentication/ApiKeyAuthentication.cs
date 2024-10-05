@@ -1,4 +1,4 @@
-﻿namespace Server.Infrastructure.Authentication;
+﻿namespace DBI.Server.Infrastructure.Authentication;
 
 static class ApiKeyAuthentication
 {

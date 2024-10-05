@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Server.Common.Models;
-using Server.Features.PathFinder.Controllers.Requests;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.Server.Features.PathFinder.Controllers.Requests;
 
-namespace Server.Features.TreasureSolver.Controllers.Requests;
+namespace DBI.Server.Features.TreasureSolver.Controllers.Requests;
 
 /// <summary>
 ///     Search for the next clue in a treasure hunt.

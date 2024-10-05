@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Models.Entities;
-using Server.Infrastructure.Database;
+﻿using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Models.Entities;
+using DBI.Server.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
-namespace Server.Features.TreasureSolver.Services.Clues.DataSources;
+namespace DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
 
 class DatabaseClueRecordsSource : IClueRecordsSource
 {

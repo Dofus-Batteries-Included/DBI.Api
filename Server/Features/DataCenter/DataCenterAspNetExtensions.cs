@@ -1,27 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using Server.Common.OpenApi;
-using Server.Features.DataCenter.Raw.Services.I18N;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.PointOfInterests;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Repositories;
-using Server.Features.DataCenter.Services;
-using Server.Features.DataCenter.Workers;
-using Server.Infrastructure.Repository;
+﻿using DBI.DataCenter.Raw;
+using DBI.DataCenter.Raw.Services.I18N;
+using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.PointOfInterests;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Common.OpenApi;
+using DBI.Server.Features.DataCenter.Ddc;
+using DBI.Server.Infrastructure;
+using Microsoft.Extensions.Options;
+using DownloadDataFromDdcGithubReleases = DBI.Server.Features.DataCenter.Ddc.DownloadDataFromDdcGithubReleases;
 
-namespace Server.Features.DataCenter;
+namespace DBI.Server.Features.DataCenter;
 
 static class DataCenterAspNetExtensions
 {
     public static void ConfigureDataCenter(this IServiceCollection services)
     {
-        services.AddSingleton<RawDataFromGithubReleasesSavedToDisk>(
-            s => new RawDataFromGithubReleasesSavedToDisk(
-                s.GetRequiredService<IOptions<RepositoryOptions>>(),
-                s.GetRequiredService<ILogger<RawDataFromGithubReleasesSavedToDisk>>()
+        services.AddSingleton<RawDataFromDdcGithubReleasesSavedToDisk>(
+            s => new RawDataFromDdcGithubReleasesSavedToDisk(
+                s.GetRequiredService<IOptions<RepositoryOptions>>().Value,
+                s.GetRequiredService<ILogger<RawDataFromDdcGithubReleasesSavedToDisk>>()
             )
         );
-        services.AddSingleton<IRawDataRepository, RawDataFromGithubReleasesSavedToDisk>(s => s.GetRequiredService<RawDataFromGithubReleasesSavedToDisk>());
+
+        services.AddSingleton<IRawDataRepository>(s => s.GetRequiredService<RawDataFromDdcGithubReleasesSavedToDisk>());
+
         services.AddSingleton<LanguagesServiceFactory>();
         services.AddSingleton<RawWorldMapsServiceFactory>();
         services.AddSingleton<RawSuperAreasServiceFactory>();
@@ -31,10 +34,9 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawMapPositionsServiceFactory>();
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
         services.AddSingleton<RawWorldGraphServiceFactory>();
-
         services.AddSingleton<WorldServiceFactory>();
 
-        services.AddHostedService<DownloadDataFromGithubReleases>();
+        services.AddHostedService<DownloadDataFromDdcGithubReleases>();
 
         services.AddOpenApiDocument(
             settings =>

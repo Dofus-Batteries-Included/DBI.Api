@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Common.Exceptions;
+using DBI.Server.Features.PathFinder.Controllers.Requests;
+using DBI.Server.Features.PathFinder.Controllers.Responses;
+using DBI.Server.Features.PathFinder.Services;
+using DBI.Server.Features.PathFinder.Services.PathFinding;
+using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Server.Common.Exceptions;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.Maps;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Services;
-using Server.Features.PathFinder.Controllers.Requests;
-using Server.Features.PathFinder.Controllers.Responses;
-using Server.Features.PathFinder.Services;
-using Server.Features.PathFinder.Services.PathFinding;
 
-namespace Server.Features.PathFinder.Controllers;
+namespace DBI.Server.Features.PathFinder.Controllers;
 
 /// <summary>
 ///     Path finder endpoints

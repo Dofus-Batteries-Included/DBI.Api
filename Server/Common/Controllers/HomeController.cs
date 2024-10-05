@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Server.Common.Controllers;
+namespace DBI.Server.Common.Controllers;
 
 /// <summary>
 /// </summary>

@@ -1,6 +1,6 @@
-﻿using Server.Features.DataCenter.Models.Maps;
+﻿using DBI.DataCenter.Structured.Models.Maps;
 
-namespace Server.Features.PathFinder.Models;
+namespace DBI.Server.Features.PathFinder.Models;
 
 /// <summary>
 ///     A path between two maps.

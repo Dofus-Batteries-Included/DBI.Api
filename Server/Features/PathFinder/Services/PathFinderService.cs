@@ -1,13 +1,12 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Services;
-using Server.Features.PathFinder.Models;
-using Server.Features.PathFinder.Services.PathFinding;
-using Path = Server.Features.PathFinder.Models.Path;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Features.PathFinder.Models;
+using DBI.Server.Features.PathFinder.Services.PathFinding;
+using Path = DBI.Server.Features.PathFinder.Models.Path;
 
-namespace Server.Features.PathFinder.Services;
+namespace DBI.Server.Features.PathFinder.Services;
 
 class PathFinderService
 {

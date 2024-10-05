@@ -1,14 +1,13 @@
-﻿using Server.Common.Models;
-using Server.Features.DataCenter.Models.Maps;
-using Server.Features.DataCenter.Raw.Models.WorldGraphs;
-using Server.Features.DataCenter.Raw.Services.WorldGraphs;
-using Server.Features.DataCenter.Services;
-using Server.Features.PathFinder.Services;
-using Server.Features.PathFinder.Services.PathFinding;
-using Server.Features.TreasureSolver.Models;
-using Server.Features.TreasureSolver.Services.Clues;
+﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
+using DBI.DataCenter.Structured.Models.Maps;
+using DBI.DataCenter.Structured.Services;
+using DBI.Server.Features.PathFinder.Services;
+using DBI.Server.Features.PathFinder.Services.PathFinding;
+using DBI.Server.Features.TreasureSolver.Models;
+using DBI.Server.Features.TreasureSolver.Services.Clues;
 
-namespace Server.Features.TreasureSolver.Services;
+namespace DBI.Server.Features.TreasureSolver.Services;
 
 /// <summary>
 ///     Solve treasure hunts.
@@ -22,7 +21,7 @@ public class TreasureSolverService(
 {
     /// <summary>
     ///     Find the next node in the treasure hunt.
-    ///     The next node is the first one containing the clue <see cref="clueId" /> when moving from the node <see cref="startNodeId" /> in direction <see cref="direction" /> for up to
+    ///     The next node is the first one containing the clue <c>clueId</c> when moving from the node <c>startNodeId</c> in direction <c>direction</c> for up to
     ///     10
     ///     steps.
     /// </summary>

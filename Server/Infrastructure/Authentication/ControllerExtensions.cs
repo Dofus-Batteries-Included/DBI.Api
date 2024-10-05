@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
+using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
-using Server.Features.Identity.Models.Entities;
-using Server.Infrastructure.Database;
 
-namespace Server.Infrastructure.Authentication;
+namespace DBI.Server.Infrastructure.Authentication;
 
 static class ControllerExtensions
 {

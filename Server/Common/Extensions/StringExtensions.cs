@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Server.Common.Extensions;
+namespace DBI.Server.Common.Extensions;
 
 static class StringExtensions
 {

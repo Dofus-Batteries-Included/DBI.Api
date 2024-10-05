@@ -1,6 +1,6 @@
-﻿namespace Server.Common.Exceptions;
+﻿namespace DBI.Server.Common.Exceptions;
 
-class BadRequestException : Exception
+class BadRequestException : ServerException
 {
     public BadRequestException(string message) : base(message) { }
 }

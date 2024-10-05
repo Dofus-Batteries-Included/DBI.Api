@@ -1,7 +1,7 @@
 ﻿using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
-namespace Server.Common.OpenApi;
+namespace DBI.Server.Common.OpenApi;
 
 class FilterOperationsByRoutePrefix : IOperationProcessor
 {

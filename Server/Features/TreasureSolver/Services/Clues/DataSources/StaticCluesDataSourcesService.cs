@@ -1,4 +1,4 @@
-﻿namespace Server.Features.TreasureSolver.Services.Clues.DataSources;
+﻿namespace DBI.Server.Features.TreasureSolver.Services.Clues.DataSources;
 
 /// <summary>
 ///     Manage known clues data sources.

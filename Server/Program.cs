@@ -1,16 +1,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DBI.Server.Common.Exceptions;
+using DBI.Server.Features.DataCenter;
+using DBI.Server.Features.Identity;
+using DBI.Server.Features.PathFinder;
+using DBI.Server.Features.TreasureSolver;
+using DBI.Server.Infrastructure;
+using DBI.Server.Infrastructure.Authentication;
+using DBI.Server.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
-using Server.Common.Exceptions;
-using Server.Features.DataCenter;
-using Server.Features.Identity;
-using Server.Features.PathFinder;
-using Server.Features.TreasureSolver;
-using Server.Infrastructure.Authentication;
-using Server.Infrastructure.Database;
-using Server.Infrastructure.Repository;
 
 #if DEBUG
 const LogEventLevel defaultLoggingLevel = LogEventLevel.Debug;

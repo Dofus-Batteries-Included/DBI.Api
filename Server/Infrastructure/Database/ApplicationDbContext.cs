@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Server.Features.Identity.Models.Entities;
-using Server.Features.TreasureSolver.Models.Entities;
+﻿using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Features.TreasureSolver.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace Server.Infrastructure.Database;
+namespace DBI.Server.Infrastructure.Database;
 
 /// <summary>
 ///     Main db context

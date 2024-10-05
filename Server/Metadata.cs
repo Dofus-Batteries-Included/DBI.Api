@@ -2,7 +2,7 @@
 using System.Reflection;
 using Semver;
 
-namespace Server;
+namespace DBI.Server;
 
 static class Metadata
 {

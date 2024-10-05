@@ -7,6 +7,8 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <UserSecretsId>a3407a5a-f324-4722-9cc3-a6d0300f02e9</UserSecretsId>
+        <AssemblyName>DBI.Server</AssemblyName>
+        <RootNamespace>DBI.Server</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,7 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Features\DataCenter\Raw\Services\"/>
+      <ProjectReference Include="..\DataCenter\DataCenter.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

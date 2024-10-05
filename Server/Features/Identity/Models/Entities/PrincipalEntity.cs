@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Server.Features.Identity.Models.Entities;
+namespace DBI.Server.Features.Identity.Models.Entities;
 
 /// <summary>
 ///     A principal in the database.

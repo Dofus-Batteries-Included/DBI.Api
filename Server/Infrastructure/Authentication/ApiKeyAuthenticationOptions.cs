@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace Server.Infrastructure.Authentication;
+namespace DBI.Server.Infrastructure.Authentication;
 
 class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
 {

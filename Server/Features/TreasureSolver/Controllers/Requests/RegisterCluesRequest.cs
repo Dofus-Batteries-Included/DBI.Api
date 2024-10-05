@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Server.Features.TreasureSolver.Controllers.Requests;
+namespace DBI.Server.Features.TreasureSolver.Controllers.Requests;
 
 /// <summary>
 ///     Register clues.

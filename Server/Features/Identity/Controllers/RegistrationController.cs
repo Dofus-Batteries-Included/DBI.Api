@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DBI.Server.Features.Identity.Models.Entities;
+using DBI.Server.Infrastructure.Authentication;
+using DBI.Server.Infrastructure.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Features.Identity.Models.Entities;
-using Server.Infrastructure.Authentication;
-using Server.Infrastructure.Database;
 
-namespace Server.Features.Identity.Controllers;
+namespace DBI.Server.Features.Identity.Controllers;
 
 /// <summary>
 ///     Registration endpoints

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using Server.Common.Models;
+using DBI.DataCenter.Structured.Models.Maps;
 
-namespace Server.Features.PathFinder.Controllers.Requests;
+namespace DBI.Server.Features.PathFinder.Controllers.Requests;
 
 /// <summary>
 ///     Base class for requests to find a node.
