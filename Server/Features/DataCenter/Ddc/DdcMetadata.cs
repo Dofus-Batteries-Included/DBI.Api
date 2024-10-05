@@ -4,7 +4,7 @@
 ///     Metadata in a DDC release.
 /// </summary>
 /// <seealso cref="DdcRelease" />
-public class DdcMetadata
+class DdcMetadata
 {
     public required string GameVersion { get; init; }
 }
