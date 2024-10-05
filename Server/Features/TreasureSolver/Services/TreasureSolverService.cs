@@ -21,7 +21,7 @@ public class TreasureSolverService(
 {
     /// <summary>
     ///     Find the next node in the treasure hunt.
-    ///     The next node is the first one containing the clue <see cref="clueId" /> when moving from the node <see cref="startNodeId" /> in direction <see cref="direction" /> for up to
+    ///     The next node is the first one containing the clue <c>clueId</c> when moving from the node <c>startNodeId</c> in direction <c>direction</c> for up to
     ///     10
     ///     steps.
     /// </summary>

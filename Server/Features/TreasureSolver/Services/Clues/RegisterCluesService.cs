@@ -21,7 +21,7 @@ public class RegisterCluesService
     }
 
     /// <summary>
-    ///     Register that the <see cref="author" /> has found (or not found) the clues in <see cref="request" />.
+    ///     Register that the <c>author</c> has found (or not found) the clues in <c>request</c>.
     /// </summary>
     public async Task RegisterCluesAsync(PrincipalEntity author, RegisterCluesRequest request)
     {
