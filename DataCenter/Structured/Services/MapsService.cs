@@ -20,7 +20,7 @@ public class MapsService(
     RawSubAreasService? rawSubAreasService,
     RawMapsService? rawMapsService,
     RawMapPositionsService? rawMapPositionsService,
-    LanguagesService languagesService
+    LanguagesService? languagesService
 )
 {
     public IEnumerable<Map> GetMaps() => GetMapsImpl().Select(x => Cook(x.RawMapPosition, x.RawMap));

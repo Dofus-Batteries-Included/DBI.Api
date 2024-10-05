@@ -88,7 +88,9 @@ public class PathFinderController : ControllerBase
             throw new NotFoundException("Could not find end position.");
         }
 
-        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).UseLogger(_loggerFactory.CreateLogger("PathFinder")).Build();
+        DBI.PathFinder.PathFinder pathFinder = await PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(_loggerFactory.CreateLogger("PathFinder"))
+            .BuildAsync(cancellationToken);
 
         return new FindPathsResponse
         {

@@ -43,7 +43,9 @@ public class TreasureSolverService(
             return new FindNextNodeContainingClueResult(false, null, null);
         }
 
-        DBI.PathFinder.PathFinder pathFinder = PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService).UseLogger(loggerFactory.CreateLogger("PathFinder")).Build();
+        DBI.PathFinder.PathFinder pathFinder = await PathFinderBuilder.FromRawServices(rawWorldGraphService, mapsService)
+            .UseLogger(loggerFactory.CreateLogger("PathFinder"))
+            .BuildAsync(cancellationToken);
 
         int distance = 1;
         foreach (MapNodeWithPosition node in pathFinder.EnumerateNodesInDirection(startNode, direction))

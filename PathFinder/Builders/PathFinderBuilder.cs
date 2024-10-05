@@ -9,12 +9,14 @@ namespace DBI.PathFinder.Builders;
 
 public class PathFinderBuilder
 {
-    readonly IWorldDataProvider _worldDataProvider;
+    BuildMode _mode;
+    RawWorldGraphService? _rawWorldGraphService;
+    MapsService? _mapsService;
+    WorldDataProviderFromDdcGithubRepositoryOptions? _options;
     ILogger? _logger;
 
-    PathFinderBuilder(IWorldDataProvider worldDataProvider)
+    PathFinderBuilder()
     {
-        _worldDataProvider = worldDataProvider;
     }
 
     public PathFinderBuilder UseLogger(ILogger logger)
@@ -23,8 +25,48 @@ public class PathFinderBuilder
         return this;
     }
 
-    public PathFinder Build() => new(new AStar(_worldDataProvider, _logger ?? NullLogger.Instance), _worldDataProvider);
+    public async Task<PathFinder> BuildAsync(CancellationToken cancellationToken = default)
+    {
+        IWorldDataProvider provider = _mode switch
+        {
+            BuildMode.FromRawServices => new WorldDataFromRawServices(
+                _rawWorldGraphService ?? throw new NullReferenceException("Raw world graph service cannot be null."),
+                _mapsService ?? throw new NullReferenceException("Maps service cannot be null.")
+            ),
+            BuildMode.FromDdcGithubRepository => await WorldDataProviderFromDdcGithubRepositoryOptions.BuildProvider(
+                _options ?? throw new NullReferenceException("Options cannot be null."),
+                _logger ?? NullLogger.Instance,
+                cancellationToken
+            ),
+            _ => throw new ArgumentOutOfRangeException(nameof(_mode), _mode, null)
+        };
+
+        return new PathFinder(new AStar(provider, _logger ?? NullLogger.Instance), provider);
+    }
 
     public static PathFinderBuilder FromRawServices(RawWorldGraphService rawWorldGraphService, MapsService mapsService) =>
-        new(new WorldDataFromRawServices(rawWorldGraphService, mapsService));
+        new()
+        {
+            _mode = BuildMode.FromRawServices,
+            _rawWorldGraphService = rawWorldGraphService,
+            _mapsService = mapsService
+        };
+
+    public static PathFinderBuilder FromDdcGithubRepository(Action<WorldDataProviderFromDdcGithubRepositoryOptions>? configure = null)
+    {
+        WorldDataProviderFromDdcGithubRepositoryOptions options = new();
+        configure?.Invoke(options);
+
+        return new PathFinderBuilder
+        {
+            _mode = BuildMode.FromDdcGithubRepository,
+            _options = options
+        };
+    }
+
+    enum BuildMode
+    {
+        FromRawServices,
+        FromDdcGithubRepository
+    }
 }

@@ -4,18 +4,23 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.Ddc;
 
 public partial class DdcClient
 {
-    readonly IHttpClientFactory _httpClientFactory;
-    readonly ILogger<DdcClient> _logger;
+    readonly IHttpClientFactory? _httpClientFactory;
+    readonly ILogger _logger;
 
-    public DdcClient(IHttpClientFactory httpClientFactory, ILogger<DdcClient> logger)
+    public DdcClient(IHttpClientFactory httpClientFactory, ILogger? logger = null) : this(logger)
     {
         _httpClientFactory = httpClientFactory;
-        _logger = logger;
+    }
+
+    public DdcClient(ILogger? logger = null)
+    {
+        _logger = logger ?? NullLogger<DdcClient>.Instance;
     }
 
     /// <summary>
@@ -24,9 +29,9 @@ public partial class DdcClient
     /// </summary>
     public string GithubRepository { get; set; } = "Dofus-Batteries-Included/DDC";
 
-    public async IAsyncEnumerable<DdcRelease> GetReleasesAsync([EnumeratorCancellation] CancellationToken stoppingToken)
+    public async IAsyncEnumerable<DdcRelease> GetReleasesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using HttpClient httpClient = _httpClientFactory.CreateClient();
+        using HttpClient httpClient = _httpClientFactory?.CreateClient() ?? new HttpClient();
         httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
         httpClient.DefaultRequestHeaders.Add("User-Agent", "DDC-Api");
         httpClient.DefaultRequestHeaders.Add("X-Github-Api-Version", "2022-11-28");
@@ -38,12 +43,12 @@ public partial class DdcClient
         {
             _logger.LogInformation("Will download releases from: {Uri}", nextReleaseUri);
 
-            HttpResponseMessage httpResponse = await httpClient.GetAsync(nextReleaseUri, stoppingToken);
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(nextReleaseUri, cancellationToken);
             httpResponse.EnsureSuccessStatusCode();
 
             DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
                 new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
-                stoppingToken
+                cancellationToken
             );
             if (responses == null)
             {
@@ -77,7 +82,7 @@ public partial class DdcClient
         _logger.LogInformation("Done getting releases from github repository {Repository}.", GithubRepository);
     }
 
-    public async Task<DdcReleaseContent?> DownloadReleaseContentAsync(DdcRelease release, CancellationToken stoppingToken)
+    public async Task<DdcReleaseContent?> DownloadReleaseContentAsync(DdcRelease release, CancellationToken cancellationToken = default)
     {
         DdcAsset? dataAsset = release.Assets.FirstOrDefault(a => a.Name == "data.zip");
         if (dataAsset == null)
@@ -85,14 +90,14 @@ public partial class DdcClient
             return null;
         }
 
-        using HttpClient httpClient = _httpClientFactory.CreateClient();
+        using HttpClient httpClient = _httpClientFactory?.CreateClient() ?? new HttpClient();
         httpClient.DefaultRequestHeaders.Add("User-Agent", "DDC-Api");
-        using HttpResponseMessage response = await httpClient.GetAsync(dataAsset.BrowserDownloadUrl, stoppingToken);
+        using HttpResponseMessage response = await httpClient.GetAsync(dataAsset.BrowserDownloadUrl, cancellationToken);
 
         // copy release content to memory
-        await using Stream contentStream = await response.Content.ReadAsStreamAsync(stoppingToken);
+        await using Stream contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
         MemoryStream memoryStream = new();
-        await contentStream.CopyToAsync(memoryStream, stoppingToken);
+        await contentStream.CopyToAsync(memoryStream, cancellationToken);
 
         ZipArchive zip = new(memoryStream, ZipArchiveMode.Read, false);
         return new DdcReleaseContent(zip);
