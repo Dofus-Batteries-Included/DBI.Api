@@ -1,7 +1,7 @@
 ﻿# Dofus Batteries Included - Path Finder
 
 Implementation of the dofus path finder used by [the DBI.Api project](https://github.com/Dofus-Batteries-Included/DBI.Api).
-This project is also published as a standalone nuget package so that it can be reused without the need of calling the API.
+This project is also published as a standalone nuget package so that it can be reused without the need of calling the web API.
 
 ## The tricky part about paths
 
