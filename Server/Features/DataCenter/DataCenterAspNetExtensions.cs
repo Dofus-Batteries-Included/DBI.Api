@@ -5,10 +5,8 @@ using DBI.DataCenter.Raw.Services.PointOfInterests;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.Server.Common.OpenApi;
-using DBI.Server.Features.DataCenter.Ddc;
 using DBI.Server.Infrastructure;
 using Microsoft.Extensions.Options;
-using DownloadDataFromDdcGithubReleases = DBI.Server.Features.DataCenter.Ddc.DownloadDataFromDdcGithubReleases;
 
 namespace DBI.Server.Features.DataCenter;
 
