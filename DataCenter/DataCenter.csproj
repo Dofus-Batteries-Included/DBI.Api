@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <AssemblyName>DBI.DataCenter</AssemblyName>
         <RootNamespace>DBI.DataCenter</RootNamespace>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>

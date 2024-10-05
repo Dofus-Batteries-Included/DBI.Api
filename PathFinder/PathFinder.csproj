@@ -7,8 +7,13 @@
         <AssemblyName>DBI.PathFinder</AssemblyName>
         <RootNamespace>DBI.PathFinder</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    
     <ItemGroup>
       <ProjectReference Include="..\DataCenter\DataCenter.csproj" />
       <ProjectReference Include="..\Ddc\Ddc.csproj" />

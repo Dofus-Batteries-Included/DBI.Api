@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <AssemblyName>DBI.Ddc</AssemblyName>
         <RootNamespace>DBI.Ddc</RootNamespace>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
