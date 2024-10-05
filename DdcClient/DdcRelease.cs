@@ -1,10 +1,10 @@
-﻿namespace DBI.Server.Features.DataCenter.Ddc;
+﻿namespace DdcClient;
 
 /// <summary>
 ///     Release of the DDC project.
 /// </summary>
 /// <seealso cref="DdcRelease" />
-class DdcRelease
+public class DdcRelease
 {
     public required string HtmlUrl { get; init; }
     public required string Name { get; init; }

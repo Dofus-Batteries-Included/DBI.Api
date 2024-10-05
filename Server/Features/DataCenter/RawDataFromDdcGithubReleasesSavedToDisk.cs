@@ -5,9 +5,10 @@ using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Infrastructure;
+using DdcClient;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace DBI.Server.Features.DataCenter.Ddc;
+namespace DBI.Server.Features.DataCenter;
 
 partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 {

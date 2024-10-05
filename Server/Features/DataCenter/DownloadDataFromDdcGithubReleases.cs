@@ -3,8 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using DBI.Server.Common.Workers;
+using DdcClient;
 
-namespace DBI.Server.Features.DataCenter.Ddc;
+namespace DBI.Server.Features.DataCenter;
 
 partial class DownloadDataFromDdcGithubReleases : PeriodicService
 {
