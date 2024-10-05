@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCenter", "DataCenter\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathFinder", "PathFinder\PathFinder.csproj", "{E71EC801-A933-44BA-B75E-21C35AADD14E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DdcClient", "DdcClient\DdcClient.csproj", "{A53E6CD3-0760-4917-80E7-888890E6873C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ddc", "Ddc\Ddc.csproj", "{A53E6CD3-0760-4917-80E7-888890E6873C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

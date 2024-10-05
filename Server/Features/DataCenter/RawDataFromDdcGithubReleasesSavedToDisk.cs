@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
+using DBI.Ddc;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Infrastructure;
-using DdcClient;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.Server.Features.DataCenter;
@@ -71,9 +71,11 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         return await ReadDdcMetadataAsync(path, cancellationToken);
     }
 
-    public async Task SaveRawDataFilesAsync(DdcRelease release, string gameVersion, ZipArchive archive, CancellationToken cancellationToken = default)
+    public async Task SaveRawDataFilesAsync(DdcRelease release, DdcReleaseContent content, CancellationToken cancellationToken = default)
     {
         string? oldLatest = GetActualVersion("latest");
+        string gameVersion = (await content.GetMetadataAsync(cancellationToken))?.GameVersion
+                             ?? throw new InvalidOperationException("Could not find new game version in release content.");
 
         _logger.LogInformation("Saving data from release {Name} containing version {Version}.", release.Name, gameVersion);
 
@@ -82,9 +84,18 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 
         await WriteDdcMetadataAsync(release, path, cancellationToken);
 
-        foreach (ZipArchiveEntry entry in archive.Entries)
+        foreach (string filename in await content.GetFilesAsync())
         {
-            string fileName = Path.GetFileNameWithoutExtension(entry.FullName);
+            Stream? contentStream = await content.GetFileContentAsync(filename);
+            if (contentStream == null)
+            {
+                _logger.LogWarning("Could not get content of file {Filename} in release {Release}.", filename, release.Name);
+                continue;
+            }
+
+            await using Stream _ = contentStream;
+
+            string fileName = Path.GetFileNameWithoutExtension(filename);
             string entryFullPath = Path.Join(path, $"{fileName}.bin");
             string? entryDirectory = Path.GetDirectoryName(entryFullPath);
             if (entryDirectory != null && !Directory.Exists(entryDirectory))
@@ -94,9 +105,9 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 
             _logger.LogDebug("Writing file {Path}...", entryFullPath);
 
+
             await using BrotliStream encodeStream = new(System.IO.File.OpenWrite(entryFullPath), CompressionLevel.Optimal, false);
-            await using Stream entryStream = entry.Open();
-            await entryStream.CopyToAsync(encodeStream, cancellationToken);
+            await contentStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
         if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)

@@ -1,4 +1,4 @@
-﻿namespace DdcClient;
+﻿namespace DBI.Ddc;
 
 /// <summary>
 ///     Asset in a DDC release.

@@ -1,4 +1,4 @@
-﻿namespace DdcClient;
+﻿namespace DBI.Ddc;
 
 /// <summary>
 ///     Release of the DDC project.

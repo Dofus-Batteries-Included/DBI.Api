@@ -1,4 +1,4 @@
-﻿namespace DdcClient;
+﻿namespace DBI.Ddc;
 
 /// <summary>
 ///     Metadata in a DDC release.
