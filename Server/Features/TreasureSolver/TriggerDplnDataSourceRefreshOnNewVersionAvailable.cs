@@ -15,7 +15,7 @@ class TriggerDplnDataSourceRefreshOnNewVersionAvailable(RefreshDplnDataSource da
             return Task.CompletedTask;
         }
 
-        logger.LogInformation("Latest version has changed, DPLN data source will be refreshed ASAP.");
+        logger.LogInformation("Latest version has changed, DPLN data source will be refreshed.");
         dataSource.Refresh();
         return Task.CompletedTask;
     }
