@@ -76,3 +76,7 @@ jobs:
         with:
           name: coverage
           path: code-coverage-results.md
+
+permissions:
+  checks: write
+  pull-requests: write
