@@ -3,7 +3,9 @@
 Implementation of the dofus path finder used by [the DBI.Api project](https://github.com/Dofus-Batteries-Included/DBI.Api).
 This project is also published as a standalone nuget package so that it can be reused without the need of calling the web API.
 
-## The tricky part about paths
+## Getting started
+
+### The tricky part about paths
 
 The first issue is that map coordinates are not unique: there are multiple worlds, and multiple levels in a given world, so multiple maps can have the same map coordinates.
 The unique identifier of a map is its `mapId`.
@@ -366,3 +368,39 @@ Using the results, we can then use the path finder to find a path between two no
   }
   ```
 </details>
+
+## Features
+
+### Caching
+
+The `FromDdcGithubReleases` builder supports caching to avoid requesting data from GitHub every time. Call the `.UseCache(cacheProvider)` to enable caching. 
+There is a `RawDataCacheProviderOnDisk` that is available out of the box:
+
+<b>Example</b>
+```csharp
+IWorldDataProvider worldData = await WorldDataBuilder.FromDdcGithubReleases().UseCache(new RawDataCacheProviderOnDisk("./cache/")).BuildAsync();
+```
+
+Alternatively, you can provide your own implementation of `IRawDataCacheProvider`.
+
+### Forks
+
+By default, the `FromDdcGithubReleases` builder reads data from the releases of the original `Dofus-Batteries-Included/DDC` repository. Call the `UseFork("some-other/repository")`
+to use the releases of another repository.
+
+<b>Example</b>
+```csharp
+IWorldDataProvider worldData = await WorldDataBuilder.FromDdcGithubReleases().UseFork("some-other/repository").BuildAsync();
+```
+
+### Advanced usage
+
+Finally, for more control about where the data comes from and how it is used, the `FromRawData` builder that asks for the data in the format that is exposed by the DDC project.
+
+<b>Example</b>
+```csharp
+RawWorldGraph rawWorldGraph = ...
+IReadOnlyCollection<RawMap> rawMaps = ...
+IReadOnlyCollection<RawMapPositions> rawMapPositions = ...
+IWorldDataProvider worldData = WorldDataBuilder.FromRawData(rawWorldGraph, rawMaps, rawMapPositions).Build();
+```

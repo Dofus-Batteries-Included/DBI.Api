@@ -1,4 +1,5 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
@@ -26,22 +27,25 @@ public class TreasureSolverController : ControllerBase
 {
     readonly WorldServiceFactory _worldServiceFactory;
     readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
+    readonly RawMapsServiceFactory _rawMapsServiceFactory;
+    readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
     readonly TreasureSolverService _solver;
-    readonly LoggerFactory _loggerFactory;
 
     /// <summary>
     /// </summary>
     public TreasureSolverController(
         RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
+        RawMapsServiceFactory rawMapsServiceFactory,
+        RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
         WorldServiceFactory worldServiceFactory,
-        TreasureSolverService solver,
-        LoggerFactory loggerFactory
+        TreasureSolverService solver
     )
     {
         _rawWorldGraphServiceFactory = rawWorldGraphServiceFactory;
+        _rawMapsServiceFactory = rawMapsServiceFactory;
+        _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
         _worldServiceFactory = worldServiceFactory;
         _solver = solver;
-        _loggerFactory = loggerFactory;
     }
 
     /// <summary>
@@ -54,8 +58,11 @@ public class TreasureSolverController : ControllerBase
     public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
+
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
 
         NodeFinder nodeFinder = new(worldData);
 
@@ -69,8 +76,9 @@ public class TreasureSolverController : ControllerBase
     public async Task<ActionResult<FindNextMapResponse>> FindNextClue(FindNextClueRequest request, CancellationToken cancellationToken)
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
+        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
 
         NodeFinder nodeFinder = new(worldData);
 

@@ -1,7 +1,7 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
-using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder.Builders;
 using DBI.PathFinder.DataProviders;
 using DBI.Server.Features.TreasureSolver.Models;
@@ -15,7 +15,8 @@ namespace DBI.Server.Features.TreasureSolver.Services;
 public class TreasureSolverService(
     FindCluesService findCluesService,
     RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
-    WorldServiceFactory worldServiceFactory,
+    RawMapsServiceFactory rawMapsServiceFactory,
+    RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
     ILoggerFactory loggerFactory
 )
 {
@@ -36,7 +37,8 @@ public class TreasureSolverService(
     )
     {
         RawWorldGraphService rawWorldGraphService = await rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        MapsService mapsService = await worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+        RawMapsService rawMapsService = await rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
 
         RawWorldGraphNode? startNode = rawWorldGraphService.GetNode(startNodeId);
         if (startNode == null)
@@ -44,7 +46,7 @@ public class TreasureSolverService(
             return new FindNextNodeContainingClueResult(false, null, null);
         }
 
-        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
         DBI.PathFinder.PathFinder pathFinder = new(worldData, loggerFactory.CreateLogger("PathFinder"));
 
         int distance = 1;
