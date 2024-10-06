@@ -6,7 +6,7 @@ class LatestVersionChangedNotification : INotification
 {
     /// <summary>
     ///     The latest version before the change, if any.
-    ///     Null means that the change is the first one.
+    ///     Null means that the change is the first one, e.g. the first time the application is executed.
     /// </summary>
     public required string? OldLatestVersion { get; init; }
 
