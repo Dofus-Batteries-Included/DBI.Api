@@ -1,19 +1,11 @@
-﻿using DBI.DataCenter.Raw.Services.WorldGraphs;
+﻿using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder.DataProviders;
 
 namespace DBI.PathFinder.Builders;
 
-public class WorldDataBuilderFromRawServices
+public class WorldDataBuilderFromRawServices(RawWorldGraphService rawWorldGraphService, RawMapsService rawMapsService, RawMapPositionsService rawMapPositionsService)
 {
-    readonly RawWorldGraphService _rawWorldGraphService;
-    readonly MapsService _mapsService;
-
-    public WorldDataBuilderFromRawServices(RawWorldGraphService rawWorldGraphService, MapsService mapsService)
-    {
-        _rawWorldGraphService = rawWorldGraphService;
-        _mapsService = mapsService;
-    }
-
-    public IWorldDataProvider Build() => new WorldDataFromRawServices(_rawWorldGraphService, _mapsService);
+    public IWorldDataProvider Build() => new WorldDataFromRawServices(rawWorldGraphService, new MapsService(null, null, null, null, rawMapsService, rawMapPositionsService, null));
 }

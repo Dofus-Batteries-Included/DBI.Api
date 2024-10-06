@@ -2,9 +2,6 @@
 using System.Text.Json.Serialization;
 using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Models.WorldGraphs;
-using DBI.DataCenter.Raw.Services.Maps;
-using DBI.DataCenter.Raw.Services.WorldGraphs;
-using DBI.DataCenter.Structured.Services;
 using DBI.Ddc;
 using DBI.PathFinder.Caches;
 using DBI.PathFinder.DataProviders;
@@ -106,9 +103,7 @@ public class WorldDataBuilderFromDdcGithubRepository
             throw new InvalidOperationException("Could not find world data in DDC Github repository.");
         }
 
-        RawWorldGraphService rawWorldGraphService = new(worldData.WorldGraph);
-        MapsService mapsService = new(null, null, null, null, new RawMapsService(worldData.Maps), new RawMapPositionsService(worldData.MapPositions), null);
-        return new WorldDataFromRawServices(rawWorldGraphService, mapsService);
+        return WorldDataBuilder.FromRawData(worldData.WorldGraph, worldData.Maps, worldData.MapPositions).Build();
     }
 
     static async Task<WorldData?> TryGetWorldDataFromCacheProviderAsync(
