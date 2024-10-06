@@ -14,9 +14,11 @@ public class PathFinder
     readonly IPathFindingStrategy _pathFindingStrategy;
     readonly IWorldDataProvider _worldDataProvider;
 
-    public PathFinder(IWorldDataProvider worldDataProvider, ILogger? logger = null)
+    public PathFinder(IWorldDataProvider worldDataProvider, ILogger? logger = null) : this(new AStar(worldDataProvider, logger ?? NullLogger.Instance), worldDataProvider) { }
+
+    public PathFinder(IPathFindingStrategy pathFindingStrategy, IWorldDataProvider worldDataProvider)
     {
-        _pathFindingStrategy = new AStar(worldDataProvider, logger ?? NullLogger.Instance);
+        _pathFindingStrategy = pathFindingStrategy;
         _worldDataProvider = worldDataProvider;
     }
 
@@ -29,6 +31,7 @@ public class PathFinder
         }
 
         Map? sourceMap = _worldDataProvider.GetMapOfNode(sourceNode);
+        Map? targetMap = _worldDataProvider.GetMapOfNode(targetNode);
 
         List<PathStep> steps = new(rawPath.Count);
         for (int i = 0; i < rawPath.Count - 1; i++)
@@ -42,7 +45,7 @@ public class PathFinder
         return new Path
         {
             From = sourceNode.Cook(sourceMap?.Position),
-            To = targetNode.Cook(sourceMap?.Position),
+            To = targetNode.Cook(targetMap?.Position),
             Steps = steps
         };
     }
