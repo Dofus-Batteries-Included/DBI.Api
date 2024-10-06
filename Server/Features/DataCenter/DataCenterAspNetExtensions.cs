@@ -6,6 +6,7 @@ using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.Server.Common.OpenApi;
 using DBI.Server.Infrastructure;
+using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace DBI.Server.Features.DataCenter;
@@ -17,6 +18,7 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawDataFromDdcGithubReleasesSavedToDisk>(
             s => new RawDataFromDdcGithubReleasesSavedToDisk(
                 s.GetRequiredService<IOptions<RepositoryOptions>>().Value,
+                s.GetRequiredService<IMediator>(),
                 s.GetRequiredService<ILogger<RawDataFromDdcGithubReleasesSavedToDisk>>()
             )
         );

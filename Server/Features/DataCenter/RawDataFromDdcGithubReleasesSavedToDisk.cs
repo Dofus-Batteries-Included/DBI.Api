@@ -5,7 +5,9 @@ using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
 using DBI.Ddc;
 using DBI.Server.Common.Exceptions;
+using DBI.Server.Common.Notifications;
 using DBI.Server.Infrastructure;
+using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.Server.Features.DataCenter;
@@ -13,16 +15,16 @@ namespace DBI.Server.Features.DataCenter;
 partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 {
     readonly RepositoryOptions _repositoryOptions;
+    readonly IMediator _mediator;
     readonly ILogger<RawDataFromDdcGithubReleasesSavedToDisk> _logger;
     readonly JsonSerializerOptions _ddcMetadataJsonSerializerOptions = new() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower };
 
-    public RawDataFromDdcGithubReleasesSavedToDisk(RepositoryOptions repositoryOptions, ILogger<RawDataFromDdcGithubReleasesSavedToDisk>? logger = null)
+    public RawDataFromDdcGithubReleasesSavedToDisk(RepositoryOptions repositoryOptions, IMediator mediator, ILogger<RawDataFromDdcGithubReleasesSavedToDisk>? logger = null)
     {
         _repositoryOptions = repositoryOptions;
+        _mediator = mediator;
         _logger = logger ?? NullLogger<RawDataFromDdcGithubReleasesSavedToDisk>.Instance;
     }
-
-    public event EventHandler<LatestVersionChangedEventArgs>? LatestVersionChanged;
 
     public Task<string?> GetLatestVersionAsync() => Task.FromResult(GetActualVersions().OrderDescending().FirstOrDefault());
 
@@ -43,26 +45,6 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
     {
         (IRawDataFile? file, string? _) = TryGetRawDataFileImpl(version, type);
         return Task.FromResult(file);
-    }
-
-    public async Task<SavedDataSummary> GetSavedDataSummaryAsync(CancellationToken cancellationToken = default)
-    {
-        List<string> versions = GetActualVersions().ToList();
-        Dictionary<string, Metadata> versionsMetadata = new();
-        foreach (string version in versions)
-        {
-            string path = Path.Join(_repositoryOptions.DataCenterRawDataPath, version);
-            Metadata? metadata = await ReadDdcMetadataAsync(path, cancellationToken);
-            if (metadata == null)
-            {
-                _logger.LogWarning("Could not find DDC metadata at {Path}.", path);
-                continue;
-            }
-
-            versionsMetadata[version] = metadata;
-        }
-
-        return new SavedDataSummary(versions, versionsMetadata);
     }
 
     public async Task<Metadata?> GetSavedMetadataAsync(string version, CancellationToken cancellationToken = default)
@@ -110,10 +92,22 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             await contentStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
-        if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
+        string newLatest = GetActualVersion("latest") ?? gameVersion;
+
+        if (newLatest == gameVersion)
         {
-            LatestVersionChanged?.Invoke(this, new LatestVersionChangedEventArgs { NewLatestVersion = gameVersion });
+            _logger.LogInformation(
+                "A new version of the raw data files is available: {Version}, and is now the latest version. The old latest version was: {OldLatestVersion}.",
+                gameVersion,
+                oldLatest
+            );
         }
+        else
+        {
+            _logger.LogInformation("A new version of the raw data files is available: {Version}. The latest version is: {LatestVersion}.", gameVersion, newLatest);
+        }
+
+        await _mediator.Publish(new NewVersionAvailableNotification { OldLatestVersion = oldLatest, NewLatestVersion = newLatest, NewVersion = gameVersion }, cancellationToken);
     }
 
     (IRawDataFile? file, string? ErrorMessage) TryGetRawDataFileImpl(string version, RawDataType type)

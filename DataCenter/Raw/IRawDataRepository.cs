@@ -9,11 +9,6 @@ namespace DBI.DataCenter.Raw;
 public interface IRawDataRepository
 {
     /// <summary>
-    ///     Invoked whenever the latest version has changed.
-    /// </summary>
-    event EventHandler<LatestVersionChangedEventArgs> LatestVersionChanged;
-
-    /// <summary>
     ///     Get the latest available version in the repository.
     /// </summary>
     Task<string?> GetLatestVersionAsync();
@@ -33,15 +28,4 @@ public interface IRawDataRepository
     ///     Get the file containing the requested data for the requested version of the game.
     /// </summary>
     Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default);
-}
-
-/// <summary>
-///     Arguments of the <see cref="IRawDataRepository.LatestVersionChanged" /> event.
-/// </summary>
-public class LatestVersionChangedEventArgs
-{
-    /// <summary>
-    ///     The new latest version after it has changed.
-    /// </summary>
-    public required string NewLatestVersion { get; init; }
 }

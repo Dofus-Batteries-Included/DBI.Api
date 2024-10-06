@@ -37,14 +37,14 @@ class RefreshDplnDataSource : PeriodicService
         _logger = logger;
         _cacheDirectory = Path.Join(repositoryOptions.Value.BasePath, "Clues", "Sources");
         _cacheFilePath = Path.Join(_cacheDirectory, "dpln.json");
+    }
 
-        // rawDataRepository.LatestVersionChanged += (_, _) =>
-        // {
-        //     _logger.LogInformation("Latest version has changed, DPLN data source will be refreshed ASAP");
-        //     _lastHintsHashCode = null;
-        //     _lastMapCluesHashCode = null;
-        //     TriggerAsap();
-        // };
+    public void Refresh()
+    {
+        _logger.LogInformation("A refresh of DPLN data has been triggered, it will be performed ASAP.");
+        _lastHintsHashCode = null;
+        _lastMapCluesHashCode = null;
+        TriggerAsap();
     }
 
     protected override async Task OnStartAsync(CancellationToken stoppingToken)

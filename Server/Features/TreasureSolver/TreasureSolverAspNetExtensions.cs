@@ -20,7 +20,8 @@ static class TreasureSolverAspNetExtensions
         services.AddScoped<RegisterCluesService>();
         services.AddScoped<TreasureSolverService>();
 
-        services.AddHostedService<RefreshDplnDataSource>();
+        services.AddSingleton<RefreshDplnDataSource>();
+        services.AddHostedService<RefreshDplnDataSource>(s => s.GetRequiredService<RefreshDplnDataSource>());
 
         services.AddOpenApiDocument(
             settings =>
