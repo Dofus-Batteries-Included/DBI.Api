@@ -45,9 +45,7 @@ public class PathFinderController : ControllerBase
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
-            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
-            .BuildAsync(cancellationToken);
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
 
         NodeFinder nodeFinder = new(worldData);
 
@@ -67,9 +65,7 @@ public class PathFinderController : ControllerBase
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
-            .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
-            .BuildAsync(cancellationToken);
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
 
         NodeFinder nodeFinder = new(worldData);
 
