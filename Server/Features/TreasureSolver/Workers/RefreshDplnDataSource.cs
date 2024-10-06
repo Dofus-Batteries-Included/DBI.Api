@@ -39,9 +39,8 @@ class RefreshDplnDataSource : PeriodicService
         _cacheFilePath = Path.Join(_cacheDirectory, "dpln.json");
     }
 
-    public void Refresh()
+    public void TriggerRefreshAsap()
     {
-        _logger.LogInformation("A refresh of DPLN data has been triggered, it will be performed ASAP.");
         _lastHintsHashCode = null;
         _lastMapCluesHashCode = null;
         TriggerAsap();
