@@ -44,10 +44,7 @@ public class TreasureSolverService(
             return new FindNextNodeContainingClueResult(false, null, null);
         }
 
-        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
-            .UseLogger(loggerFactory.CreateLogger("PathFinder"))
-            .BuildAsync(cancellationToken);
-
+        IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService).Build();
         DBI.PathFinder.PathFinder pathFinder = new(worldData, loggerFactory.CreateLogger("PathFinder"));
 
         int distance = 1;
