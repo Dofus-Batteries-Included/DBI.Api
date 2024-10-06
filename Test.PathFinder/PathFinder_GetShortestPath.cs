@@ -6,6 +6,7 @@ using DBI.PathFinder.Strategies;
 using FluentAssertions;
 using Moq;
 using Test.FakeData;
+using Test.PathFinder.Extensions;
 using Path = DBI.PathFinder.Models.Path;
 
 namespace Test.PathFinder;

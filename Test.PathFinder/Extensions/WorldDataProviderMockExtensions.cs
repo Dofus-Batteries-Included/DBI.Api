@@ -3,7 +3,7 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.PathFinder.DataProviders;
 using Moq;
 
-namespace Test.PathFinder;
+namespace Test.PathFinder.Extensions;
 
 public static class WorldDataProviderMockExtensions
 {
