@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DBI.PathFinder.Models;
+namespace DBI.Server.Features.PathFinder.Controllers.Requests;
 
 /// <summary>
 ///     Search for a path between the start and end nodes.
