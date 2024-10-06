@@ -7,6 +7,7 @@ using DBI.PathFinder.Builders;
 using DBI.PathFinder.DataProviders;
 using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
+using DBI.Server.Features.PathFinder.Controllers.Requests;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
