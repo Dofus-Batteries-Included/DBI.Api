@@ -92,11 +92,22 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             await contentStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
-        if (oldLatest == null || string.CompareOrdinal(gameVersion, oldLatest) > 0)
+        string newLatest = GetActualVersion("latest") ?? gameVersion;
+
+        if (newLatest == gameVersion)
         {
-            _logger.LogInformation("A new version of the raw data files is available: {Version}.", gameVersion);
-            await _mediator.Publish(new LatestVersionChangedNotification { OldLatestVersion = oldLatest, NewLatestVersion = gameVersion }, cancellationToken);
+            _logger.LogInformation(
+                "A new version of the raw data files is available: {Version}, and is now the latest version. The old latest version was: {OldLatestVersion}.",
+                gameVersion,
+                oldLatest
+            );
         }
+        else
+        {
+            _logger.LogInformation("A new version of the raw data files is available: {Version}. The latest version is: {LatestVersion}.", gameVersion, newLatest);
+        }
+
+        await _mediator.Publish(new NewVersionAvailableNotification { OldLatestVersion = oldLatest, NewLatestVersion = newLatest, NewVersion = gameVersion }, cancellationToken);
     }
 
     (IRawDataFile? file, string? ErrorMessage) TryGetRawDataFileImpl(string version, RawDataType type)
