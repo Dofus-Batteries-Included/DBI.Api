@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PathFinder\PathFinder.csproj" />
+      <ProjectReference Include="..\Test.FakeData\Test.FakeData.csproj" />
     </ItemGroup>
 
 </Project>

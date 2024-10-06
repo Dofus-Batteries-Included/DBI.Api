@@ -1,7 +1,7 @@
 ﻿using DBI.DataCenter.Raw.Models.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 
-namespace Test.PathFinder.Fake;
+namespace Test.FakeData;
 
 public static class FakeRawWorldGraphNode
 {

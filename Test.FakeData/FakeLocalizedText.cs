@@ -1,6 +1,6 @@
 ﻿using DBI.DataCenter.Structured.Models.I18N;
 
-namespace Test.PathFinder.Fake;
+namespace Test.FakeData;
 
 public static class FakeLocalizedText
 {

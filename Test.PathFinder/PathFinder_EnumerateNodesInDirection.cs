@@ -3,7 +3,7 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.PathFinder.DataProviders;
 using FluentAssertions;
 using Moq;
-using Test.PathFinder.Fake;
+using Test.FakeData;
 
 namespace Test.PathFinder;
 
