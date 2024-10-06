@@ -6,6 +6,7 @@ using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Services;
 using DBI.Ddc;
+using DBI.PathFinder.Caches;
 using DBI.PathFinder.DataProviders;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +34,13 @@ public class WorldDataFromDdcGithubRepositoryOptions
     /// </summary>
     public string GithubRepository { get; set; } = "Dofus-Batteries-Included/DDC";
 
-    internal static async Task<IWorldDataProvider> BuildProvider(WorldDataFromDdcGithubRepositoryOptions options, ILogger logger, CancellationToken cancellationToken = default)
+    public IRawDataCacheProvider? CacheProvider { get; set; } = null;
+
+    internal static async Task<IWorldDataProvider> BuildProviderAsync(
+        WorldDataFromDdcGithubRepositoryOptions options,
+        ILogger logger,
+        CancellationToken cancellationToken = default
+    )
     {
         DdcClient ddcClient = new(logger)
         {
@@ -46,28 +53,78 @@ public class WorldDataFromDdcGithubRepositoryOptions
             throw new InvalidOperationException($"Could not find any release in repository {options.GithubRepository}.");
         }
 
-        DdcRelease? selectedRelease = null;
-        DdcReleaseContent? content = null;
-        foreach (DdcRelease release in releases.OrderByDescending(r => r.Name))
+        DdcRelease[] orderedReleases = releases.OrderByDescending(r => r.Name).ToArray();
+
+        foreach (DdcRelease release in orderedReleases)
         {
-            selectedRelease = release;
-            content = await ddcClient.DownloadReleaseContentAsync(release, cancellationToken);
-            if (content != null)
+            if (options.CacheProvider != null)
             {
-                break;
+                IWorldDataProvider? providerFromCachedData = await BuildProviderFromCacheProviderAsync(options.CacheProvider, logger, release, cancellationToken);
+                if (providerFromCachedData != null)
+                {
+                    logger.LogInformation("Using cached files for release {Release}.", release.Name);
+                    return providerFromCachedData;
+                }
+            }
+
+            IWorldDataProvider? providerFromRemoteData = await BuildProviderFromDdcGithubReleaseAsync(ddcClient, release, logger, cancellationToken);
+            if (providerFromRemoteData != null)
+            {
+                logger.LogInformation("Using new data from release {Release}.", release.Name);
+                return providerFromRemoteData;
             }
         }
 
-        if (selectedRelease == null || content == null)
+        throw new InvalidOperationException("Could not find world data in DDC Github repository.");
+    }
+
+    static async Task<IWorldDataProvider?> BuildProviderFromCacheProviderAsync(
+        IRawDataCacheProvider cacheProvider,
+        ILogger logger,
+        DdcRelease release,
+        CancellationToken cancellationToken
+    )
+    {
+        IRawDataCache? cache = await cacheProvider.FindCacheAsync(release.Name, cancellationToken);
+        if (cache == null)
         {
-            throw new InvalidOperationException($"Could not get any content in the following releases: {string.Join(", ", releases.Select(r => r.Name))}.");
+            logger.LogInformation("Could not find cached data for release {Release}.", release.Name);
+            return null;
         }
 
-        logger.LogInformation("Selected latest release with content: {Release}.", selectedRelease.Name);
+        if (!await cache.ContainsDataAsync(RawDataType.WorldGraph, cancellationToken)
+            || !await cache.ContainsDataAsync(RawDataType.Maps, cancellationToken)
+            || !await cache.ContainsDataAsync(RawDataType.MapPositions, cancellationToken))
+        {
+            logger.LogWarning("Found incomplete cache data for release {Release}.", release.Name);
+            return null;
+        }
 
-        RawWorldGraph worldGraph = await ExtractDataFromFile<RawWorldGraph>(selectedRelease, content, "world-graph.json", KebabCaseSerializerOptions, cancellationToken);
-        Dictionary<long, RawMap> maps = await ExtractDataFromFile<Dictionary<long, RawMap>>(selectedRelease, content, "maps.json", CamelCaseSerializerOptions, cancellationToken);
-        RawMapPosition[] mapPositions = await ExtractDataFromFile<RawMapPosition[]>(selectedRelease, content, "map-positions.json", CamelCaseSerializerOptions, cancellationToken);
+        return await BuildProviderFromCacheAsync(cache, release, logger, cancellationToken);
+    }
+
+    static async Task<IWorldDataProvider?> BuildProviderFromCacheAsync(IRawDataCache cache, DdcRelease release, ILogger logger, CancellationToken cancellationToken)
+    {
+        RawWorldGraph? worldGraph = await ExtractDataFromFileAsync<RawWorldGraph>(cache, RawDataType.WorldGraph, KebabCaseSerializerOptions, cancellationToken);
+        if (worldGraph == null)
+        {
+            logger.LogWarning("Could not find cached world graph for release {Release}.", release.Name);
+            return null;
+        }
+
+        Dictionary<long, RawMap>? maps = await ExtractDataFromFileAsync<Dictionary<long, RawMap>>(cache, RawDataType.Maps, CamelCaseSerializerOptions, cancellationToken);
+        if (maps == null)
+        {
+            logger.LogWarning("Could not find cached maps for release {Release}.", release.Name);
+            return null;
+        }
+
+        RawMapPosition[]? mapPositions = await ExtractDataFromFileAsync<RawMapPosition[]>(cache, RawDataType.MapPositions, CamelCaseSerializerOptions, cancellationToken);
+        if (mapPositions == null)
+        {
+            logger.LogWarning("Could not find cached map positions for release {Release}.", release.Name);
+            return null;
+        }
 
         RawWorldGraphService rawWorldGraphService = new(worldGraph);
         MapsService mapsService = new(null, null, null, null, new RawMapsService(maps), new RawMapPositionsService(mapPositions), null);
@@ -75,26 +132,81 @@ public class WorldDataFromDdcGithubRepositoryOptions
         return new WorldDataFromRawServices(rawWorldGraphService, mapsService);
     }
 
-    static async Task<TData> ExtractDataFromFile<TData>(
-        DdcRelease release,
-        DdcReleaseContent content,
-        string filename,
-        JsonSerializerOptions options,
-        CancellationToken cancellationToken
-    )
+    static async Task<IWorldDataProvider?> BuildProviderFromDdcGithubReleaseAsync(DdcClient ddcClient, DdcRelease release, ILogger logger, CancellationToken cancellationToken)
     {
-        Stream? file = await content.GetFileContentAsync(filename);
-        if (file == null)
+        if (release.Content == null)
         {
-            throw new InvalidOperationException($"Could not get content of file {filename} in release {release.Name}.");
+            logger.LogWarning("Could not find content asset in release {Release}.", release.Name);
+            return null;
         }
 
-        TData? worldGraph = await JsonSerializer.DeserializeAsync<TData>(file, options, cancellationToken);
+        DdcReleaseContent? content = await ddcClient.DownloadReleaseContentAsync(release, cancellationToken);
+        if (content == null)
+        {
+            logger.LogWarning("Could not download content asset from release {Release}.", release.Name);
+            return null;
+        }
+
+        logger.LogInformation("Selected latest release with content: {Release}.", release.Name);
+
+        RawWorldGraph? worldGraph = await ExtractDataFromFileAsync<RawWorldGraph>(content, RawDataType.WorldGraph, KebabCaseSerializerOptions, cancellationToken);
         if (worldGraph == null)
         {
-            throw new InvalidOperationException($"Could not read content of file {filename} in release {release.Name}.");
+            logger.LogWarning("Could not download world graph from release {Release}.", release.Name);
+            return null;
         }
 
-        return worldGraph;
+        Dictionary<long, RawMap>? maps = await ExtractDataFromFileAsync<Dictionary<long, RawMap>>(content, RawDataType.Maps, CamelCaseSerializerOptions, cancellationToken);
+        if (maps == null)
+        {
+            logger.LogWarning("Could not download maps from release {Release}.", release.Name);
+            return null;
+        }
+
+        RawMapPosition[]? mapPositions = await ExtractDataFromFileAsync<RawMapPosition[]>(content, RawDataType.MapPositions, CamelCaseSerializerOptions, cancellationToken);
+        if (mapPositions == null)
+        {
+            logger.LogWarning("Could not download map positions from release {Release}.", release.Name);
+            return null;
+        }
+
+        RawWorldGraphService rawWorldGraphService = new(worldGraph);
+        MapsService mapsService = new(null, null, null, null, new RawMapsService(maps), new RawMapPositionsService(mapPositions), null);
+
+        return new WorldDataFromRawServices(rawWorldGraphService, mapsService);
     }
+
+    static async Task<TData?> ExtractDataFromFileAsync<TData>(DdcReleaseContent content, RawDataType type, JsonSerializerOptions options, CancellationToken cancellationToken)
+    {
+        Stream? file = await content.GetFileContentAsync(GetFilename(type));
+        if (file == null)
+        {
+            return default;
+        }
+
+        return await ExtractDataFromFileAsync<TData>(file, options, cancellationToken);
+    }
+
+    static async Task<TData?> ExtractDataFromFileAsync<TData>(IRawDataCache cache, RawDataType type, JsonSerializerOptions options, CancellationToken cancellationToken)
+    {
+        Stream? file = await cache.LoadDataAsync(type, cancellationToken);
+        if (file == null)
+        {
+            return default;
+        }
+
+        return await ExtractDataFromFileAsync<TData>(file, options, cancellationToken);
+    }
+
+    static async Task<TData?> ExtractDataFromFileAsync<TData>(Stream stream, JsonSerializerOptions options, CancellationToken cancellationToken) =>
+        await JsonSerializer.DeserializeAsync<TData>(stream, options, cancellationToken);
+
+    static string GetFilename(RawDataType type) =>
+        type switch
+        {
+            RawDataType.MapPositions => "map-positions.json",
+            RawDataType.WorldGraph => "world-graph.json",
+            RawDataType.Maps => "maps.json",
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
 }
