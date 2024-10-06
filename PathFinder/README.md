@@ -166,7 +166,7 @@ The first step is to retrieve the game data. The easiest way is to download it f
 and the `PathFinder`.
 
 ```csharp
-IWorldDataProvider worldData = WorldDataBuilder.FromDdcGithubRepository().BuildAsync();
+IWorldDataProvider worldData = await WorldDataBuilder.FromDdcGithubRepository().BuildAsync();
 NodeFinder nodeFinder = new NodeFinder(worldData);
 PathFinder pathFinder = new PathFinder(worldData);
 ```
@@ -182,7 +182,7 @@ The node finder is used to find the start and end node. There are multiple ways 
 
   __Code__
   ```csharp
-  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodes(new FindNodesById { NodeId = 7911 });
+  RawWorldGraphNode? nodes = nodeFinder.FindNodeById(7911);
   ```
   
   __Result__
@@ -205,7 +205,7 @@ The node finder is used to find the start and end node. There are multiple ways 
 
   __Code__
   ```csharp
-  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodes(new FindNodesByMap { MapId = 106693122, CellNumber = 425 });
+  RawWorldGraphNode? nodes = nodeFinder.FindNodeByMap(106693122, 425);
   ```
 
   __Result__
@@ -228,7 +228,7 @@ The node finder is used to find the start and end node. There are multiple ways 
 
   __Code__
   ```csharp
-  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodes(new FindNodesByMap { MapId = 106693122 });
+  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodesByMap(106693122);
   ```
 
   __Result__
@@ -256,7 +256,7 @@ The node finder is used to find the start and end node. There are multiple ways 
 
   __Code__
   ```csharp
-  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodes(new FindNodeAtPosition { Position = new Position(26, -9) });
+  IEnumerable<RawWorldGraphNode> nodes = nodeFinder.FindNodesAtPosition(new Position(26, -9));
   ```
 
   __Result__
@@ -290,8 +290,8 @@ Using the results, we can then use the path finder to find a path between two no
 
   __Code__
   ```csharp
-  RawWorldGraphNode fromNode = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75497730, CellNumber = 425 }).Single();
-  RawWorldGraphNode toNode = nodeFinder.FindNodes(new FindNodesByMap { MapId = 75498242, CellNumber = 430 }).Single();
+  RawWorldGraphNode fromNode = nodeFinder.FindNodeByMap(75497730, 425) ?? throw new InvalidOperationException("From position not found");
+  RawWorldGraphNode toNode = nodeFinder.FindNodeByMap(75498242, 430) ?? throw new InvalidOperationException("To position not found");
   Path? path = pathFinder.GetShortestPath(fromNode, toNode);
   ```
 
