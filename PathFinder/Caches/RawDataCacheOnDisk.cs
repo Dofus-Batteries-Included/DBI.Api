@@ -1,15 +1,19 @@
 ﻿using System.IO.Compression;
 using DBI.DataCenter.Raw.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.PathFinder.Caches;
 
 public class RawDataCacheOnDisk : IRawDataCache
 {
     readonly string _folder;
+    readonly ILogger _logger;
 
-    public RawDataCacheOnDisk(string folder)
+    public RawDataCacheOnDisk(string folder, ILogger? logger = null)
     {
         _folder = folder;
+        _logger = logger ?? NullLogger.Instance;
     }
 
     public Task<bool> ContainsDataAsync(RawDataType rawDataType, CancellationToken cancellationToken = default)
@@ -43,6 +47,8 @@ public class RawDataCacheOnDisk : IRawDataCache
 
         await using FileStream fileStream = File.Open(path, FileMode.Create);
         await using BrotliStream compressedStream = new(fileStream, CompressionLevel.Optimal);
+
+        _logger.LogInformation("Saving data for {Type} at {Path}.", rawDataType, path);
 
         await stream.CopyToAsync(compressedStream, cancellationToken);
     }

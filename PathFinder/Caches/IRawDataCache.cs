@@ -4,11 +4,12 @@ namespace DBI.PathFinder.Caches;
 
 public interface IRawDataCacheProvider
 {
-    public Task<IRawDataCache?> FindCacheAsync(string release, CancellationToken cancellationToken = default);
+    public Task<IRawDataCache> GetCacheAsync(string release, CancellationToken cancellationToken = default);
 }
 
 public interface IRawDataCache
 {
     public Task<bool> ContainsDataAsync(RawDataType rawDataType, CancellationToken cancellationToken = default);
     public Task<Stream?> LoadDataAsync(RawDataType rawDataType, CancellationToken cancellationToken = default);
+    public Task SaveDataAsync(RawDataType rawDataType, Stream stream, CancellationToken cancellationToken = default);
 }

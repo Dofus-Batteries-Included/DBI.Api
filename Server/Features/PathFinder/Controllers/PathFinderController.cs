@@ -4,13 +4,14 @@ using DBI.DataCenter.Structured.Models.Maps;
 using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
 using DBI.PathFinder.Builders;
+using DBI.PathFinder.Caches;
 using DBI.PathFinder.DataProviders;
-using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Requests;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using Path = System.IO.Path;
 
 namespace DBI.Server.Features.PathFinder.Controllers;
 
@@ -46,7 +47,17 @@ public class PathFinderController : ControllerBase
     {
         RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
-        IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
+
+        // IWorldDataProvider worldData = await WorldDataBuilder.FromRawServices(rawWorldGraphService, mapsService)
+        //     .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
+        //     .BuildAsync(cancellationToken);
+
+        IWorldDataProvider worldData = await WorldDataBuilder.FromDdcGithubRepository(
+                opt => opt.CacheProvider = new RawDataCacheProviderOnDisk(
+                    Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DBI", "PathFinder", "Raw"),
+                    _loggerFactory.CreateLogger("RawDataCacheOnDisk")
+                )
+            )
             .UseLogger(_loggerFactory.CreateLogger("NodeFinder"))
             .BuildAsync(cancellationToken);
 
