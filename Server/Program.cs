@@ -56,11 +56,12 @@ try
     builder.Services.AddExceptionHandler<ExceptionHandler>();
     builder.Services.AddHttpClient();
 
-
     builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, opt => { });
     builder.Services.AddAuthorization();
 
     builder.Services.AddEndpointsApiExplorer();
+
+    builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<Program>());
 
     builder.Services.Configure<RepositoryOptions>(
         o =>

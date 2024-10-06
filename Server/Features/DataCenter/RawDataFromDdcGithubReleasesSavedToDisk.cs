@@ -5,7 +5,9 @@ using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
 using DBI.Ddc;
 using DBI.Server.Common.Exceptions;
+using DBI.Server.Common.Notifications;
 using DBI.Server.Infrastructure;
+using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.Server.Features.DataCenter;
@@ -13,16 +15,16 @@ namespace DBI.Server.Features.DataCenter;
 partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 {
     readonly RepositoryOptions _repositoryOptions;
+    readonly IMediator _mediator;
     readonly ILogger<RawDataFromDdcGithubReleasesSavedToDisk> _logger;
     readonly JsonSerializerOptions _ddcMetadataJsonSerializerOptions = new() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower };
 
-    public RawDataFromDdcGithubReleasesSavedToDisk(RepositoryOptions repositoryOptions, ILogger<RawDataFromDdcGithubReleasesSavedToDisk>? logger = null)
+    public RawDataFromDdcGithubReleasesSavedToDisk(RepositoryOptions repositoryOptions, IMediator mediator, ILogger<RawDataFromDdcGithubReleasesSavedToDisk>? logger = null)
     {
         _repositoryOptions = repositoryOptions;
+        _mediator = mediator;
         _logger = logger ?? NullLogger<RawDataFromDdcGithubReleasesSavedToDisk>.Instance;
     }
-
-    public event EventHandler<LatestVersionChangedEventArgs>? LatestVersionChanged;
 
     public Task<string?> GetLatestVersionAsync() => Task.FromResult(GetActualVersions().OrderDescending().FirstOrDefault());
 
@@ -112,7 +114,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 
         if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
         {
-            LatestVersionChanged?.Invoke(this, new LatestVersionChangedEventArgs { NewLatestVersion = gameVersion });
+            await _mediator.Publish(new LatestVersionChangedNotification { NewLatestVersion = gameVersion }, cancellationToken);
         }
     }
 
