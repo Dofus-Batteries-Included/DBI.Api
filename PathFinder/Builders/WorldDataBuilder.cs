@@ -32,7 +32,7 @@ public class WorldDataBuilder
                 _rawWorldGraphService ?? throw new NullReferenceException("Raw world graph service cannot be null."),
                 _mapsService ?? throw new NullReferenceException("Maps service cannot be null.")
             ),
-            BuildMode.FromDdcGithubRepository => await WorldDataFromDdcGithubRepositoryOptions.BuildProvider(
+            BuildMode.FromDdcGithubRepository => await WorldDataFromDdcGithubRepositoryOptions.BuildProviderAsync(
                 _options ?? throw new NullReferenceException("Options cannot be null."),
                 _logger ?? NullLogger.Instance,
                 cancellationToken

@@ -5,7 +5,6 @@ using DBI.DataCenter.Structured.Services;
 using DBI.PathFinder;
 using DBI.PathFinder.Builders;
 using DBI.PathFinder.DataProviders;
-using DBI.PathFinder.Models;
 using DBI.Server.Common.Exceptions;
 using DBI.Server.Features.PathFinder.Controllers.Requests;
 using DBI.Server.Features.PathFinder.Controllers.Responses;
