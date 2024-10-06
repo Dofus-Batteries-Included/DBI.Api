@@ -47,26 +47,6 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         return Task.FromResult(file);
     }
 
-    public async Task<SavedDataSummary> GetSavedDataSummaryAsync(CancellationToken cancellationToken = default)
-    {
-        List<string> versions = GetActualVersions().ToList();
-        Dictionary<string, Metadata> versionsMetadata = new();
-        foreach (string version in versions)
-        {
-            string path = Path.Join(_repositoryOptions.DataCenterRawDataPath, version);
-            Metadata? metadata = await ReadDdcMetadataAsync(path, cancellationToken);
-            if (metadata == null)
-            {
-                _logger.LogWarning("Could not find DDC metadata at {Path}.", path);
-                continue;
-            }
-
-            versionsMetadata[version] = metadata;
-        }
-
-        return new SavedDataSummary(versions, versionsMetadata);
-    }
-
     public async Task<Metadata?> GetSavedMetadataAsync(string version, CancellationToken cancellationToken = default)
     {
         string path = Path.Join(_repositoryOptions.DataCenterRawDataPath, version);
@@ -112,9 +92,10 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             await contentStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
-        if (oldLatest != null && string.CompareOrdinal(gameVersion, oldLatest) > 0)
+        if (oldLatest == null || string.CompareOrdinal(gameVersion, oldLatest) > 0)
         {
-            await _mediator.Publish(new LatestVersionChangedNotification { NewLatestVersion = gameVersion }, cancellationToken);
+            _logger.LogInformation("A new version of the raw data files is available: {Version}.", gameVersion);
+            await _mediator.Publish(new LatestVersionChangedNotification { OldLatestVersion = oldLatest, NewLatestVersion = gameVersion }, cancellationToken);
         }
     }
 
