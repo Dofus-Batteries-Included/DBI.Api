@@ -7,6 +7,12 @@ namespace Test.PathFinder.Extensions;
 
 public static class WorldDataProviderMockExtensions
 {
+    public static void SetupNode(this Mock<IWorldDataProvider> worldDataProviderMock, RawWorldGraphNode node)
+    {
+        worldDataProviderMock.Setup(p => p.GetNode(node.Id)).Returns(node);
+        worldDataProviderMock.Setup(p => p.GetNodesInMap(node.MapId)).Returns([node]);
+    }
+
     public static void SetupNodeAndMap(this Mock<IWorldDataProvider> worldDataProviderMock, RawWorldGraphNode node, Map map)
     {
         worldDataProviderMock.Setup(p => p.GetNode(node.Id)).Returns(node);

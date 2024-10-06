@@ -137,4 +137,78 @@ public class PathFinder_GetShortestPath
                 }
             );
     }
+
+    [DataTestMethod]
+    [DynamicData(nameof(GetExpectedTransitionsMinimal), DynamicDataSourceType.Method)]
+    public void ShouldMapStepsProperly(RawWorldGraphEdgeTransition rawTransition, MapTransitionMinimal expectedTransition)
+    {
+        RawWorldGraphNode fromNode = FakeRawWorldGraphNode.Create();
+        RawWorldGraphNode toNode = FakeRawWorldGraphNode.Create();
+        RawWorldGraphNode[] path = [fromNode, toNode];
+
+        RawWorldGraphEdge edge = new() { From = fromNode.Id, To = toNode.Id, Transitions = [rawTransition] };
+
+        _worldDataProviderMock.SetupNode(fromNode);
+        _worldDataProviderMock.SetupNode(toNode);
+        _worldDataProviderMock.SetupEdges(edge);
+
+        _pathFindingStrategyMock.Setup(s => s.ComputePath(fromNode, toNode)).Returns(path);
+
+        Path? result = _pathFinder.GetShortestPath(fromNode, toNode);
+
+        _pathFindingStrategyMock.Verify(s => s.ComputePath(fromNode, toNode));
+
+        result.Should().NotBeNull();
+        PathStep step = result!.Steps.Single();
+        step.Transition.Should().NotBeNull();
+        step.Transition.Should().BeEquivalentTo(expectedTransition, opt => opt.RespectingRuntimeTypes());
+    }
+
+    static IEnumerable<object[]> GetExpectedTransitionsMinimal()
+    {
+        yield return
+        [
+            new RawWorldGraphEdgeTransition { Type = RawWorldGraphEdgeType.Scroll, Direction = RawWorldGraphEdgeDirection.East },
+            new MapScrollTransitionMinimal { Direction = Direction.East }
+        ];
+
+        yield return
+        [
+            new RawWorldGraphEdgeTransition { Type = RawWorldGraphEdgeType.ScrollAction, Direction = RawWorldGraphEdgeDirection.North },
+            new MapScrollTransitionMinimal { Direction = Direction.North }
+        ];
+
+        yield return
+        [
+            new RawWorldGraphEdgeTransition { Type = RawWorldGraphEdgeType.MapAction, Direction = RawWorldGraphEdgeDirection.West },
+            new MapActionTransitionMinimal { Direction = ExtendedDirection.West }
+        ];
+
+        yield return
+        [
+            new RawWorldGraphEdgeTransition { Type = RawWorldGraphEdgeType.Interactive, Direction = RawWorldGraphEdgeDirection.South },
+            new MapInteractiveTransitionMinimal { Direction = ExtendedDirection.South }
+        ];
+
+        // yield return
+        // [
+        //     new RawWorldGraphEdgeTransition { Type = RawWorldGraphEdgeType.NpcAction },
+        //     new MapNpcActionTransitionMinimal()
+        // ];
+    }
+
+    [TestMethod]
+    public void ShouldReturnNullIfStrategyDoesntFindAnyPath()
+    {
+        RawWorldGraphNode fromNode = FakeRawWorldGraphNode.Create();
+        RawWorldGraphNode toNode = FakeRawWorldGraphNode.Create();
+
+        _pathFindingStrategyMock.Setup(s => s.ComputePath(fromNode, toNode)).Returns((IReadOnlyList<RawWorldGraphNode>?)null);
+
+        Path? result = _pathFinder.GetShortestPath(fromNode, toNode);
+
+        _pathFindingStrategyMock.Verify(s => s.ComputePath(fromNode, toNode));
+
+        result.Should().BeNull();
+    }
 }
