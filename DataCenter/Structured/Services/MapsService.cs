@@ -11,8 +11,8 @@ using RawWorldMap = DBI.DataCenter.Raw.Models.RawWorldMap;
 
 namespace DBI.DataCenter.Structured.Services;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class MapsService(
     RawWorldMapsService? rawWorldMapsService,
     RawSuperAreasService? rawSuperAreasService,

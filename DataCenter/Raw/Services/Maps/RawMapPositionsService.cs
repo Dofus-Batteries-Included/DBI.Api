@@ -2,8 +2,8 @@ using DBI.DataCenter.Raw.Models;
 
 namespace DBI.DataCenter.Raw.Services.Maps;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class RawMapPositionsService(IReadOnlyCollection<RawMapPosition> maps)
 {
     readonly Dictionary<long, RawMapPosition> _maps = maps.ToDictionary(map => map.MapId, map => map);

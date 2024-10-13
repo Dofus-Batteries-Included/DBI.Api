@@ -1,7 +1,7 @@
 ﻿namespace DBI.DataCenter.Raw.Models.WorldGraphs;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 /// <summary>
 ///     Type of <c>Core.PathFinding.WorldPathfinding.Transition.m_type</c>
 /// </summary>
