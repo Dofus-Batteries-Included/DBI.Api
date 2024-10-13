@@ -91,6 +91,11 @@ public enum RawDataType
     ItemTypes,
 
     /// <summary>
+    ///     Item super types data
+    /// </summary>
+    ItemSuperTypes,
+
+    /// <summary>
     ///     Evolutive item types data
     /// </summary>
     EvolutiveItemTypes,
