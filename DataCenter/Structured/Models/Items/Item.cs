@@ -23,7 +23,7 @@ public class Item
     /// <summary>
     ///     The unique ID of the item.
     /// </summary>
-    public ushort Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     ///     The level of the item.

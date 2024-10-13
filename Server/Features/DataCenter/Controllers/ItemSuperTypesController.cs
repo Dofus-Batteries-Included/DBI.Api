@@ -26,7 +26,7 @@ public class ItemSuperTypesController(ItemServicesFactory itemServicesFactory) :
     [HttpGet("{superType}/item-types")]
     public async Task<IEnumerable<ItemType>> GetItemTypesInSuperType(ItemSuperType superType, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesService(gameVersion, cancellationToken);
+        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesServiceAsync(gameVersion, cancellationToken);
         return itemTypesService.GetItemTypesInSuperType(superType) ?? throw new NotFoundException($"Could not find item types in version {gameVersion}.");
     }
 
@@ -36,7 +36,7 @@ public class ItemSuperTypesController(ItemServicesFactory itemServicesFactory) :
     [HttpGet("{superType}/items")]
     public async Task<IEnumerable<Item>> GetItemsInSuperType(ItemSuperType superType, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemsService itemsService = await itemServicesFactory.CreateItemsService(gameVersion, cancellationToken);
+        ItemsService itemsService = await itemServicesFactory.CreateItemsServiceAsync(gameVersion, cancellationToken);
         return itemsService.GetItemsInSuperType(superType) ?? throw new NotFoundException($"Could not find items in version {gameVersion}.");
     }
 }

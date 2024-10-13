@@ -45,7 +45,7 @@ public class ItemsService(RawItemTypesService? rawItemTypesService, RawItemsServ
             Description = languagesService?.Get(item.DescriptionId),
             PossibleEffects = item.PossibleEffects.Select(e => e.Cook()).ToArray(),
             Price = item.Price,
-            Weight = item.Weight,
+            Weight = item.RealWeight,
             ItemSetId = item.ItemSetId,
             ItemSetName = itemSet == null ? null : languagesService?.Get(itemSet.NameId),
             TwoHanded = item.TwoHanded,

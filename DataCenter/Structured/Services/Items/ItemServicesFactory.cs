@@ -13,14 +13,14 @@ public class ItemServicesFactory(
     WorldServicesFactory worldServicesFactory
 )
 {
-    public async Task<ItemTypesService> CreateItemTypesService(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
+    public async Task<ItemTypesService> CreateItemTypesServiceAsync(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
         new(
             await rawItemTypesServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await rawEvolutiveItemTypesServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await languagesServiceFactory.CreateLanguagesServiceAsync(gameVersion, cancellationToken)
         );
 
-    public async Task<ItemsService> CreateItemsService(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
+    public async Task<ItemsService> CreateItemsServiceAsync(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
         new(
             await rawItemTypesServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await rawItemsServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
@@ -28,10 +28,10 @@ public class ItemServicesFactory(
             await languagesServiceFactory.CreateLanguagesServiceAsync(gameVersion, cancellationToken)
         );
 
-    public async Task<ItemsRecyclingDataService> CreateItemRecyclingDataService(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
+    public async Task<ItemsRecyclingDataService> CreateItemRecyclingDataServiceAsync(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
         new(
             await rawItemsServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await worldServicesFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken),
-            await CreateItemsService(gameVersion, cancellationToken)
+            await CreateItemsServiceAsync(gameVersion, cancellationToken)
         );
 }

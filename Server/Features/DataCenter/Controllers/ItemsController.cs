@@ -20,7 +20,7 @@ public class ItemsController(ItemServicesFactory itemServicesFactory) : Controll
     [HttpGet]
     public async Task<IEnumerable<Item>> GetItems(string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemsService itemsService = await itemServicesFactory.CreateItemsService(gameVersion, cancellationToken);
+        ItemsService itemsService = await itemServicesFactory.CreateItemsServiceAsync(gameVersion, cancellationToken);
         return itemsService.GetItems() ?? throw new NotFoundException($"Could not find items in version {gameVersion}.");
     }
 
@@ -30,7 +30,7 @@ public class ItemsController(ItemServicesFactory itemServicesFactory) : Controll
     [HttpGet("{itemId:int}")]
     public async Task<Item> GetItem(int itemId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemsService itemsService = await itemServicesFactory.CreateItemsService(gameVersion, cancellationToken);
+        ItemsService itemsService = await itemServicesFactory.CreateItemsServiceAsync(gameVersion, cancellationToken);
         return itemsService.GetItem(itemId) ?? throw new NotFoundException($"Could not find item in version {gameVersion}.");
     }
 
@@ -40,7 +40,7 @@ public class ItemsController(ItemServicesFactory itemServicesFactory) : Controll
     [HttpGet("{itemId:int}/recycling")]
     public async Task<ItemRecyclingData> GetItemRecyclingData(int itemId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemsRecyclingDataService itemsRecyclingDataService = await itemServicesFactory.CreateItemRecyclingDataService(gameVersion, cancellationToken);
+        ItemsRecyclingDataService itemsRecyclingDataService = await itemServicesFactory.CreateItemRecyclingDataServiceAsync(gameVersion, cancellationToken);
         return itemsRecyclingDataService.GetItemRecyclingData(itemId) ?? throw new NotFoundException($"Could not find item in version {gameVersion}.");
     }
 }

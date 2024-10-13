@@ -20,7 +20,7 @@ public class ItemTypesController(ItemServicesFactory itemServicesFactory) : Cont
     [HttpGet]
     public async Task<IEnumerable<ItemType>> GetItemTypes(string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesService(gameVersion, cancellationToken);
+        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesServiceAsync(gameVersion, cancellationToken);
         return itemTypesService.GetItemTypes() ?? throw new NotFoundException($"Could not find item types in version {gameVersion}.");
     }
 
@@ -30,7 +30,7 @@ public class ItemTypesController(ItemServicesFactory itemServicesFactory) : Cont
     [HttpGet("{itemTypeId:int}")]
     public async Task<ItemType> GetItemType(int itemTypeId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesService(gameVersion, cancellationToken);
+        ItemTypesService itemTypesService = await itemServicesFactory.CreateItemTypesServiceAsync(gameVersion, cancellationToken);
         return itemTypesService.GetItemType(itemTypeId) ?? throw new NotFoundException($"Could not find item type in version {gameVersion}.");
     }
 
@@ -40,7 +40,7 @@ public class ItemTypesController(ItemServicesFactory itemServicesFactory) : Cont
     [HttpGet("{itemTypeId:int}/items")]
     public async Task<IEnumerable<Item>> GetItemsInType(int itemTypeId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        ItemsService itemsService = await itemServicesFactory.CreateItemsService(gameVersion, cancellationToken);
+        ItemsService itemsService = await itemServicesFactory.CreateItemsServiceAsync(gameVersion, cancellationToken);
         return itemsService.GetItemsInType(itemTypeId) ?? throw new NotFoundException($"Could not find items in version {gameVersion}.");
     }
 }
