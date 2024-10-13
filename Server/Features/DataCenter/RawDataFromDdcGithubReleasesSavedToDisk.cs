@@ -30,21 +30,21 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 
     public Task<IReadOnlyCollection<string>> GetAvailableVersionsAsync() => Task.FromResult<IReadOnlyCollection<string>>(GetActualVersions().ToList());
 
-    public Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
+    public async Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
     {
-        (IRawDataFile? file, string? errorMessage) = TryGetRawDataFileImpl(version, type);
+        (IRawDataFile? file, string? errorMessage) = await TryGetRawDataFileImpl(version, type, cancellationToken);
         if (file == null)
         {
             throw new NotFoundException(errorMessage);
         }
 
-        return Task.FromResult(file);
+        return file;
     }
 
-    public Task<IRawDataFile?> TryGetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
+    public async Task<IRawDataFile?> TryGetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
     {
-        (IRawDataFile? file, string? _) = TryGetRawDataFileImpl(version, type);
-        return Task.FromResult(file);
+        (IRawDataFile? file, string? _) = await TryGetRawDataFileImpl(version, type, cancellationToken);
+        return file;
     }
 
     public async Task<Metadata?> GetSavedMetadataAsync(string version, CancellationToken cancellationToken = default)
@@ -110,7 +110,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         await _mediator.Publish(new NewVersionAvailableNotification { OldLatestVersion = oldLatest, NewLatestVersion = newLatest, NewVersion = gameVersion }, cancellationToken);
     }
 
-    (IRawDataFile? file, string? ErrorMessage) TryGetRawDataFileImpl(string version, RawDataType type)
+    async Task<(IRawDataFile? file, string? ErrorMessage)> TryGetRawDataFileImpl(string version, RawDataType type, CancellationToken cancellationToken)
     {
         string? actualVersion = GetActualVersion(version);
         if (actualVersion == null)
@@ -124,19 +124,25 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             return (null, $"Could not find data for version {actualVersion}.");
         }
 
+        Metadata? metadata = await ReadDdcMetadataAsync(versionPath, cancellationToken);
+        if (metadata == null)
+        {
+            return (null, $"Could not find data for version {actualVersion}.");
+        }
+
         string filename = GetFilename(type);
 
         string compressedFileName = $"{Path.GetFileNameWithoutExtension(filename)}.bin";
         string compressedFilePath = Path.Join(versionPath, compressedFileName);
         if (Path.Exists(compressedFilePath))
         {
-            return (new BrotliCompressedFile(compressedFilePath, actualVersion), null);
+            return (new BrotliCompressedFile(compressedFilePath, actualVersion, metadata.DdcVersion), null);
         }
 
         string path = Path.Join(versionPath, filename);
         if (Path.Exists(path))
         {
-            return (new File(path, actualVersion), null);
+            return (new File(path, actualVersion, metadata.DdcVersion), null);
         }
 
         return (null, $"Could not find data for {type} in version {version}.");
@@ -179,7 +185,8 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
 
     async Task WriteDdcMetadataAsync(DdcRelease release, string directory, CancellationToken cancellationToken)
     {
-        Metadata metadata = new() { ReleaseUrl = release.HtmlUrl, ReleaseName = release.Name };
+        string? ddcVersion = release.Name.StartsWith('v') ? release.Name[1..] : null;
+        Metadata metadata = new() { ReleaseUrl = release.HtmlUrl, ReleaseName = release.Name, DdcVersion = ddcVersion };
         string ddcMetadataPath = Path.Join(directory, "ddc-metadata.json");
         await using FileStream ddcMetadataStream = System.IO.File.OpenWrite(ddcMetadataPath);
         await JsonSerializer.SerializeAsync(ddcMetadataStream, metadata, _ddcMetadataJsonSerializerOptions, cancellationToken);
@@ -201,15 +208,17 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
     {
         readonly string _filepath;
 
-        public File(string filepath, string version)
+        public File(string filepath, string gameVersion, string? ddcVersion)
         {
             _filepath = filepath;
-            Version = version;
+            GameVersion = gameVersion;
+            DdcVersion = ddcVersion;
             Name = Path.GetFileName(filepath);
         }
 
         public string Name { get; }
-        public string Version { get; }
+        public string GameVersion { get; }
+        public string? DdcVersion { get; }
         public string ContentType { get; } = "application/json";
         public Stream OpenRead() => System.IO.File.OpenRead(_filepath);
     }
@@ -218,15 +227,17 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
     {
         readonly string _filepath;
 
-        public BrotliCompressedFile(string filepath, string version)
+        public BrotliCompressedFile(string filepath, string gameVersion, string? ddcVersion)
         {
             _filepath = filepath;
-            Version = version;
+            GameVersion = gameVersion;
+            DdcVersion = ddcVersion;
             Name = $"{Path.GetFileNameWithoutExtension(filepath)}.json";
         }
 
         public string Name { get; }
-        public string Version { get; }
+        public string GameVersion { get; }
+        public string? DdcVersion { get; }
         public string ContentType { get; } = "application/json";
         public Stream OpenRead() => new BrotliStream(System.IO.File.OpenRead(_filepath), CompressionMode.Decompress, false);
     }
@@ -250,6 +261,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
     {
         public required string ReleaseUrl { get; init; }
         public required string ReleaseName { get; init; }
+        public string? DdcVersion { get; init; }
     }
 
     [GeneratedRegex(

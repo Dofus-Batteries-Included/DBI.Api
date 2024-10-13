@@ -11,9 +11,14 @@ public interface IRawDataFile
     string Name { get; }
 
     /// <summary>
-    ///     The version of the data
+    ///     The version of the game that corresponds to the data file
     /// </summary>
-    string Version { get; }
+    string GameVersion { get; }
+
+    /// <summary>
+    ///     The version of the DDC application that extracted the data
+    /// </summary>
+    string? DdcVersion { get; }
 
     /// <summary>
     ///     The content type of the data
