@@ -1,5 +1,5 @@
 ﻿using DBI.DataCenter.Structured.Models.Maps;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -14,13 +14,13 @@ namespace DBI.Server.Features.DataCenter.Controllers;
 [ApiController]
 public class SubAreasController : ControllerBase
 {
-    readonly WorldServiceFactory _worldServiceFactory;
+    readonly WorldServicesFactory _worldServicesFactory;
 
     /// <summary>
     /// </summary>
-    public SubAreasController(WorldServiceFactory worldServiceFactory)
+    public SubAreasController(WorldServicesFactory worldServicesFactory)
     {
-        _worldServiceFactory = worldServiceFactory;
+        _worldServicesFactory = worldServicesFactory;
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class SubAreasController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<SubArea>> GetSubArea(string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        SubAreasService worldService = await _worldServiceFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
+        SubAreasService worldService = await _worldServicesFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
         return worldService.GetSubAreas() ?? throw new NotFoundException($"Could not find sub areas in version {gameVersion}.");
     }
 
@@ -39,7 +39,7 @@ public class SubAreasController : ControllerBase
     [HttpGet("{subAreaId:int}")]
     public async Task<SubArea> GetSubArea(int subAreaId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        SubAreasService worldService = await _worldServiceFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
+        SubAreasService worldService = await _worldServicesFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
         return worldService.GetSubArea(subAreaId) ?? throw new NotFoundException($"Could not find sub area in version {gameVersion}.");
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DBI.DataCenter.Structured.Models.Maps;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -14,13 +14,13 @@ namespace DBI.Server.Features.DataCenter.Controllers;
 [ApiController]
 public class SuperAreasController : ControllerBase
 {
-    readonly WorldServiceFactory _worldServiceFactory;
+    readonly WorldServicesFactory _worldServicesFactory;
 
     /// <summary>
     /// </summary>
-    public SuperAreasController(WorldServiceFactory worldServiceFactory)
+    public SuperAreasController(WorldServicesFactory worldServicesFactory)
     {
-        _worldServiceFactory = worldServiceFactory;
+        _worldServicesFactory = worldServicesFactory;
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class SuperAreasController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<SuperArea>> GetSuperArea(string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        SuperAreasService superAreasService = await _worldServiceFactory.CreateSuperAreasServiceAsync(gameVersion, cancellationToken);
+        SuperAreasService superAreasService = await _worldServicesFactory.CreateSuperAreasServiceAsync(gameVersion, cancellationToken);
         return superAreasService.GetSuperAreas() ?? throw new NotFoundException($"Could not find super areas in version: {gameVersion}.");
     }
 
@@ -39,7 +39,7 @@ public class SuperAreasController : ControllerBase
     [HttpGet("{superAreaId:int}")]
     public async Task<SuperArea> GetSuperArea(int superAreaId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        SuperAreasService superAreasService = await _worldServiceFactory.CreateSuperAreasServiceAsync(gameVersion, cancellationToken);
+        SuperAreasService superAreasService = await _worldServicesFactory.CreateSuperAreasServiceAsync(gameVersion, cancellationToken);
         return superAreasService.GetSuperArea(superAreaId) ?? throw new NotFoundException($"Could not find super area in version: {gameVersion}.");
     }
 
@@ -49,7 +49,7 @@ public class SuperAreasController : ControllerBase
     [HttpGet("{superAreaId:int}/areas")]
     public async Task<IEnumerable<Area>> GetAreasInSuperArea(int superAreaId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        AreasService areasService = await _worldServiceFactory.CreateAreasServiceAsync(gameVersion, cancellationToken);
+        AreasService areasService = await _worldServicesFactory.CreateAreasServiceAsync(gameVersion, cancellationToken);
         return areasService.GetAreasInSuperArea(superAreaId) ?? throw new NotFoundException($"Could not find areas in version: {gameVersion}.");
     }
 
@@ -59,7 +59,7 @@ public class SuperAreasController : ControllerBase
     [HttpGet("{superAreaId:int}/sub-areas")]
     public async Task<IEnumerable<SubArea>> GetSubAreasInSuperArea(int superAreaId, string gameVersion = "latest", CancellationToken cancellationToken = default)
     {
-        SubAreasService subAreasService = await _worldServiceFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
+        SubAreasService subAreasService = await _worldServicesFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken);
         return subAreasService.GetSubAreasInSuperArea(superAreaId) ?? throw new NotFoundException($"Could not find sub areas in version: {gameVersion}.");
     }
 }

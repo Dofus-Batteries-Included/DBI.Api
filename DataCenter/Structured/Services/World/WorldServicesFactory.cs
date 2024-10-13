@@ -2,12 +2,12 @@
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 
-namespace DBI.DataCenter.Structured.Services;
+namespace DBI.DataCenter.Structured.Services.World;
 
 /// <summary>
 ///     Create instances of services for world data.
 /// </summary>
-public class WorldServiceFactory(
+public class WorldServicesFactory(
     RawMapsServiceFactory rawMapsServiceFactory,
     RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
     RawSubAreasServiceFactory rawSubAreasServiceFactory,

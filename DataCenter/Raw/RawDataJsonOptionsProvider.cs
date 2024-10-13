@@ -15,7 +15,10 @@ public class RawDataJsonOptionsProvider
 
     readonly JsonSerializerOptions _postZeroNineKebabCaseOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
+        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) },
+        NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals
     };
 
     /// <inheritdoc cref="GetJsonSerializerOptions(string,DBI.DataCenter.Raw.Models.RawDataType)" />

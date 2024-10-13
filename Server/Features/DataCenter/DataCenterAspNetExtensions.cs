@@ -1,10 +1,17 @@
 ﻿using DBI.DataCenter.Raw;
+using DBI.DataCenter.Raw.Services.Effects;
 using DBI.DataCenter.Raw.Services.I18N;
 using DBI.DataCenter.Raw.Services.Items;
+using DBI.DataCenter.Raw.Services.Jobs;
 using DBI.DataCenter.Raw.Services.Maps;
+using DBI.DataCenter.Raw.Services.Monsters;
 using DBI.DataCenter.Raw.Services.PointOfInterests;
+using DBI.DataCenter.Raw.Services.Recipes;
+using DBI.DataCenter.Raw.Services.Skills;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.Items;
+using DBI.DataCenter.Structured.Services.Jobs;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.Server.Common.OpenApi;
 using DBI.Server.Infrastructure;
 using MediatR;
@@ -39,10 +46,18 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawItemsServiceFactory>();
         services.AddSingleton<RawItemSetsServiceFactory>();
         services.AddSingleton<RawItemTypesServiceFactory>();
-        services.AddSingleton<RawItemSuperTypesServiceFactory>();
         services.AddSingleton<RawEvolutiveItemTypesServiceFactory>();
+        services.AddSingleton<RawEffectsServiceFactory>();
+        services.AddSingleton<RawJobsServiceFactory>();
+        services.AddSingleton<RawRecipesServiceFactory>();
+        services.AddSingleton<RawSkillNamesServiceFactory>();
+        services.AddSingleton<RawMonstersServiceFactory>();
+        services.AddSingleton<RawMonsterRacesServiceFactory>();
+        services.AddSingleton<RawMonsterSuperRacesServiceFactory>();
 
-        services.AddSingleton<WorldServiceFactory>();
+        services.AddSingleton<WorldServicesFactory>();
+        services.AddSingleton<JobServicesFactory>();
+        services.AddSingleton<ItemServicesFactory>();
 
         services.AddHostedService<DownloadDataFromDdcGithubReleases>();
 

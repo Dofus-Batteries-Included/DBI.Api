@@ -5,15 +5,15 @@ using DBI.DataCenter.Raw.Models.Spells;
 namespace DBI.DataCenter.Raw.Models.Effects;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(RawEffectInstanceString), "EffectInstanceString")]
-[JsonDerivedType(typeof(RawEffectInstanceDice), "EffectInstanceDice")]
-[JsonDerivedType(typeof(RawEffectInstanceInteger), "EffectInstanceInteger")]
-[JsonDerivedType(typeof(RawEffectInstanceMinMax), "EffectInstanceMinMax")]
-[JsonDerivedType(typeof(RawEffectInstanceDate), "EffectInstanceDate")]
-[JsonDerivedType(typeof(RawEffectInstanceDuration), "EffectInstanceDuration")]
-[JsonDerivedType(typeof(RawEffectInstanceLadder), "EffectInstanceLadder")]
-[JsonDerivedType(typeof(RawEffectInstanceMount), "EffectInstanceMount")]
-[JsonDerivedType(typeof(RawEffectInstanceCreature), "EffectInstanceCreature")]
+[JsonDerivedType(typeof(RawEffectInstanceString), "string")]
+[JsonDerivedType(typeof(RawEffectInstanceDice), "dice")]
+[JsonDerivedType(typeof(RawEffectInstanceInteger), "integer")]
+[JsonDerivedType(typeof(RawEffectInstanceMinMax), "min-max")]
+[JsonDerivedType(typeof(RawEffectInstanceDate), "date")]
+[JsonDerivedType(typeof(RawEffectInstanceDuration), "duration")]
+[JsonDerivedType(typeof(RawEffectInstanceLadder), "ladder")]
+[JsonDerivedType(typeof(RawEffectInstanceMount), "mount")]
+[JsonDerivedType(typeof(RawEffectInstanceCreature), "creature")]
 public class RawEffectInstance
 {
     public RawActionId EffectId { get; set; }

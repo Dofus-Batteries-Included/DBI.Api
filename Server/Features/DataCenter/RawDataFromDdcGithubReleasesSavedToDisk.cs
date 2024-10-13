@@ -175,7 +175,6 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.Items => "items.json",
             RawDataType.ItemSets => "item-sets.json",
             RawDataType.ItemTypes => "item-types.json",
-            RawDataType.ItemSuperTypes => "item-super-types.json",
             RawDataType.EvolutiveItemTypes => "evolutive-item-types.json",
             RawDataType.Effects => "effects.json",
             RawDataType.Recipes => "recipes.json",
