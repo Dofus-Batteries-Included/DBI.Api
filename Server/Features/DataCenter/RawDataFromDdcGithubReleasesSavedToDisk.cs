@@ -177,6 +177,13 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.ItemTypes => "item-types.json",
             RawDataType.ItemSuperTypes => "item-super-types.json",
             RawDataType.EvolutiveItemTypes => "evolutive-item-types.json",
+            RawDataType.Effects => "effects.json",
+            RawDataType.Recipes => "recipes.json",
+            RawDataType.Jobs => "jobs.json",
+            RawDataType.SkillNames => "skill-names.json",
+            RawDataType.Monsters => "monsters.json",
+            RawDataType.MonsterRaces => "monster-races.json",
+            RawDataType.MonsterSuperRaces => "monster-super-races.json",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 
