@@ -88,7 +88,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             _logger.LogDebug("Writing file {Path}...", entryFullPath);
 
 
-            await using BrotliStream encodeStream = new(System.IO.File.OpenWrite(entryFullPath), CompressionLevel.Optimal, false);
+            await using BrotliStream encodeStream = new(System.IO.File.Open(entryFullPath, FileMode.Create), CompressionLevel.Optimal, false);
             await contentStream.CopyToAsync(encodeStream, cancellationToken);
         }
 
@@ -200,7 +200,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         string? ddcVersion = release.Name.StartsWith('v') ? release.Name[1..] : null;
         Metadata metadata = new() { ReleaseUrl = release.HtmlUrl, ReleaseName = release.Name, DdcVersion = ddcVersion };
         string ddcMetadataPath = Path.Join(directory, "ddc-metadata.json");
-        await using FileStream ddcMetadataStream = System.IO.File.OpenWrite(ddcMetadataPath);
+        await using FileStream ddcMetadataStream = System.IO.File.Open(ddcMetadataPath, FileMode.Create);
         await JsonSerializer.SerializeAsync(ddcMetadataStream, metadata, _ddcMetadataJsonSerializerOptions, cancellationToken);
     }
 
