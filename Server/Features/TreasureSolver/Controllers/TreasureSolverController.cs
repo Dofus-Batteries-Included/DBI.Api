@@ -2,7 +2,7 @@
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.PathFinder;
 using DBI.PathFinder.Builders;
 using DBI.PathFinder.DataProviders;
@@ -25,7 +25,7 @@ namespace DBI.Server.Features.TreasureSolver.Controllers;
 [ApiController]
 public class TreasureSolverController : ControllerBase
 {
-    readonly WorldServiceFactory _worldServiceFactory;
+    readonly WorldServicesFactory _worldServicesFactory;
     readonly RawWorldGraphServiceFactory _rawWorldGraphServiceFactory;
     readonly RawMapsServiceFactory _rawMapsServiceFactory;
     readonly RawMapPositionsServiceFactory _rawMapPositionsServiceFactory;
@@ -37,14 +37,14 @@ public class TreasureSolverController : ControllerBase
         RawWorldGraphServiceFactory rawWorldGraphServiceFactory,
         RawMapsServiceFactory rawMapsServiceFactory,
         RawMapPositionsServiceFactory rawMapPositionsServiceFactory,
-        WorldServiceFactory worldServiceFactory,
+        WorldServicesFactory worldServicesFactory,
         TreasureSolverService solver
     )
     {
         _rawWorldGraphServiceFactory = rawWorldGraphServiceFactory;
         _rawMapsServiceFactory = rawMapsServiceFactory;
         _rawMapPositionsServiceFactory = rawMapPositionsServiceFactory;
-        _worldServiceFactory = worldServiceFactory;
+        _worldServicesFactory = worldServicesFactory;
         _solver = solver;
     }
 
@@ -62,7 +62,7 @@ public class TreasureSolverController : ControllerBase
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
         IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
 
-        MapsService mapsService = await _worldServiceFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServicesFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
 
         NodeFinder nodeFinder = new(worldData);
 

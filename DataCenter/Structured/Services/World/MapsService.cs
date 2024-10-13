@@ -9,7 +9,7 @@ using RawSubArea = DBI.DataCenter.Raw.Models.RawSubArea;
 using RawSuperArea = DBI.DataCenter.Raw.Models.RawSuperArea;
 using RawWorldMap = DBI.DataCenter.Raw.Models.RawWorldMap;
 
-namespace DBI.DataCenter.Structured.Services;
+namespace DBI.DataCenter.Structured.Services.World;
 
 /// <summary>
 /// </summary>

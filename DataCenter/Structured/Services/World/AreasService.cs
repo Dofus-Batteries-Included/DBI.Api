@@ -3,7 +3,7 @@ using DBI.DataCenter.Raw.Services.I18N;
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Structured.Models.Maps;
 
-namespace DBI.DataCenter.Structured.Services;
+namespace DBI.DataCenter.Structured.Services.World;
 
 /// <summary>
 ///     Get areas

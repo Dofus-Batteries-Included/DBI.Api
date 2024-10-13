@@ -242,22 +242,6 @@ public class RawDataController : ControllerBase
     }
 
     /// <summary>
-    ///     Get item super types data
-    /// </summary>
-    /// <remarks>
-    ///     Returns a JSON file.
-    /// </remarks>
-    [HttpGet("item-super-types")]
-    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public async Task<FileResult> GetItemSuperTypes(string gameVersion = "latest")
-    {
-        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.ItemSuperTypes);
-        return File(file.OpenRead(), file.ContentType, file.Name);
-    }
-
-    /// <summary>
     ///     Get evolutive item types data
     /// </summary>
     /// <remarks>

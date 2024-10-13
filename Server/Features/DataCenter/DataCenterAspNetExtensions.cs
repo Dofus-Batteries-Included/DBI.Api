@@ -4,7 +4,8 @@ using DBI.DataCenter.Raw.Services.Items;
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.PointOfInterests;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.Items;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.Server.Common.OpenApi;
 using DBI.Server.Infrastructure;
 using MediatR;
@@ -39,10 +40,10 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawItemsServiceFactory>();
         services.AddSingleton<RawItemSetsServiceFactory>();
         services.AddSingleton<RawItemTypesServiceFactory>();
-        services.AddSingleton<RawItemSuperTypesServiceFactory>();
         services.AddSingleton<RawEvolutiveItemTypesServiceFactory>();
 
-        services.AddSingleton<WorldServiceFactory>();
+        services.AddSingleton<WorldServicesFactory>();
+        services.AddSingleton<ItemServicesFactory>();
 
         services.AddHostedService<DownloadDataFromDdcGithubReleases>();
 

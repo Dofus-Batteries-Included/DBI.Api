@@ -11,6 +11,6 @@ public class RawEvolutiveItemTypesService(IReadOnlyCollection<RawEvolutiveItemTy
         evolutiveItemType => evolutiveItemType
     );
 
-    public RawEvolutiveItemType? GetEvolutiveItemType(ushort evolutiveItemTypeId) => _evolutiveItemTypes.GetValueOrDefault(evolutiveItemTypeId);
+    public RawEvolutiveItemType? GetEvolutiveItemType(int evolutiveItemTypeId) => _evolutiveItemTypes.GetValueOrDefault(evolutiveItemTypeId);
     public IEnumerable<RawEvolutiveItemType> GetEvolutiveItemTypes() => _evolutiveItemTypes.Values;
 }

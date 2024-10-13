@@ -2,7 +2,7 @@
 using DBI.DataCenter.Raw.Services.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 
-namespace DBI.DataCenter.Structured.Services;
+namespace DBI.DataCenter.Structured.Services.World;
 
 /// <summary>
 ///     Get world graph data

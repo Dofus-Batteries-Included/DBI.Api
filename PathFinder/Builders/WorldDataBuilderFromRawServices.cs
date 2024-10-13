@@ -1,6 +1,6 @@
 ﻿using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
-using DBI.DataCenter.Structured.Services;
+using DBI.DataCenter.Structured.Services.World;
 using DBI.PathFinder.DataProviders;
 
 namespace DBI.PathFinder.Builders;

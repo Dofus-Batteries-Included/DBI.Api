@@ -8,6 +8,6 @@ public class RawItemTypesService(IReadOnlyCollection<RawItemType> itemTypes)
 {
     readonly Dictionary<int, RawItemType> _itemTypes = itemTypes.ToDictionary(itemType => itemType.Id, itemType => itemType);
 
-    public RawItemType? GetItemType(ushort itemTypeId) => _itemTypes.GetValueOrDefault(itemTypeId);
+    public RawItemType? GetItemType(int itemTypeId) => _itemTypes.GetValueOrDefault(itemTypeId);
     public IEnumerable<RawItemType> GetItemTypes() => _itemTypes.Values;
 }

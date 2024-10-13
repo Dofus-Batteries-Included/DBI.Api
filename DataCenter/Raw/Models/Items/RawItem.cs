@@ -6,8 +6,8 @@ public class RawItem
 {
     public ushort Id { get; set; }
     public byte Level { get; set; }
-    public uint NameId { get; set; }
-    public uint DescriptionId { get; set; }
+    public int NameId { get; set; }
+    public int DescriptionId { get; set; }
     public int ItemTypeId { get; set; }
     public IReadOnlyList<RawEffectInstance> PossibleEffects { get; set; } = [];
     public float Price { get; set; }
