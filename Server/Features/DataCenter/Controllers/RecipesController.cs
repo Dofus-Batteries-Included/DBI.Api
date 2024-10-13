@@ -24,6 +24,16 @@ public class RecipesController : ControllerBase
     }
 
     /// <summary>
+    ///     Get recipes
+    /// </summary>
+    [HttpGet]
+    public async Task<IEnumerable<Recipe>> GetRecipes(string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        RecipesService recipesService = await _jobServicesFactory.CreateRecipesServiceAsync(gameVersion, cancellationToken);
+        return recipesService.GetRecipes() ?? throw new NotFoundException($"Could not find recipes in version {gameVersion}.");
+    }
+
+    /// <summary>
     ///     Get recipes of job
     /// </summary>
     [HttpGet("jobs/{jobId:int}")]
