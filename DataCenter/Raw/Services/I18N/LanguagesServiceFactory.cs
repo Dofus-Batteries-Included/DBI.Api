@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using DBI.DataCenter.Raw.Models;
+﻿using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Services.Internal;
 using DBI.DataCenter.Structured.Models.I18N;
 
@@ -15,13 +14,13 @@ public class LanguagesServiceFactory
     readonly LanguageServiceFactory _deLanguageFactory;
     readonly LanguageServiceFactory _ptLanguageFactory;
 
-    public LanguagesServiceFactory(IRawDataRepository rawDataRepository)
+    public LanguagesServiceFactory(IRawDataRepository rawDataRepository, RawDataJsonOptionsProvider rawDataJsonOptionsProvider)
     {
-        _frLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NFr);
-        _enLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEn);
-        _esLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEs);
-        _deLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NDe);
-        _ptLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NPt);
+        _frLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NFr, rawDataJsonOptionsProvider);
+        _enLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEn, rawDataJsonOptionsProvider);
+        _esLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NEs, rawDataJsonOptionsProvider);
+        _deLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NDe, rawDataJsonOptionsProvider);
+        _ptLanguageFactory = new LanguageServiceFactory(rawDataRepository, RawDataType.I18NPt, rawDataJsonOptionsProvider);
     }
 
     public async Task<LanguagesService> CreateLanguagesServiceAsync(string version = "latest", CancellationToken cancellationToken = default) =>
@@ -34,15 +33,10 @@ public class LanguagesServiceFactory
             Portuguese = await _ptLanguageFactory.TryCreateServiceAsync(version, cancellationToken)
         };
 
-    class LanguageServiceFactory : ParsedDataServiceFactory<LanguageService>
+    class LanguageServiceFactory(IRawDataRepository rawDataRepository, RawDataType dataType, RawDataJsonOptionsProvider rawDataJsonOptionsProvider)
+        : ParsedDataServiceFactory<LanguageService, LocalizationTable>(rawDataRepository, dataType, rawDataJsonOptionsProvider)
     {
-        readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-
-        public LanguageServiceFactory(IRawDataRepository rawDataRepository, RawDataType dataType) : base(rawDataRepository, dataType)
-        {
-        }
-
-        protected override async Task<LanguageService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
+        protected override LanguageService? CreateServiceImpl(LocalizationTable data, CancellationToken cancellationToken)
         {
             string languageCode = DataType switch
             {
@@ -54,9 +48,7 @@ public class LanguagesServiceFactory
                 _ => throw new ArgumentOutOfRangeException(nameof(DataType), DataType, null)
             };
 
-            await using Stream stream = file.OpenRead();
-            LocalizationTable? data = await JsonSerializer.DeserializeAsync<LocalizationTable>(stream, _jsonSerializerOptions, cancellationToken);
-            return data == null ? null : new LanguageService(languageCode, data.Entries);
+            return new LanguageService(languageCode, data.Entries);
         }
     }
 }

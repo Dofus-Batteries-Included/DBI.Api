@@ -1,23 +1,12 @@
-﻿using System.Text.Json;
-using DBI.DataCenter.Raw.Models;
+﻿using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Services.Internal;
 
 namespace DBI.DataCenter.Raw.Services.Maps;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-public class RawAreasServiceFactory : ParsedDataServiceFactory<RawAreasService>
+/// <summary>
+/// </summary>
+public class RawAreasServiceFactory(IRawDataRepository rawDataRepository, RawDataJsonOptionsProvider rawDataJsonOptionsProvider)
+    : ParsedDataServiceFactory<RawAreasService, RawArea[]>(rawDataRepository, RawDataType.Areas, rawDataJsonOptionsProvider)
 {
-    readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-
-    public RawAreasServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.Areas)
-    {
-    }
-
-    protected override async Task<RawAreasService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
-    {
-        await using Stream stream = file.OpenRead();
-        RawArea[]? data = await JsonSerializer.DeserializeAsync<RawArea[]>(stream, _jsonSerializerOptions, cancellationToken);
-        return data == null ? null : new RawAreasService(data);
-    }
+    protected override RawAreasService? CreateServiceImpl(RawArea[] data, CancellationToken cancellationToken) => new(data);
 }
