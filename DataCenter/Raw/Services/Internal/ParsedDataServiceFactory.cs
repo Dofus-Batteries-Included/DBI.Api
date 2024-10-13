@@ -68,7 +68,9 @@ public abstract class ParsedDataServiceFactory<TService, TData>
             return (actualVersion, default);
         }
 
-        JsonSerializerOptions jsonSerializerOptions = _rawDataJsonOptionsProvider.GetJsonSerializerOptions(actualVersion, DataType);
+        JsonSerializerOptions jsonSerializerOptions = file.DdcVersion == null
+            ? _rawDataJsonOptionsProvider.GetJsonSerializerOptions(actualVersion, DataType)
+            : _rawDataJsonOptionsProvider.GetJsonSerializerOptions(file.DdcVersion, actualVersion, DataType);
 
         await using Stream stream = file.OpenRead();
         TData? data = await JsonSerializer.DeserializeAsync<TData>(stream, jsonSerializerOptions, cancellationToken);
