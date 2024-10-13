@@ -172,6 +172,11 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             RawDataType.SubAreas => "sub-areas.json",
             RawDataType.Maps => "maps.json",
             RawDataType.WorldMaps => "world-maps.json",
+            RawDataType.Items => "items.json",
+            RawDataType.ItemSets => "item-sets.json",
+            RawDataType.ItemTypes => "item-types.json",
+            RawDataType.ItemSuperTypes => "item-super-types.json",
+            RawDataType.EvolutiveItemTypes => "evolutive-item-types.json",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 

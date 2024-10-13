@@ -2,12 +2,12 @@
 
 namespace DBI.DataCenter.Raw.Services.Maps;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-public class RawSuperAreasService(IReadOnlyCollection<RawSuperArea> subAreas)
+/// <summary>
+/// </summary>
+public class RawSuperAreasService(IReadOnlyCollection<RawSuperArea> superAreas)
 {
-    readonly Dictionary<int, RawSuperArea> _subAreas = subAreas.ToDictionary(map => map.Id, map => map);
+    readonly Dictionary<int, RawSuperArea> _superAreas = superAreas.ToDictionary(superArea => superArea.Id, superArea => superArea);
 
-    public RawSuperArea? GetSuperArea(int subAreaId) => _subAreas.GetValueOrDefault(subAreaId);
-    public IEnumerable<RawSuperArea> GetSuperAreas() => _subAreas.Values;
+    public RawSuperArea? GetSuperArea(int superAreaId) => _superAreas.GetValueOrDefault(superAreaId);
+    public IEnumerable<RawSuperArea> GetSuperAreas() => _superAreas.Values;
 }

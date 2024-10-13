@@ -1,5 +1,6 @@
 ﻿using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Services.I18N;
+using DBI.DataCenter.Raw.Services.Items;
 using DBI.DataCenter.Raw.Services.Maps;
 using DBI.DataCenter.Raw.Services.PointOfInterests;
 using DBI.DataCenter.Raw.Services.WorldGraphs;
@@ -35,6 +36,12 @@ static class DataCenterAspNetExtensions
         services.AddSingleton<RawMapPositionsServiceFactory>();
         services.AddSingleton<RawPointOfInterestsServiceFactory>();
         services.AddSingleton<RawWorldGraphServiceFactory>();
+        services.AddSingleton<RawItemsServiceFactory>();
+        services.AddSingleton<RawItemSetsServiceFactory>();
+        services.AddSingleton<RawItemTypesServiceFactory>();
+        services.AddSingleton<RawItemSuperTypesServiceFactory>();
+        services.AddSingleton<RawEvolutiveItemTypesServiceFactory>();
+
         services.AddSingleton<WorldServiceFactory>();
 
         services.AddHostedService<DownloadDataFromDdcGithubReleases>();

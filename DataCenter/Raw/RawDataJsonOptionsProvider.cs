@@ -6,12 +6,14 @@ namespace DBI.DataCenter.Raw;
 
 public class RawDataJsonOptionsProvider
 {
-    readonly JsonSerializerOptions _camelCaseOptions = new()
+    readonly JsonSerializerOptions _preZeroNineDefaultOptions = new() { PropertyNameCaseInsensitive = true };
+
+    readonly JsonSerializerOptions _preZeroNineKebabCaseOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
     };
 
-    readonly JsonSerializerOptions _kebabCaseOptions = new()
+    readonly JsonSerializerOptions _postZeroNineKebabCaseOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
     };
@@ -23,8 +25,8 @@ public class RawDataJsonOptionsProvider
     public JsonSerializerOptions GetJsonSerializerOptions(string gameVersion, RawDataType rawDataType) =>
         rawDataType switch
         {
-            RawDataType.Maps or RawDataType.WorldGraph => _kebabCaseOptions,
-            _ => _camelCaseOptions
+            RawDataType.Maps or RawDataType.WorldGraph => _preZeroNineKebabCaseOptions,
+            _ => _preZeroNineDefaultOptions
         };
 
     /// <summary>
@@ -38,6 +40,6 @@ public class RawDataJsonOptionsProvider
             GetJsonSerializerOptions(gameVersion, rawDataType);
         }
 
-        return _kebabCaseOptions;
+        return _postZeroNineKebabCaseOptions;
     }
 }

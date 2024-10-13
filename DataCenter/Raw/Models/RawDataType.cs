@@ -73,5 +73,30 @@ public enum RawDataType
     /// <summary>
     ///     World maps data
     /// </summary>
-    WorldMaps
+    WorldMaps,
+
+    /// <summary>
+    ///     Items data
+    /// </summary>
+    Items,
+
+    /// <summary>
+    ///     Item sets data
+    /// </summary>
+    ItemSets,
+
+    /// <summary>
+    ///     Item types data
+    /// </summary>
+    ItemTypes,
+
+    /// <summary>
+    ///     Item super types data
+    /// </summary>
+    ItemSuperTypes,
+
+    /// <summary>
+    ///     Evolutive item types data
+    /// </summary>
+    EvolutiveItemTypes
 }

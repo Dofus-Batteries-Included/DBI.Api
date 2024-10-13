@@ -2,8 +2,8 @@
 
 namespace DBI.DataCenter.Raw.Services.WorldGraphs;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class RawWorldGraphService(RawWorldGraph data)
 {
     readonly Dictionary<long, RawWorldGraphNode> _nodes = data.Nodes.ToDictionary(n => n.Id, n => n);

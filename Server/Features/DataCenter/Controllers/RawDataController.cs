@@ -192,4 +192,84 @@ public class RawDataController : ControllerBase
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.WorldMaps);
         return File(file.OpenRead(), file.ContentType, file.Name);
     }
+
+    /// <summary>
+    ///     Get items data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("items")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetItems(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Items);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get item sets data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("item-sets")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetItemSets(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.ItemSets);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get item types data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("item-types")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetItemTypes(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.ItemTypes);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get item super types data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("item-super-types")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetItemSuperTypes(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.ItemSuperTypes);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get evolutive item types data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("evolutive-item-types")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetEvolutiveItemTypes(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.EvolutiveItemTypes);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
 }

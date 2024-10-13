@@ -1,7 +1,7 @@
 ﻿namespace DBI.DataCenter.Raw.Models.WorldGraphs;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class RawWorldGraph
 {
     public IReadOnlyCollection<RawWorldGraphNode> Nodes { get; set; } = [];

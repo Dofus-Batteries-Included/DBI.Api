@@ -70,7 +70,7 @@ public class FindCluesService
     public async Task<IReadOnlyCollection<Clue>> FindCluesAtPositionAsync(int posX, int posY)
     {
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync();
-        long[] mapIds = rawMapPositionsService.GetMaps().Where(m => m.PosX == posX && m.PosY == posY).Select(m => m.MapId).ToArray();
+        long[] mapIds = rawMapPositionsService.GetMapPositions().Where(m => m.PosX == posX && m.PosY == posY).Select(m => m.MapId).ToArray();
 
         List<ClueRecord> results = [];
         foreach (long mapId in mapIds)

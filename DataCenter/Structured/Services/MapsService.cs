@@ -11,8 +11,8 @@ using RawWorldMap = DBI.DataCenter.Raw.Models.RawWorldMap;
 
 namespace DBI.DataCenter.Structured.Services;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class MapsService(
     RawWorldMapsService? rawWorldMapsService,
     RawSuperAreasService? rawSuperAreasService,
@@ -63,7 +63,7 @@ public class MapsService(
     public Map? GetMap(long mapId)
     {
         RawMap? rawMap = rawMapsService?.GetMap(mapId);
-        RawMapPosition? rawMapPosition = rawMapPositionsService?.GetMap(mapId);
+        RawMapPosition? rawMapPosition = rawMapPositionsService?.GetMapPosition(mapId);
         return rawMap == null || rawMapPosition == null ? null : Cook(rawMapPosition, rawMap);
     }
 
@@ -127,7 +127,7 @@ public class MapsService(
             yield break;
         }
 
-        foreach (RawMapPosition rawMapPosition in rawMapPositionsService.GetMaps())
+        foreach (RawMapPosition rawMapPosition in rawMapPositionsService.GetMapPositions())
         {
             RawMap? rawMap = rawMapsService.GetMap(rawMapPosition.MapId);
             if (rawMap != null)

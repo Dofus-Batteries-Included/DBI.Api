@@ -4,8 +4,8 @@ using DBI.DataCenter.Structured.Models.I18N;
 
 namespace DBI.DataCenter.Raw.Services.I18N;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+/// <summary>
+/// </summary>
 public class LanguagesServiceFactory
 {
     readonly LanguageServiceFactory _frLanguageFactory;

@@ -125,7 +125,7 @@ public class ExportCluesService
     async Task<Dictionary<long, FileMap>> GetMapsAsync()
     {
         RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync();
-        var maps = rawMapPositionsService.GetMaps().Select(m => new { m.MapId, m.PosX, m.PosY }).ToArray();
+        var maps = rawMapPositionsService.GetMapPositions().Select(m => new { m.MapId, m.PosX, m.PosY }).ToArray();
         Dictionary<long, List<ClueRecord>> clues = new();
         foreach (IClueRecordsSource source in GetDataSources())
         {

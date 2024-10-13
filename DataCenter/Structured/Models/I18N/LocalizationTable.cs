@@ -2,6 +2,6 @@
 
 class LocalizationTable
 {
-    public string LanguageCode { get; init; } = "";
+    public string LanguageCode { get; init; } = string.Empty;
     public Dictionary<int, string> Entries { get; init; } = new();
 }

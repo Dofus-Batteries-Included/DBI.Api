@@ -21,5 +21,5 @@ static class MetadataVersionExtensions
     public static bool IsDebug(this SemVersion version) => version.MetadataIdentifiers.Any(m => string.Equals(m.Value, "debug", StringComparison.InvariantCultureIgnoreCase));
 
     public static string PrereleaseIdentifier(this SemVersion version) =>
-        string.IsNullOrWhiteSpace(version.Prerelease) ? "" : version.Prerelease[..version.Prerelease.IndexOf('.')];
+        string.IsNullOrWhiteSpace(version.Prerelease) ? string.Empty : version.Prerelease[..version.Prerelease.IndexOf('.')];
 }
