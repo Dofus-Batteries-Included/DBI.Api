@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  dbi_api:
+    build:
+      context: "D:\\source\\repos\\DofusBatteriesIncluded\\DBI.Api"
+      dockerfile: "Server/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/DBI.Server.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "dbi_api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\lahki\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
+    - "C:\\Users\\lahki\\.nuget\\packages:/root/.nuget/packages"
+    - "D:\\source\\repos\\DofusBatteriesIncluded\\DBI.Api\\Server:/app:rw"
+    - "D:\\source\\repos\\DofusBatteriesIncluded\\DBI.Api:/src:rw"
+    working_dir: "/app"
