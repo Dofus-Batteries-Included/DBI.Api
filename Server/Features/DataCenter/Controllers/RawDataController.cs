@@ -272,4 +272,116 @@ public class RawDataController : ControllerBase
         IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.EvolutiveItemTypes);
         return File(file.OpenRead(), file.ContentType, file.Name);
     }
+
+    /// <summary>
+    ///     Get effects data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("effects")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetEffects(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Effects);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get recipes data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("recipes")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetRecipes(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Recipes);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get jobs data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("jobs")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetJobs(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Jobs);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get skill names data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("skill-names")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetSkillNames(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.SkillNames);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get monsters data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("monsters")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetMonsters(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.Monsters);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get monster races data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("monster-races")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetMonsterRaces(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.MonsterRaces);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
+
+    /// <summary>
+    ///     Get monster super races data
+    /// </summary>
+    /// <remarks>
+    ///     Returns a JSON file.
+    /// </remarks>
+    [HttpGet("monster-super-races")]
+    [ProducesResponseType<FileResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<FileResult> GetMonsterSuperRaces(string gameVersion = "latest")
+    {
+        IRawDataFile file = await _repository.GetRawDataFileAsync(gameVersion, RawDataType.MonsterSuperRaces);
+        return File(file.OpenRead(), file.ContentType, file.Name);
+    }
 }
