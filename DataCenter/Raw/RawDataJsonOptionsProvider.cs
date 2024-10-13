@@ -16,10 +16,18 @@ public class RawDataJsonOptionsProvider
         PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
     };
 
-    public JsonSerializerOptions GetJsonSerializerOptions(string version, RawDataType rawDataType) =>
-        rawDataType switch
+    public JsonSerializerOptions GetJsonSerializerOptions(string version, RawDataType rawDataType)
+    {
+        if (Version.TryParse(version, out Version? versionParsed) && versionParsed < new Version(0, 9))
         {
-            RawDataType.Maps or RawDataType.WorldGraph => _kebabCaseOptions,
-            _ => _camelCaseOptions
-        };
+            // old behavior
+            return rawDataType switch
+            {
+                RawDataType.Maps or RawDataType.WorldGraph => _kebabCaseOptions,
+                _ => _camelCaseOptions
+            };
+        }
+
+        return _kebabCaseOptions;
+    }
 }
