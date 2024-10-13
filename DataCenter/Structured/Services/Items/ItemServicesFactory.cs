@@ -1,5 +1,6 @@
 ﻿using DBI.DataCenter.Raw.Services.I18N;
 using DBI.DataCenter.Raw.Services.Items;
+using DBI.DataCenter.Structured.Services.World;
 
 namespace DBI.DataCenter.Structured.Services.Items;
 
@@ -8,7 +9,8 @@ public class ItemServicesFactory(
     RawItemTypesServiceFactory rawItemTypesServiceFactory,
     RawItemsServiceFactory rawItemsServiceFactory,
     RawItemSetsServiceFactory rawItemSetsServiceFactory,
-    LanguagesServiceFactory languagesServiceFactory
+    LanguagesServiceFactory languagesServiceFactory,
+    WorldServicesFactory worldServicesFactory
 )
 {
     public async Task<ItemTypesService> CreateItemTypesService(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
@@ -24,5 +26,12 @@ public class ItemServicesFactory(
             await rawItemsServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await rawItemSetsServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
             await languagesServiceFactory.CreateLanguagesServiceAsync(gameVersion, cancellationToken)
+        );
+
+    public async Task<ItemsRecyclingDataService> CreateItemRecyclingDataService(string gameVersion = "latest", CancellationToken cancellationToken = default) =>
+        new(
+            await rawItemsServiceFactory.TryCreateServiceAsync(gameVersion, cancellationToken),
+            await worldServicesFactory.CreateSubAreasServiceAsync(gameVersion, cancellationToken),
+            await CreateItemsService(gameVersion, cancellationToken)
         );
 }

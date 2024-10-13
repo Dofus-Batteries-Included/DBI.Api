@@ -33,4 +33,14 @@ public class ItemsController(ItemServicesFactory itemServicesFactory) : Controll
         ItemsService itemsService = await itemServicesFactory.CreateItemsService(gameVersion, cancellationToken);
         return itemsService.GetItem(itemId) ?? throw new NotFoundException($"Could not find item in version {gameVersion}.");
     }
+
+    /// <summary>
+    ///     Get item recycling data
+    /// </summary>
+    [HttpGet("{itemId:int}/recycling")]
+    public async Task<ItemRecyclingData> GetItemRecyclingData(int itemId, string gameVersion = "latest", CancellationToken cancellationToken = default)
+    {
+        ItemsRecyclingDataService itemsRecyclingDataService = await itemServicesFactory.CreateItemRecyclingDataService(gameVersion, cancellationToken);
+        return itemsRecyclingDataService.GetItemRecyclingData(itemId) ?? throw new NotFoundException($"Could not find item in version {gameVersion}.");
+    }
 }
