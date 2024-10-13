@@ -86,7 +86,7 @@ public class ExportCluesService
                 Directory.CreateDirectory(filepath);
             }
 
-            await using FileStream writeStream = System.IO.File.OpenWrite(path);
+            await using FileStream writeStream = System.IO.File.Open(path, FileMode.Create);
             await JsonSerializer.SerializeAsync(writeStream, content, _serializerOptions);
 
             _logger.LogInformation("Saved export result at {Path}.", path);

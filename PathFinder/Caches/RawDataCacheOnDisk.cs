@@ -72,6 +72,18 @@ public class RawDataCacheOnDisk : IRawDataCache
             RawDataType.SubAreas => "sub-areas.bin",
             RawDataType.Maps => "maps.bin",
             RawDataType.WorldMaps => "world-maps.bin",
+            RawDataType.Items => "items.bin",
+            RawDataType.ItemSets => "item-sets.bin",
+            RawDataType.ItemTypes => "item-types.bin",
+            RawDataType.ItemSuperTypes => "item-super-types.bin",
+            RawDataType.EvolutiveItemTypes => "evolutive-item-types.bin",
+            RawDataType.Effects => "effects.bin",
+            RawDataType.Recipes => "recipes.bin",
+            RawDataType.Jobs => "jobs.bin",
+            RawDataType.SkillNames => "skill-names.bin",
+            RawDataType.Monsters => "monsters.bin",
+            RawDataType.MonsterRaces => "monster-races.bin",
+            RawDataType.MonsterSuperRaces => "monster-super-races.bin",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 }

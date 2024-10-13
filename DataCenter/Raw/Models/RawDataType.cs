@@ -93,5 +93,40 @@ public enum RawDataType
     /// <summary>
     ///     Evolutive item types data
     /// </summary>
-    EvolutiveItemTypes
+    EvolutiveItemTypes,
+
+    /// <summary>
+    ///     Effects data
+    /// </summary>
+    Effects,
+
+    /// <summary>
+    ///     Recipes data
+    /// </summary>
+    Recipes,
+
+    /// <summary>
+    ///     Jobs data
+    /// </summary>
+    Jobs,
+
+    /// <summary>
+    ///     Skill names data
+    /// </summary>
+    SkillNames,
+
+    /// <summary>
+    ///     Monsters data
+    /// </summary>
+    Monsters,
+
+    /// <summary>
+    ///     Monsters races data
+    /// </summary>
+    MonsterRaces,
+
+    /// <summary>
+    ///     Monsters super races data
+    /// </summary>
+    MonsterSuperRaces
 }
