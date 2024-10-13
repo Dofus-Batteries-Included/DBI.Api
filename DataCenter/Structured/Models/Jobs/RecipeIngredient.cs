@@ -10,7 +10,7 @@ public class RecipeIngredient
     /// <summary>
     ///     The item in the recipe.
     /// </summary>
-    public Item? Item { get; set; }
+    public ItemMinimal? Item { get; set; }
 
     /// <summary>
     ///     The number of items.

@@ -26,5 +26,5 @@ public class Recipe
     /// <summary>
     ///     The result of the recipe.
     /// </summary>
-    public Item? Result { get; set; }
+    public ItemMinimal? Result { get; set; }
 }
