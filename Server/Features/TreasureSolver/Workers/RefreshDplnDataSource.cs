@@ -165,7 +165,7 @@ class RefreshDplnDataSource : PeriodicService
                 return [];
             }
 
-            RawMapPosition[] maps = rawMapPositionsService.GetMaps().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
+            RawMapPosition[] maps = rawMapPositionsService.GetMapPositions().Where(m => m.PosX == clues.X && m.PosY == clues.Y).ToArray();
             int[] clueIds = clues.Clues.Where(c => dplbClueToGameClueMapping.ContainsKey(c)).Select(c => dplbClueToGameClueMapping[c]).ToArray();
 
             foreach (RawMapPosition map in maps)
