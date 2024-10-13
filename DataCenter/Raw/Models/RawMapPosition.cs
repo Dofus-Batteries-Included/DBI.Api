@@ -12,8 +12,8 @@ public class RawMapPosition
     public int WorldMap { get; init; }
     public bool Outdoor { get; init; }
     public bool ShowNameOnFingerpost { get; init; }
-    public string FightSnapshot { get; init; } = "";
-    public string RoleplaySnapshot { get; init; } = "";
+    public string FightSnapshot { get; init; } = string.Empty;
+    public string RoleplaySnapshot { get; init; } = string.Empty;
     public bool HasPriorityOnWorldMap { get; init; }
     public bool HasPublicPaddock { get; init; }
     public bool IsUnderWater { get; init; }

@@ -218,7 +218,7 @@ class RefreshDplnDataSource : PeriodicService
 
         if (stoppingToken.IsCancellationRequested)
         {
-            return ("", "");
+            return (string.Empty, string.Empty);
         }
 
         await using IBrowser browser = await Puppeteer.LaunchAsync(
@@ -231,28 +231,28 @@ class RefreshDplnDataSource : PeriodicService
 
         if (stoppingToken.IsCancellationRequested)
         {
-            return ("", "");
+            return (string.Empty, string.Empty);
         }
 
         await using IPage page = await browser.NewPageAsync();
 
         if (stoppingToken.IsCancellationRequested)
         {
-            return ("", "");
+            return (string.Empty, string.Empty);
         }
 
         await page.GoToAsync("https://www.dofuspourlesnoobs.com/resolution-de-chasse-aux-tresors.html");
 
         if (stoppingToken.IsCancellationRequested)
         {
-            return ("", "");
+            return (string.Empty, string.Empty);
         }
 
         string cluesJson = await page.EvaluateExpressionAsync<string>("JSON.stringify(listHintId)");
 
         if (stoppingToken.IsCancellationRequested)
         {
-            return ("", "");
+            return (string.Empty, string.Empty);
         }
 
         string positionsJson = await page.EvaluateExpressionAsync<string>("JSON.stringify(listHuntClues)");
