@@ -40,12 +40,12 @@ public class ItemsService(RawItemTypesService? rawItemTypesService, RawItemsServ
             ItemTypeName = itemType == null ? null : languagesService?.Get(itemType.NameId),
             Id = item.Id,
             Level = item.Level,
+            IconId = item.IconId,
             Name = languagesService?.Get(item.NameId),
             Description = languagesService?.Get(item.DescriptionId),
             PossibleEffects = item.PossibleEffects.Select(e => e.Cook()).ToArray(),
             Price = item.Price,
             Weight = item.Weight,
-            RecyclingNuggets = item.RecyclingNuggets,
             ItemSetId = item.ItemSetId,
             ItemSetName = itemSet == null ? null : languagesService?.Get(itemSet.NameId),
             TwoHanded = item.TwoHanded,
@@ -63,7 +63,15 @@ public class ItemsService(RawItemTypesService? rawItemTypesService, RawItemsServ
             IsSealable = item.IsSealable,
             HideEffects = item.HideEffects,
             BonusIsSecret = item.BonusIsSecret,
-            ObjectIsDisplayOnWeb = item.ObjectIsDisplayOnWeb
+            ObjectIsDisplayOnWeb = item.ObjectIsDisplayOnWeb,
+            UseAnimationId = item.UseAnimationId,
+            Visibility = item.Visibility,
+            Criteria = item.Criteria,
+            CriteriaTarget = item.CriteriaTarget,
+            AppearanceId = item.AppearanceId,
+            ImportantNotice = item.ImportantNoticeId,
+            ChangeVersion = item.ChangeVersion,
+            TooltipExpirationDate = item.TooltipExpirationDate
         };
     }
 }

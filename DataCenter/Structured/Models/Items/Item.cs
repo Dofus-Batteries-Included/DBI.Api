@@ -31,6 +31,11 @@ public class Item
     public byte Level { get; set; }
 
     /// <summary>
+    ///     The ID of the icon of the item.
+    /// </summary>
+    public int IconId { get; set; }
+
+    /// <summary>
     ///     The name of item.
     /// </summary>
     public LocalizedText? Name { get; set; }
@@ -54,11 +59,6 @@ public class Item
     ///     The weight of the item.
     /// </summary>
     public uint Weight { get; set; }
-
-    /// <summary>
-    ///     The base amount of nuggets received when recycling the item.
-    /// </summary>
-    public float RecyclingNuggets { get; set; }
 
     /// <summary>
     ///     The item set containing the item, if any.
@@ -149,4 +149,44 @@ public class Item
     ///     Is the item displayable on the official website?
     /// </summary>
     public bool ObjectIsDisplayOnWeb { get; set; }
+
+    /// <summary>
+    ///     The animation that the character plays when they use the item.
+    /// </summary>
+    public sbyte UseAnimationId { get; set; }
+
+    /// <summary>
+    ///     The visibility condition.
+    /// </summary>
+    public string Visibility { get; set; } = "";
+
+    /// <summary>
+    ///     The use criteria.
+    /// </summary>
+    public string Criteria { get; set; } = "";
+
+    /// <summary>
+    ///     The target of the use criteria.
+    /// </summary>
+    public string CriteriaTarget { get; set; } = "";
+
+    /// <summary>
+    ///     The appearance ID.
+    /// </summary>
+    public ushort AppearanceId { get; set; }
+
+    /// <summary>
+    ///     The important notice, if any.
+    /// </summary>
+    public string ImportantNotice { get; set; } = "";
+
+    /// <summary>
+    ///     The version of change.
+    /// </summary>
+    public string ChangeVersion { get; set; } = "";
+
+    /// <summary>
+    ///     The tooltip expiration date.
+    /// </summary>
+    public double TooltipExpirationDate { get; set; }
 }
