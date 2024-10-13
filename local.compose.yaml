@@ -1,0 +1,32 @@
+services:
+  dbi_api_database:
+    image: postgres:16
+    restart: always
+    volumes:
+      - dbi_api_pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: DBI_API
+      POSTGRES_USER: dbi_api_admin
+      POSTGRES_PASSWORD: h0F611tC0Dmz
+
+  dbi_api:
+    image: dbi_api
+    restart: always
+    depends_on:
+      dbi_api_database:
+        condition: service_started
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    volumes:
+      - dbi_api_appdata:/AppData
+    ports:
+      - 80:8080
+    environment:
+      DOTNET_ENVIRONMENT: "Production"
+      ConnectionStrings__Application: "Server=dbi_api_database;Port=5432;Database=DBI_API;User Id=dbi_api_admin;Password=h0F611tC0Dmz;"
+      RepositoryPath: "/AppData"
+
+volumes:
+  dbi_api_pgdata:
+  dbi_api_appdata:

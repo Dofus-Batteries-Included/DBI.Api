@@ -1,23 +1,12 @@
-﻿using System.Text.Json;
-using DBI.DataCenter.Raw.Models;
+﻿using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Services.Internal;
 
 namespace DBI.DataCenter.Raw.Services.Maps;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-public class RawWorldMapsServiceFactory : ParsedDataServiceFactory<RawWorldMapsService>
+/// <summary>
+/// </summary>
+public class RawWorldMapsServiceFactory(IRawDataRepository rawDataRepository, RawDataJsonOptionsProvider rawDataJsonOptionsProvider)
+    : ParsedDataServiceFactory<RawWorldMapsService, RawWorldMap[]>(rawDataRepository, RawDataType.WorldMaps, rawDataJsonOptionsProvider)
 {
-    readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
-
-    public RawWorldMapsServiceFactory(IRawDataRepository rawDataRepository) : base(rawDataRepository, RawDataType.WorldMaps)
-    {
-    }
-
-    protected override async Task<RawWorldMapsService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken)
-    {
-        await using Stream stream = file.OpenRead();
-        RawWorldMap[]? data = await JsonSerializer.DeserializeAsync<RawWorldMap[]>(stream, _jsonSerializerOptions, cancellationToken);
-        return data == null ? null : new RawWorldMapsService(data);
-    }
+    protected override RawWorldMapsService? CreateServiceImpl(RawWorldMap[] data, CancellationToken cancellationToken) => new(data);
 }

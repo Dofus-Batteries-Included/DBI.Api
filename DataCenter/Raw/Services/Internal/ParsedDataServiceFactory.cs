@@ -1,20 +1,23 @@
-﻿using DBI.DataCenter.Raw.Models;
+﻿using System.Text.Json;
+using DBI.DataCenter.Raw.Models;
 
 namespace DBI.DataCenter.Raw.Services.Internal;
 
 /// <summary>
 ///     Base class for all factories of services that expose raw data.
 /// </summary>
-public abstract class ParsedDataServiceFactory<TService>
+public abstract class ParsedDataServiceFactory<TService, TData>
 {
     readonly IRawDataRepository _rawDataRepository;
+    readonly RawDataJsonOptionsProvider _rawDataJsonOptionsProvider;
     readonly Dictionary<string, TService> _cache = new();
 
     /// <summary>
     /// </summary>
-    public ParsedDataServiceFactory(IRawDataRepository rawDataRepository, RawDataType dataType)
+    public ParsedDataServiceFactory(IRawDataRepository rawDataRepository, RawDataType dataType, RawDataJsonOptionsProvider rawDataJsonOptionsProvider)
     {
         _rawDataRepository = rawDataRepository;
+        _rawDataJsonOptionsProvider = rawDataJsonOptionsProvider;
         DataType = dataType;
     }
 
@@ -65,7 +68,16 @@ public abstract class ParsedDataServiceFactory<TService>
             return (actualVersion, default);
         }
 
-        TService? result = await CreateServiceImpl(file, cancellationToken);
+        JsonSerializerOptions jsonSerializerOptions = _rawDataJsonOptionsProvider.GetJsonSerializerOptions(actualVersion, DataType);
+
+        await using Stream stream = file.OpenRead();
+        TData? data = await JsonSerializer.DeserializeAsync<TData>(stream, jsonSerializerOptions, cancellationToken);
+        if (data == null)
+        {
+            return (actualVersion, default);
+        }
+
+        TService? result = CreateServiceImpl(data, cancellationToken);
         if (result == null)
         {
             return (actualVersion, default);
@@ -79,5 +91,5 @@ public abstract class ParsedDataServiceFactory<TService>
     /// <summary>
     ///     Actual implementation of the service creation.
     /// </summary>
-    protected abstract Task<TService?> CreateServiceImpl(IRawDataFile file, CancellationToken cancellationToken);
+    protected abstract TService? CreateServiceImpl(TData file, CancellationToken cancellationToken);
 }
