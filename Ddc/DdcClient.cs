@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using DBI.Ddc.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -51,7 +52,7 @@ public partial class DdcClient
             httpResponse.EnsureSuccessStatusCode();
 
             DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
+                new JsonSerializerOptions { PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance, PropertyNameCaseInsensitive = true },
                 cancellationToken
             );
             if (responses == null)
