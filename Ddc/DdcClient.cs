@@ -48,7 +48,11 @@ public class DdcClient
             httpResponse.EnsureSuccessStatusCode();
 
             DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase },
+#if NET7_0_OR_GREATER
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
+#else
+                new JsonSerializerOptions { PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance },
+#endif
                 cancellationToken
             );
             if (responses == null)
@@ -102,4 +106,16 @@ public class DdcClient
         ZipArchive zip = new(memoryStream, ZipArchiveMode.Read, false);
         return new DdcReleaseContent(zip);
     }
+
+#if !NET7_0_OR_GREATER
+    /// <remarks>
+    ///     The System.Text.Json is not built-in before net7.0.
+    ///     For net6.0, the nuget package is required to use it. However, the nuget package does not define the snake case naming policy.
+    /// </remarks>
+    class SnakeCaseNamingPolicy : JsonNamingPolicy
+    {
+        public static SnakeCaseNamingPolicy Instance { get; } = new();
+        public override string ConvertName(string name) => string.Concat(name.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString())).ToLower();
+    }
+#endif
 }
