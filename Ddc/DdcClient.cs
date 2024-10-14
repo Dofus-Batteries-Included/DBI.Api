@@ -10,6 +10,10 @@ namespace DBI.Ddc;
 
 public partial class DdcClient
 {
+    readonly Regex _nextLinkRegex = new(
+        "<(?<uri>[^>]*)>; rel=\"next\"",
+        RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant
+    );
     readonly IHttpClientFactory? _httpClientFactory;
     readonly ILogger _logger;
 
@@ -68,8 +72,7 @@ public partial class DdcClient
                 break;
             }
 
-            Regex nextLinkRegex = NextLinkRegex();
-            Match? match = links.Select(l => nextLinkRegex.Match(l)).FirstOrDefault(m => m.Success);
+            Match? match = links.Select(l => _nextLinkRegex.Match(l)).FirstOrDefault(m => m.Success);
             if (match == null)
             {
                 break;
@@ -95,14 +98,11 @@ public partial class DdcClient
         using HttpResponseMessage response = await httpClient.GetAsync(dataAsset.BrowserDownloadUrl, cancellationToken);
 
         // copy release content to memory
-        await using Stream contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        await using Stream contentStream = await response.Content.ReadAsStreamAsync();
         MemoryStream memoryStream = new();
         await contentStream.CopyToAsync(memoryStream, cancellationToken);
 
         ZipArchive zip = new(memoryStream, ZipArchiveMode.Read, false);
         return new DdcReleaseContent(zip);
     }
-
-    [GeneratedRegex("<(?<uri>[^>]*)>; rel=\"next\"")]
-    private static partial Regex NextLinkRegex();
 }

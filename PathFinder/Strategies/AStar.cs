@@ -2,6 +2,7 @@
 using DBI.DataCenter.Raw.Models.WorldGraphs;
 using DBI.DataCenter.Structured.Models.Maps;
 using DBI.PathFinder.DataProviders;
+using DBI.PathFinder.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace DBI.PathFinder.Strategies;
