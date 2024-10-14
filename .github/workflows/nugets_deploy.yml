@@ -12,6 +12,10 @@ jobs:
   job:
     name: Build & Release
     runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        version: [ 8.0, 6.0 ]
 
     steps:
       - name: Checkout
@@ -22,16 +26,13 @@ jobs:
       - name: Install .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '${{ matrix.version }}.x'
 
       - name: Configure Github Nuget repository
         run: dotnet nuget add source --username ismailbennani --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Dofus-Batteries-Included/index.json"
 
-      - name: Build
-        run: dotnet build --configuration Release
-
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output nuget/
+        run: dotnet pack --configuration Release -f net${{ matrix.version }} --output nuget/
 
       - name: Publish nugets
         if: ${{ github.event_name == 'release' }}
