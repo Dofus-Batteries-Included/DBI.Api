@@ -9,7 +9,18 @@
         <RootNamespace>DBI.DataCenter</RootNamespace>
         <IsPackable>true</IsPackable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>DBI.DataCenter</Product>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Title>Data Center - Dofus Batteries Included</Title>
+        <Authors>Ismail Bennani</Authors>
+        <Description>
+            Models used by the DBI API project.
+        </Description>
+        <RepositoryUrl>https://github.com/Dofus-Batteries-Included/DBI.Api</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>dofus, data center</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>

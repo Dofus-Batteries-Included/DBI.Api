@@ -9,7 +9,18 @@
         <RootNamespace>DBI.Ddc</RootNamespace>
         <IsPackable>true</IsPackable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>DBI.Ddc</Product>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Title>DDC Client - Dofus Batteries Included</Title>
+        <Authors>Ismail Bennani</Authors>
+        <Description>
+            Client that downloads data from the releases of the DDC repository. 
+        </Description>
+        <RepositoryUrl>https://github.com/Dofus-Batteries-Included/DBI.Api</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>dofus, ddc, client</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,9 +28,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-      <PackageReference Include="System.Net.Http.Json" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1"/>
+        <PackageReference Include="System.Net.Http.Json" Version="8.0.1"/>
     </ItemGroup>
 
 </Project>

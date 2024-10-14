@@ -8,24 +8,36 @@
         <AssemblyName>DBI.PathFinder</AssemblyName>
         <RootNamespace>DBI.PathFinder</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>DBI.PathFinder</Product>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Title>Path Finder - Dofus Batteries Included</Title>
+        <Authors>Ismail Bennani</Authors>
+        <Description>
+            Path finding algorithms for Dofus.
+            The services of the package rely on the World Graph data of the game.
+        </Description>
+        <RepositoryUrl>https://github.com/Dofus-Batteries-Included/DBI.Api</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>dofus, pathfinder, pathfinding, path, finder, finding</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\DataCenter\DataCenter.csproj" />
-      <ProjectReference Include="..\Ddc\Ddc.csproj" />
+        <ProjectReference Include="..\DataCenter\DataCenter.csproj"/>
+        <ProjectReference Include="..\Ddc\Ddc.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MinVer" Version="6.0.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+        <PackageReference Include="MinVer" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
     </ItemGroup>
 
     <PropertyGroup>
