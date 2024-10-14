@@ -7,8 +7,14 @@
         <Nullable>enable</Nullable>
         <AssemblyName>DBI.DataCenter</AssemblyName>
         <RootNamespace>DBI.DataCenter</RootNamespace>
-        <IsPackable>false</IsPackable>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Structured\" />
