@@ -30,7 +30,15 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1"/>
+        <PackageReference Include="MinVer" Version="6.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="System.Net.Http.Json" Version="8.0.1"/>
     </ItemGroup>
+
+    <PropertyGroup>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
 
 </Project>
