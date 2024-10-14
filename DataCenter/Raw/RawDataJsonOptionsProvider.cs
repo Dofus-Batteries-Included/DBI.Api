@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using DBI.DataCenter.Raw.Models;
+using DBI.DataCenter.Serialization;
 
 namespace DBI.DataCenter.Raw;
 
@@ -10,14 +11,14 @@ public class RawDataJsonOptionsProvider
 
     readonly JsonSerializerOptions _preZeroNineKebabCaseOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
+        PropertyNamingPolicy = KebabCaseNamingPolicy.Instance, PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter(KebabCaseNamingPolicy.Instance) }
     };
 
     readonly JsonSerializerOptions _postZeroNineKebabCaseOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
+        PropertyNamingPolicy = KebabCaseNamingPolicy.Instance,
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) },
+        Converters = { new JsonStringEnumConverter(KebabCaseNamingPolicy.Instance) },
         NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals
     };
 

@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using DBI.DataCenter.Raw.Models;
 using DBI.DataCenter.Raw.Models.WorldGraphs;
+using DBI.DataCenter.Serialization;
 using DBI.Ddc;
 using DBI.PathFinder.Caches;
 using DBI.PathFinder.DataProviders;
@@ -14,9 +15,9 @@ public class WorldDataBuilderFromDdcGithubRepository
 {
     static readonly JsonSerializerOptions KebabCaseSerializerOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
+        PropertyNamingPolicy = KebabCaseNamingPolicy.Instance,
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower) }
+        Converters = { new JsonStringEnumConverter(KebabCaseNamingPolicy.Instance) }
     };
 
     static readonly JsonSerializerOptions CamelCaseSerializerOptions = new()
