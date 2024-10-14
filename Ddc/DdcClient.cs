@@ -8,8 +8,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DBI.Ddc;
 
-public partial class DdcClient
+public class DdcClient
 {
+    static readonly Regex NextLinkRegex = new("<(?<uri>[^>]*)>; rel=\"next\"");
     readonly IHttpClientFactory? _httpClientFactory;
     readonly ILogger _logger;
 
@@ -47,7 +48,7 @@ public partial class DdcClient
             httpResponse.EnsureSuccessStatusCode();
 
             DdcRelease[]? responses = await httpResponse.Content.ReadFromJsonAsync<DdcRelease[]>(
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase },
                 cancellationToken
             );
             if (responses == null)
@@ -68,8 +69,7 @@ public partial class DdcClient
                 break;
             }
 
-            Regex nextLinkRegex = NextLinkRegex();
-            Match? match = links.Select(l => nextLinkRegex.Match(l)).FirstOrDefault(m => m.Success);
+            Match? match = links.Select(l => NextLinkRegex.Match(l)).FirstOrDefault(m => m.Success);
             if (match == null)
             {
                 break;
@@ -102,7 +102,4 @@ public partial class DdcClient
         ZipArchive zip = new(memoryStream, ZipArchiveMode.Read, false);
         return new DdcReleaseContent(zip);
     }
-
-    [GeneratedRegex("<(?<uri>[^>]*)>; rel=\"next\"")]
-    private static partial Regex NextLinkRegex();
 }
