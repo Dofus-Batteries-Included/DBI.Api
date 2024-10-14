@@ -57,7 +57,7 @@ try
     builder.Services.AddExceptionHandler<ExceptionHandler>();
     builder.Services.AddHttpClient();
 
-    builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, opt => { });
+    builder.Services.AddAuthentication(ApiKeyAuthentication.Scheme).AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthentication.Scheme, _ => { });
     builder.Services.AddAuthorization();
 
     builder.Services.AddEndpointsApiExplorer();
