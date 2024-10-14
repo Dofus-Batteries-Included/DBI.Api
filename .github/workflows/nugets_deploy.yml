@@ -4,11 +4,11 @@
 name: Publish Nugets
 
 on:
-  release: 
-    types: [published]
+  release:
+    types: [ published ]
   workflow_dispatch:
 
-jobs:  
+jobs:
   job:
     name: Build & Release
     runs-on: windows-latest
@@ -52,7 +52,7 @@ jobs:
         if: ${{ github.event_name != 'release' }}
         uses: actions/upload-artifact@v4
         with:
-          name: nugets
+          name: nugets-${{ matrix.version }}
           path: nuget/*.nupkg
           if-no-files-found: 'error'
 

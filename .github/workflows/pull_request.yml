@@ -12,6 +12,10 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        version: [ 8.0, 6.0 ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,16 +25,16 @@ jobs:
       - name: Install .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '${{ matrix.version }}.x'
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release -f net${{ matrix.version }} --no-restore
 
       - name: Test
-        run: dotnet test --configuration Release --no-build --logger trx --collect:"XPlat Code Coverage"
+        run: dotnet test --configuration Release -f net${{ matrix.version }} --no-build --logger trx --collect:"XPlat Code Coverage"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2.16.1
@@ -46,7 +50,7 @@ jobs:
           reporttypes: "Cobertura"
           verbosity: "Info"
           title: "Code Coverage"
-          tag: "${{ github.run_number }}_${{ github.run_id }}"
+          tag: "${{ matrix.version }}_${{ github.run_number }}_${{ github.run_id }}"
           customSettings: ""
           toolpath: "reportgeneratortool"
 
