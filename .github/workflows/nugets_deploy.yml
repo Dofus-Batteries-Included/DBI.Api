@@ -40,6 +40,13 @@ jobs:
               dotnet nuget push $File --source github --api-key ${{ secrets.GITHUB_TOKEN }}
           }
 
+      - name: Publish nugets - Nuget
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          foreach($File in (Get-ChildItem "nuget/" -Recurse -Include *.nupkg)) {
+              dotnet nuget push $File --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_TOKEN }}
+          }
+
       - name: Upload nugets to artifacts
         if: ${{ github.event_name != 'release' }}
         uses: actions/upload-artifact@v4
