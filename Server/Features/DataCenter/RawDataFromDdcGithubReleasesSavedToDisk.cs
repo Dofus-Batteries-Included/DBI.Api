@@ -1,6 +1,5 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using DBI.DataCenter.Raw;
 using DBI.DataCenter.Raw.Models;
 using DBI.Ddc;
@@ -26,9 +25,9 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         _logger = logger ?? NullLogger<RawDataFromDdcGithubReleasesSavedToDisk>.Instance;
     }
 
-    public Task<string?> GetLatestVersionAsync() => Task.FromResult(GetActualVersions().OrderDescending().FirstOrDefault());
+    public Task<string?> GetLatestVersionAsync() => Task.FromResult(GetActualVersionsInDescendingOrder().FirstOrDefault());
 
-    public Task<IReadOnlyCollection<string>> GetAvailableVersionsAsync() => Task.FromResult<IReadOnlyCollection<string>>(GetActualVersions().ToList());
+    public Task<IReadOnlyCollection<string>> GetAvailableVersionsAsync() => Task.FromResult<IReadOnlyCollection<string>>(GetActualVersionsInDescendingOrder().ToList());
 
     public async Task<IRawDataFile> GetRawDataFileAsync(string version, RawDataType type, CancellationToken cancellationToken = default)
     {
@@ -151,7 +150,7 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
     string? GetActualVersion(string version) =>
         version switch
         {
-            "latest" => GetActualVersions().OrderDescending().FirstOrDefault(),
+            "latest" => GetActualVersionsInDescendingOrder().OrderDescending().FirstOrDefault(),
             _ => version
         };
 
@@ -186,11 +185,16 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 
-    IEnumerable<string> GetActualVersions()
+    IEnumerable<string> GetActualVersionsInDescendingOrder()
     {
-        Regex versionRegex = VersionRegex();
         return Directory.Exists(_repositoryOptions.DataCenterRawDataPath)
-            ? Directory.EnumerateDirectories(_repositoryOptions.DataCenterRawDataPath).Select(Path.GetFileName).OfType<string>().Where(v => versionRegex.IsMatch(v)).Order()
+            ? Directory.EnumerateDirectories(_repositoryOptions.DataCenterRawDataPath)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Select(v => new { Version = v, ParsedVersion = Version.TryParse(v, out Version? version) ? version : null})
+                .Where(x => x.ParsedVersion != null)
+                .OrderByDescending(x => x.ParsedVersion)
+                .Select(x => x.Version)
             : [];
     }
 
@@ -274,10 +278,4 @@ partial class RawDataFromDdcGithubReleasesSavedToDisk : IRawDataRepository
         public required string ReleaseName { get; init; }
         public string? DdcVersion { get; init; }
     }
-
-    [GeneratedRegex(
-        @"^\d+(\.\d+)*$",
-        RegexOptions.Compiled | RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Singleline | RegexOptions.ExplicitCapture
-    )]
-    private static partial Regex VersionRegex();
 }
