@@ -14,12 +14,14 @@ class DatabaseClueRecordsSource : IClueRecordsSource
         _context = context;
     }
 
-    public async Task<DateTime?> GetLastModificationDate() =>
-        await _context.ClueRecords.DefaultIfEmpty().MaxAsync<ClueRecordEntity?, DateTime?>(c => c == null ? null : c.LastModificationDate);
+    public async Task<DateTime?> GetLastModificationDate(CancellationToken cancellationToken = default) =>
+        await _context.ClueRecords.DefaultIfEmpty().MaxAsync<ClueRecordEntity?, DateTime?>(c => c == null ? null : c.LastModificationDate, cancellationToken);
 
-    public async Task<IReadOnlyCollection<ClueRecord>> GetCluesInMap(long mapId) =>
-        (await _context.ClueRecords.Where(c => c.MapId == mapId).GroupBy(c => c.ClueId).Select(g => g.OrderByDescending(c => c.LastModificationDate).First()).ToArrayAsync())
-        .Select(
+    public async Task<IReadOnlyCollection<ClueRecord>> GetCluesInMap(long mapId, CancellationToken cancellationToken = default) =>
+        (await _context.ClueRecords.Where(c => c.MapId == mapId)
+            .GroupBy(c => c.ClueId)
+            .Select(g => g.OrderByDescending(c => c.LastModificationDate).First())
+            .ToArrayAsync(cancellationToken)).Select(
             c => new ClueRecord
             {
                 RecordDate = c.LastModificationDate,
@@ -30,8 +32,9 @@ class DatabaseClueRecordsSource : IClueRecordsSource
         )
         .ToArray();
 
-    public async Task<IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>>> ExportData() =>
-        (await _context.ClueRecords.GroupBy(c => c.ClueId).Select(g => g.OrderByDescending(c => c.LastModificationDate).First()).ToArrayAsync()).GroupBy(c => c.MapId)
+    public async Task<IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>>> ExportData(CancellationToken cancellationToken = default) =>
+        (await _context.ClueRecords.GroupBy(c => c.ClueId).Select(g => g.OrderByDescending(c => c.LastModificationDate).First()).ToArrayAsync(cancellationToken))
+        .GroupBy(c => c.MapId)
         .ToDictionary(
             g => g.Key,
             IReadOnlyCollection<ClueRecord> (g) => g.Select(

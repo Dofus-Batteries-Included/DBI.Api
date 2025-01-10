@@ -20,22 +20,36 @@ public class CluesController : ControllerBase
     ///     Find clues in map
     /// </summary>
     [HttpGet("at-map/{mapId:long}")]
-    public async Task<IReadOnlyCollection<Clue>> FindCluesInMap([FromServices] FindCluesService findCluesService, long mapId) => await findCluesService.FindCluesInMapAsync(mapId);
+    public async Task<IReadOnlyCollection<Clue>> FindCluesInMap(
+        [FromServices] FindCluesService findCluesService,
+        long mapId,
+        string version = "latest",
+        CancellationToken cancellationToken = default
+    ) =>
+        // FIXME: clues are not versioned right now so the version parameter is always ignored by this endpoint
+        await findCluesService.FindCluesInMapAsync(mapId, cancellationToken);
 
     /// <summary>
     ///     Find clues at position
     /// </summary>
     [HttpGet("at-position/{posX:int}/{posY:int}")]
-    public async Task<IReadOnlyCollection<Clue>> FindCluesAtPosition([FromServices] FindCluesService findCluesService, int posX, int posY) =>
-        await findCluesService.FindCluesAtPositionAsync(posX, posY);
+    public async Task<IReadOnlyCollection<Clue>> FindCluesAtPosition(
+        [FromServices] FindCluesService findCluesService,
+        int posX,
+        int posY,
+        string version = "latest",
+        CancellationToken cancellationToken = default
+    ) =>
+        await findCluesService.FindCluesAtPositionAsync(posX, posY, version, cancellationToken);
 
     /// <summary>
     ///     Export clues
     /// </summary>
     [HttpGet("export")]
-    public async Task<FileStreamResult> ExportClues([FromServices] ExportCluesService exportCluesService)
+    public async Task<FileStreamResult> ExportClues([FromServices] ExportCluesService exportCluesService, string version = "latest", CancellationToken cancellationToken = default)
     {
-        ExportCluesService.File file = await exportCluesService.ExportCluesAsync();
+        // FIXME: clues are not versioned right now so the version parameter is always ignored by this endpoint
+        ExportCluesService.File file = await exportCluesService.ExportCluesAsync(cancellationToken);
         return new FileStreamResult(file.Content, file.Type) { FileDownloadName = file.Name };
     }
 
@@ -44,9 +58,16 @@ public class CluesController : ControllerBase
     /// </summary>
     [HttpPost]
     [Authorize]
-    public async Task RegisterClues([FromServices] RegisterCluesService registerCluesService, [FromServices] ApplicationDbContext dbContext, RegisterCluesRequest request)
+    public async Task RegisterClues(
+        [FromServices] RegisterCluesService registerCluesService,
+        [FromServices] ApplicationDbContext dbContext,
+        RegisterCluesRequest request,
+        string version = "latest",
+        CancellationToken cancellationToken = default
+    )
     {
+        // FIXME: clues are not versioned right now so the version parameter is always ignored by this endpoint
         PrincipalEntity principal = await ControllerContext.RequirePrincipal(dbContext);
-        await registerCluesService.RegisterCluesAsync(principal, request);
+        await registerCluesService.RegisterCluesAsync(principal, request, cancellationToken);
     }
 }

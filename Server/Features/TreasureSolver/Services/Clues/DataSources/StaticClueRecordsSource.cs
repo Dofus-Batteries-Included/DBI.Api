@@ -13,7 +13,7 @@ class StaticClueRecordsSource : IClueRecordsSource
     public DateTime? LastModificationDate { get; }
     public IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>> Clues { get; }
 
-    public Task<DateTime?> GetLastModificationDate() => Task.FromResult(LastModificationDate);
-    public Task<IReadOnlyCollection<ClueRecord>> GetCluesInMap(long mapId) => Task.FromResult(Clues.GetValueOrDefault(mapId) ?? []);
-    public Task<IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>>> ExportData() => Task.FromResult(Clues);
+    public Task<DateTime?> GetLastModificationDate(CancellationToken cancellationToken = default) => Task.FromResult(LastModificationDate);
+    public Task<IReadOnlyCollection<ClueRecord>> GetCluesInMap(long mapId, CancellationToken cancellationToken = default) => Task.FromResult(Clues.GetValueOrDefault(mapId) ?? []);
+    public Task<IReadOnlyDictionary<long, IReadOnlyCollection<ClueRecord>>> ExportData(CancellationToken cancellationToken = default) => Task.FromResult(Clues);
 }
