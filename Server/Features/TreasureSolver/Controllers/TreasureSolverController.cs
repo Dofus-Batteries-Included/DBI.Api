@@ -55,14 +55,14 @@ public class TreasureSolverController : ControllerBase
     ///     The endpoint is mostly used to understand how <see cref="FindNodeRequest" />s work. The actual clue search is performed by <see cref="FindNextClue" />.
     /// </remarks>
     [HttpPost("find-nodes")]
-    public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MapNodeWithPosition>> FindNodes(FindNodeRequest request, string version = "latest", CancellationToken cancellationToken = default)
     {
-        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(version, cancellationToken);
         IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
 
-        MapsService mapsService = await _worldServicesFactory.CreateMapsServiceAsync(cancellationToken: cancellationToken);
+        MapsService mapsService = await _worldServicesFactory.CreateMapsServiceAsync(version, cancellationToken);
 
         NodeFinder nodeFinder = new(worldData);
 
@@ -73,11 +73,11 @@ public class TreasureSolverController : ControllerBase
     ///     Find next clue
     /// </summary>
     [HttpPost("find-next-clue")]
-    public async Task<ActionResult<FindNextMapResponse>> FindNextClue(FindNextClueRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<FindNextMapResponse>> FindNextClue(FindNextClueRequest request, string version = "latest", CancellationToken cancellationToken = default)
     {
-        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawWorldGraphService rawWorldGraphService = await _rawWorldGraphServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapsService rawMapsService = await _rawMapsServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await _rawMapPositionsServiceFactory.CreateServiceAsync(version, cancellationToken);
         IWorldDataProvider worldData = WorldDataBuilder.FromRawServices(rawWorldGraphService, rawMapsService, rawMapPositionsService).Build();
 
         NodeFinder nodeFinder = new(worldData);
@@ -90,7 +90,7 @@ public class TreasureSolverController : ControllerBase
 
         foreach (RawWorldGraphNode node in nodes)
         {
-            FindNextNodeContainingClueResult result = await _solver.FindNextNodeContainingClueAsync(node.Id, request.Direction, request.ClueId, cancellationToken);
+            FindNextNodeContainingClueResult result = await _solver.FindNextNodeContainingClueAsync(node.Id, request.Direction, request.ClueId, version, cancellationToken);
             if (result.Found)
             {
                 return new FindNextMapResponse { Found = true, Map = result.Map, Distance = result.Distance };

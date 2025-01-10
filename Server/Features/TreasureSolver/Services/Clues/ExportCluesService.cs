@@ -56,10 +56,10 @@ public class ExportCluesService
     /// <summary>
     ///     Export clues
     /// </summary>
-    public async Task<File> ExportCluesAsync()
+    public async Task<File> ExportCluesAsync(CancellationToken cancellationToken = default)
     {
         string version = Metadata.Version?.ToString() ?? "~dev";
-        DateTime lastModificationDate = await _findCluesService.GetLastModificationDateAsync() ?? DateTime.Now;
+        DateTime lastModificationDate = await _findCluesService.GetLastModificationDateAsync(cancellationToken) ?? DateTime.Now;
 
         string filepath = GetExportedFilePath();
         string filename = GetExportedFileName(version, lastModificationDate);
@@ -87,7 +87,7 @@ public class ExportCluesService
             }
 
             await using FileStream writeStream = System.IO.File.Open(path, FileMode.Create);
-            await JsonSerializer.SerializeAsync(writeStream, content, _serializerOptions);
+            await JsonSerializer.SerializeAsync(writeStream, content, _serializerOptions, cancellationToken);
 
             _logger.LogInformation("Saved export result at {Path}.", path);
         }

@@ -23,14 +23,16 @@ public class RegisterCluesService
     /// <summary>
     ///     Register that the <c>author</c> has found (or not found) the clues in <c>request</c>.
     /// </summary>
-    public async Task RegisterCluesAsync(PrincipalEntity author, RegisterCluesRequest request)
+    public async Task RegisterCluesAsync(PrincipalEntity author, RegisterCluesRequest request, CancellationToken cancellationToken = default)
     {
         foreach (RegisterClueRequest clueRequest in request.Clues)
         {
             ClueAtMapStatus status = clueRequest.Found ? ClueAtMapStatus.Found : ClueAtMapStatus.NotFound;
 
-            ClueRecordEntity? existingClue =
-                await _context.ClueRecords.SingleOrDefaultAsync(c => c.MapId == clueRequest.MapId && c.ClueId == clueRequest.ClueId && c.Author == author);
+            ClueRecordEntity? existingClue = await _context.ClueRecords.SingleOrDefaultAsync(
+                c => c.MapId == clueRequest.MapId && c.ClueId == clueRequest.ClueId && c.Author == author,
+                cancellationToken
+            );
             if (existingClue != null)
             {
                 existingClue.UpdateStatus(status);
@@ -38,9 +40,9 @@ public class RegisterCluesService
             }
 
             ClueRecordEntity newClue = new(clueRequest.ClueId, clueRequest.MapId, author, status);
-            await _context.AddAsync(newClue);
+            await _context.AddAsync(newClue, cancellationToken);
         }
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

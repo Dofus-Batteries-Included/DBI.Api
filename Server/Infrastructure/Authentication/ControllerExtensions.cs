@@ -7,7 +7,7 @@ namespace DBI.Server.Infrastructure.Authentication;
 
 static class ControllerExtensions
 {
-    public static async Task<PrincipalEntity?> GetPrincipal(this ControllerContext context, ApplicationDbContext dbContext)
+    public static async Task<PrincipalEntity?> GetPrincipal(this ControllerContext context, ApplicationDbContext dbContext, CancellationToken cancellationToken = default)
     {
         if (context.HttpContext.User.Identity?.IsAuthenticated != true)
         {
@@ -20,9 +20,9 @@ static class ControllerExtensions
             return null;
         }
 
-        return await dbContext.Principals.FindAsync(principalId);
+        return await dbContext.Principals.FindAsync([principalId], cancellationToken);
     }
 
-    public static async Task<PrincipalEntity> RequirePrincipal(this ControllerContext context, ApplicationDbContext dbContext) =>
-        await GetPrincipal(context, dbContext) ?? throw new InvalidOperationException("Could not determine current principal.");
+    public static async Task<PrincipalEntity> RequirePrincipal(this ControllerContext context, ApplicationDbContext dbContext, CancellationToken cancellationToken = default) =>
+        await GetPrincipal(context, dbContext, cancellationToken) ?? throw new InvalidOperationException("Could not determine current principal.");
 }
