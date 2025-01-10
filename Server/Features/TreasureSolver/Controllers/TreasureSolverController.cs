@@ -90,7 +90,7 @@ public class TreasureSolverController : ControllerBase
 
         foreach (RawWorldGraphNode node in nodes)
         {
-            FindNextNodeContainingClueResult result = await _solver.FindNextNodeContainingClueAsync(node.Id, request.Direction, request.ClueId, cancellationToken);
+            FindNextNodeContainingClueResult result = await _solver.FindNextNodeContainingClueAsync(node.Id, request.Direction, request.ClueId, version, cancellationToken);
             if (result.Found)
             {
                 return new FindNextMapResponse { Found = true, Map = result.Map, Distance = result.Distance };

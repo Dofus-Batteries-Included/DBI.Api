@@ -33,12 +33,13 @@ public class TreasureSolverService(
         long startNodeId,
         Direction direction,
         int clueId,
+        string version = "latest",
         CancellationToken cancellationToken = default
     )
     {
-        RawWorldGraphService rawWorldGraphService = await rawWorldGraphServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapsService rawMapsService = await rawMapsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
-        RawMapPositionsService rawMapPositionsService = await rawMapPositionsServiceFactory.CreateServiceAsync(cancellationToken: cancellationToken);
+        RawWorldGraphService rawWorldGraphService = await rawWorldGraphServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapsService rawMapsService = await rawMapsServiceFactory.CreateServiceAsync(version, cancellationToken);
+        RawMapPositionsService rawMapPositionsService = await rawMapPositionsServiceFactory.CreateServiceAsync(version, cancellationToken);
 
         RawWorldGraphNode? startNode = rawWorldGraphService.GetNode(startNodeId);
         if (startNode == null)
@@ -52,7 +53,7 @@ public class TreasureSolverService(
         int distance = 1;
         foreach (MapNodeWithPosition node in pathFinder.EnumerateNodesInDirection(startNode, direction))
         {
-            IReadOnlyCollection<Clue> clues = await findCluesService.FindCluesInMapAsync(node.MapId);
+            IReadOnlyCollection<Clue> clues = await findCluesService.FindCluesInMapAsync(node.MapId, cancellationToken);
             if (clues.Any(c => c.ClueId == clueId))
             {
                 return new FindNextNodeContainingClueResult(true, node, distance);
