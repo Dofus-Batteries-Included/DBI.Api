@@ -22,7 +22,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.2.0"/>
         <PackageReference Include="PuppeteerSharp" Version="20.0.5"/>
         <PackageReference Include="Semver" Version="3.0.0"/>
