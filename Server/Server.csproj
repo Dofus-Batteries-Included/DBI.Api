@@ -24,7 +24,7 @@
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.2.0"/>
-        <PackageReference Include="PuppeteerSharp" Version="20.1.1"/>
+        <PackageReference Include="PuppeteerSharp" Version="20.1.2"/>
         <PackageReference Include="Semver" Version="3.0.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
     </ItemGroup>
