@@ -71,7 +71,7 @@ jobs:
           path: code-coverage-results.md
 
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: github.event_name != 'pull_request'
         with:
           name: coverage
